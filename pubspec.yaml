@@ -11,6 +11,8 @@ dependencies:
   flutter:
     sdk: flutter
 
+  css_filter: ^1.0.3
+
 dev_dependencies:
   flutter_test:
     sdk: flutter
