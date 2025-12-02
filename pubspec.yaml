@@ -1,7 +1,15 @@
 name: radix_themes
-description: "A new Flutter package project."
+description: |
+  Unofficial Radix Themes 3.0 components for Flutter. 
+  A pre-styled, minimal-configuration library following the community Figma edition.
 version: 0.0.1
 homepage:
+repository: https://github.com/thanhle1547/flutter_radix_themes
+topics:
+  - ui
+  - widget
+  - user-interface
+  - design-system
 
 environment:
   sdk: ^3.9.2
