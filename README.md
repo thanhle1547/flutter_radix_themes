@@ -1,18 +1,10 @@
-<!--
-This README describes the package. If you publish this package to pub.dev,
-this README's contents appear on the landing page for your package.
+# Radix Themes for Flutter
 
-For information about how to write a good package README, see the guide for
-[writing package pages](https://dart.dev/tools/pub/writing-package-pages).
+Unofficial Radix Themes 3.0 components for Flutter. A pre-styled, minimal-configuration library that follows the community Figma edition.
 
-For general information about developing packages, see the Dart guide for
-[creating packages](https://dart.dev/guides/libraries/create-packages)
-and the Flutter guide for
-[developing packages and plugins](https://flutter.dev/to/develop-packages).
--->
+> It is compatible to mix `radix_themes` widgets with Flutter's standard `MaterialApp` or `CupertinoApp`.
 
-TODO: Put a short description of the package here that helps potential users
-know whether this package might be useful for them.
+> Radix's classic variant components use inner shadow. Because Flutter does not natively support inner shadow, components that have this classic variant are currently unsupported.
 
 ## Features
 
