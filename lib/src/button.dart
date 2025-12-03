@@ -1196,6 +1196,19 @@ class _RadixButtonState extends State<RadixButton> with SingleTickerProviderStat
     _styleModifier = widget.styleModifier;
   }
 
+  static IconThemeData _getEffectiveIconThemeData(
+    BuildContext context, {
+    required bool hasIcon,
+    required Color withColor,
+  }) {
+    if (!hasIcon) {
+      return const IconThemeData.fallback();
+    }
+
+    final IconTheme? iconTheme = context.dependOnInheritedWidgetOfExactType<IconTheme>();
+    return (iconTheme?.data ?? const IconThemeData.fallback()).copyWith(color: withColor);
+  }
+
   Widget decorateChild(
     Widget child,
     RadixButtonStyle style,
@@ -1281,13 +1294,26 @@ class _RadixButtonState extends State<RadixButton> with SingleTickerProviderStat
 
     Widget child;
 
+    final Widget? iconStart = widget.iconStart;
+    final Widget? iconEnd = widget.iconEnd;
+
+    final Color textColor = styleModifier?.textColor?.resolve(states) ?? style.textColor.resolve(states);
+
+    final IconThemeData iconThemeData = _getEffectiveIconThemeData(
+      context,
+      hasIcon: widget._child != null || iconStart != null || iconEnd != null,
+      withColor: textColor,
+    );
+
     if (widget._child case final Widget customChild) {
-      child = customChild;
+      child = IconTheme(
+        data: iconThemeData,
+        child: customChild,
+      );
     } else {
       final String? text = widget.text;
 
       TextStyle textStyle = styleModifier?.textStyle ?? style.textStyle;
-      final Color textColor = styleModifier?.textColor?.resolve(states) ?? style.textColor.resolve(states);
 
       textStyle = textStyle.copyWith(color: textColor);
 
@@ -1301,8 +1327,6 @@ class _RadixButtonState extends State<RadixButton> with SingleTickerProviderStat
         child = const SizedBox.shrink();
       }
     }
-
-    Widget? iconStart = widget.iconStart;
 
     if (widget.cacheLoadingState || widget.loading) {
       final RadixSpinnerSize spinnerSize = switch (widget.size) {
@@ -1330,8 +1354,6 @@ class _RadixButtonState extends State<RadixButton> with SingleTickerProviderStat
       );
     }
 
-    Widget? iconEnd = widget.iconEnd;
-
     if (iconStart == null && iconEnd == null) {
       child = Center(
         widthFactor: widget.mainAxisSize == MainAxisSize.min ? 1 : null,
@@ -1347,20 +1369,23 @@ class _RadixButtonState extends State<RadixButton> with SingleTickerProviderStat
     } else {
       final Widget gap = SizedBox(width: styleModifier?.gap ?? style.gap);
 
-      child = Row(
-        mainAxisSize: widget.mainAxisSize,
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          if (iconStart != null) ...[
-            iconStart,
-            gap,
+      child = IconTheme(
+        data: iconThemeData,
+        child: Row(
+          mainAxisSize: widget.mainAxisSize,
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            if (iconStart != null) ...[
+              iconStart,
+              gap,
+            ],
+            child,
+            if (iconEnd != null) ...[
+              gap,
+              iconEnd,
+            ],
           ],
-          child,
-          if (iconEnd != null) ...[
-            gap,
-            iconEnd,
-          ],
-        ],
+        ),
       );
     }
 
