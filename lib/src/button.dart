@@ -103,7 +103,7 @@ class RadixButtonSizeSwatch {
       height: RadixSpace.kDefault.scale_5,
       uniformDimension: RadixSpace.kDefault.scale_5,
       textStyle: RadixTextTheme.kDefault.scale_1,
-      gap: RadixSpace.kDefault.scale_2,
+      gap: RadixSpace.kDefault.scale_1,
       borderRadius: BorderRadius.all(
         RadixRadiusFactor.kDefault.medium.swatch.scale_1,
       ),
