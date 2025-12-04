@@ -67,6 +67,13 @@ class RadixOutlineIconButtonExample extends StatelessWidget {
               ),
             ),
           ),
+          RadixOutlineButton.icon(
+            icon: Icon(Icons.bookmark_border_outlined),
+            size: RadixButtonSize.$2,
+            styleModifier: RadixButtonStyleModifier(
+              shape: BoxShape.circle,
+            ),
+          ),
         ],
       ),
     );

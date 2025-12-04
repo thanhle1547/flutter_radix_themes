@@ -67,6 +67,13 @@ class RadixSoftIconButtonExample extends StatelessWidget {
               ),
             ),
           ),
+          RadixSoftButton.icon(
+            icon: Icon(Icons.bookmark_border_outlined),
+            size: RadixButtonSize.$2,
+            styleModifier: RadixButtonStyleModifier(
+              shape: BoxShape.circle,
+            ),
+          ),
         ],
       ),
     );

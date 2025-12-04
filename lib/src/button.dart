@@ -659,7 +659,11 @@ class RadixButtonStyleModifier {
     this.shapeBorder,
     this.filter,
   }) : assert(border == null || shapeBorder == null),
-       assert(borderRadius == null || shapeBorder == null);
+       assert(borderRadius == null || shapeBorder == null),
+       assert(
+         shape != BoxShape.circle || borderRadius == null,
+         'A circle cannot have a border radius. Remove either the shape or the borderRadius argument.',
+       );
 
   final WidgetStateProperty<Color?>? backgroundColor;
 
@@ -1226,7 +1230,11 @@ class _RadixButtonState extends State<RadixButton> with SingleTickerProviderStat
     }
 
     final ShapeBorder? shapeBorder = styleModifier?.shapeBorder ?? styleModifier?.border?.resolve(states) ?? style.shapeBorder?.resolve(states);
-    final BorderRadiusGeometry? borderRadius = styleModifier?.borderRadius ?? style.borderRadius;
+    final BoxShape? modifiedShape = styleModifier?.shape;
+    final BorderRadiusGeometry? borderRadius =  modifiedShape == BoxShape.circle
+        ? null
+        : styleModifier?.borderRadius ?? style.borderRadius;
+    final BoxShape shape = modifiedShape ?? BoxShape.rectangle;
     final List<BoxShadow>? boxShadow = styleModifier?.boxShadow ?? style.boxShadow;
     final WidgetStateProperty<CSSFilterMatrix?>? filter = styleModifier?.filter ?? style.filter;
 
@@ -1239,7 +1247,7 @@ class _RadixButtonState extends State<RadixButton> with SingleTickerProviderStat
           border: shapeBorder,
           borderRadius: borderRadius,
           boxShadow: boxShadow,
-          shape: BoxShape.rectangle,
+          shape: shape,
         );
       } else {
         decoration = ShapeDecoration(
@@ -1253,11 +1261,12 @@ class _RadixButtonState extends State<RadixButton> with SingleTickerProviderStat
         decoration: decoration,
         child: child,
       );
-    } else if (borderRadius != null || boxShadow != null) {
+    } else if (borderRadius != null || modifiedShape != null || boxShadow != null) {
       child = DecoratedBox(
         decoration: BoxDecoration(
           color: effectiveBackgroundColor,
           borderRadius: borderRadius,
+          shape: shape,
           boxShadow: boxShadow,
         ),
         child: child,
