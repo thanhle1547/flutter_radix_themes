@@ -4,6 +4,7 @@ export 'src/colors.dart';
 export 'src/input_decorator.dart';
 export 'src/radius.dart';
 export 'src/shadow.dart';
+export 'src/skeleton.dart';
 export 'src/space.dart';
 export 'src/spinner.dart';
 export 'src/text_field.dart';
