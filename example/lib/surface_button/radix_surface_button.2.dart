@@ -22,7 +22,10 @@ class ButtonApp extends StatelessWidget {
         ),
       ),
       title: 'Radix Surface Icon Button',
-      home: const Scaffold(body: RadixSurfaceIconButtonExample()),
+      home: const Scaffold(
+        backgroundColor: RadixColors.white,
+        body: RadixSurfaceIconButtonExample(),
+      ),
     );
   }
 }

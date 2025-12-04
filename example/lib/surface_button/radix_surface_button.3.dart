@@ -22,7 +22,10 @@ class ButtonApp extends StatelessWidget {
         ),
       ),
       title: 'Radix Surface Icon Button',
-      home: const Scaffold(body: RadixSurfaceIconButtonExample()),
+      home: const Scaffold(
+        backgroundColor: RadixColors.white,
+        body: RadixSurfaceIconButtonExample(),
+      ),
     );
   }
 }
@@ -43,7 +46,7 @@ class RadixSurfaceIconButtonExample extends StatelessWidget {
           RadixSurfaceButton.icon(
             icon: Icon(Icons.bookmark_border_outlined),
             size: RadixButtonSize.$2,
-            styleModifier: RadixSolidButton.styleFrom(
+            styleModifier: RadixSurfaceButton.styleFrom(
               borderRadius: radixRadiusFactor.none.resolveForButton(
                 buttonSize: RadixButtonSize.$2,
               ),
@@ -52,7 +55,7 @@ class RadixSurfaceIconButtonExample extends StatelessWidget {
           RadixSurfaceButton.icon(
             icon: Icon(Icons.bookmark_border_outlined),
             size: RadixButtonSize.$2,
-            styleModifier: RadixSolidButton.styleFrom(
+            styleModifier: RadixSurfaceButton.styleFrom(
               borderRadius: radixRadiusFactor.large.resolveForButton(
                 buttonSize: RadixButtonSize.$2,
               ),
@@ -61,7 +64,7 @@ class RadixSurfaceIconButtonExample extends StatelessWidget {
           RadixSurfaceButton.icon(
             icon: Icon(Icons.bookmark_border_outlined),
             size: RadixButtonSize.$2,
-            styleModifier: RadixSolidButton.styleFrom(
+            styleModifier: RadixSurfaceButton.styleFrom(
               borderRadius: radixRadiusFactor.full.resolveForButton(
                 buttonSize: RadixButtonSize.$2,
               ),

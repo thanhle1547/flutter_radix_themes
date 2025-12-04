@@ -19,7 +19,10 @@ class ButtonApp extends StatelessWidget {
         ],
       ),
       title: 'Radix Surface Button',
-      home: const Scaffold(body: RadixSurfaceButtonExample()),
+      home: const Scaffold(
+        backgroundColor: RadixColors.white,
+        body: RadixSurfaceButtonExample(),
+      ),
     );
   }
 }

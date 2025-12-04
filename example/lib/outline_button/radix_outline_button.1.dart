@@ -19,7 +19,10 @@ class ButtonApp extends StatelessWidget {
         ],
       ),
       title: 'Radix Outline Button',
-      home: const Scaffold(body: RadixOutlineButtonExample()),
+      home: const Scaffold(
+        backgroundColor: RadixColors.white,
+        body: RadixOutlineButtonExample(),
+      ),
     );
   }
 }

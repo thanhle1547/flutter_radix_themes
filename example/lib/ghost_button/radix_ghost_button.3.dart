@@ -59,9 +59,6 @@ class RadixGhostIconButtonExample extends StatelessWidget {
             ),
           ),
           RadixGhostButton.icon(
-            onTap: () {
-              print('object');
-            },
             icon: Icon(Icons.bookmark_border_outlined),
             size: RadixButtonSize.$2,
             styleModifier: RadixGhostButton.styleFrom(
