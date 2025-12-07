@@ -1800,7 +1800,7 @@ class RadixSolidButton extends RadixButton {
   /// [RadixButtonStyleModifier] given simple values.
   ///
   /// All parameters default to null, by default this method returns
-  /// a [ButtonStyle] that doesn't override anything.
+  /// a [RadixButtonStyleModifier] that doesn't override anything.
   static RadixButtonStyleModifier styleFrom({
     RadixColorsSwatch? graySwatch,
     RadixColorsSwatch? accentColorSwatch,
@@ -1905,7 +1905,7 @@ class RadixSoftButton extends RadixButton {
   /// [RadixButtonStyleModifier] given simple values.
   ///
   /// All parameters default to null, by default this method returns
-  /// a [ButtonStyle] that doesn't override anything.
+  /// a [RadixButtonStyleModifier] that doesn't override anything.
   static RadixButtonStyleModifier styleFrom({
     RadixColorsSwatch? graySwatch,
     RadixColorsSwatch? accentColorSwatch,
@@ -2010,7 +2010,7 @@ class RadixSurfaceButton extends RadixButton {
   /// [RadixButtonStyleModifier] given simple values.
   ///
   /// All parameters default to null, by default this method returns
-  /// a [ButtonStyle] that doesn't override anything.
+  /// a [RadixButtonStyleModifier] that doesn't override anything.
   static RadixButtonStyleModifier styleFrom({
     RadixColorsSwatch? graySwatch,
     RadixColorsSwatch? accentColorSwatch,
@@ -2181,7 +2181,7 @@ class RadixOutlineButton extends RadixButton {
   /// [RadixButtonStyleModifier] given simple values.
   ///
   /// All parameters default to null, by default this method returns
-  /// a [ButtonStyle] that doesn't override anything.
+  /// a [RadixButtonStyleModifier] that doesn't override anything.
   static RadixButtonStyleModifier styleFrom({
     RadixColorsSwatch? graySwatch,
     RadixColorsSwatch? accentColorSwatch,
@@ -2328,7 +2328,7 @@ class RadixGhostButton extends RadixButton {
   /// [RadixButtonStyleModifier] given simple values.
   ///
   /// All parameters default to null, by default this method returns
-  /// a [ButtonStyle] that doesn't override anything.
+  /// a [RadixButtonStyleModifier] that doesn't override anything.
   static RadixButtonStyleModifier styleFrom({
     RadixColorsSwatch? graySwatch,
     RadixColorsSwatch? accentColorSwatch,
