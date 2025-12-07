@@ -356,6 +356,129 @@ class RadixButtonThemeData {
     ),
   );
 
+  /// The visual styles are derived by reconciling the Figma design.
+  /// They use a neutral color instead of gray for disabled state,
+  /// when widgets cannot be interacted with.
+  static final RadixButtonThemeData kFigmaLight = RadixButtonThemeData(
+    solid: RadixButtonVariantStyle.from(
+      debugVariant: RadixButtonVariant.solid,
+      backgroundColor: WidgetStateColor.fromMap({
+        WidgetState.hovered: RadixColorScheme.kLight.accent.scale_10,
+        WidgetState.pressed: RadixColorScheme.kLight.accent.scale_10,
+        WidgetState.disabled: RadixColorScheme.kLight.neutral.radixScale_3.alphaVariant,
+        WidgetState.any: RadixColorScheme.kLight.accent.scale_9,
+      }),
+      textColor: WidgetStateColor.fromMap({
+        WidgetState.disabled: RadixColorScheme.kLight.neutral.radixScale_8.alphaVariant,
+        WidgetState.any: RadixColorScheme.kLight.accent.contrast!,
+      }),
+      filter: WidgetStateProperty.fromMap({
+        WidgetState.pressed: CSSFilterMatrix().brightness(1.08),
+      }),
+      sizeSwatch: RadixButtonSizeSwatch.kChrome,
+    ),
+    soft: RadixButtonVariantStyle.from(
+      debugVariant: RadixButtonVariant.soft,
+      backgroundColor: WidgetStateColor.fromMap({
+        WidgetState.hovered: RadixColorScheme.kLight.accent.radixScale_4.alphaVariant,
+        WidgetState.pressed: RadixColorScheme.kLight.accent.radixScale_5.alphaVariant,
+        WidgetState.disabled: RadixColorScheme.kLight.neutral.radixScale_3.alphaVariant,
+        WidgetState.any: RadixColorScheme.kLight.accent.radixScale_3.alphaVariant,
+      }),
+      textColor: WidgetStateColor.fromMap({
+        WidgetState.disabled: RadixColorScheme.kLight.neutral.radixScale_8.alphaVariant,
+        WidgetState.any: RadixColorScheme.kLight.accent.radixScale_11.alphaVariant,
+      }),
+      sizeSwatch: RadixButtonSizeSwatch.kChrome,
+    ),
+    surface: RadixButtonVariantStyle.from(
+      debugVariant: RadixButtonVariant.surface,
+      backgroundColor: WidgetStateColor.fromMap({
+        WidgetState.pressed: RadixColorScheme.kLight.accent.radixScale_3.alphaVariant,
+        WidgetState.disabled: RadixColorScheme.kLight.neutral.radixScale_2.alphaVariant,
+        WidgetState.any: RadixColorScheme.kLight.accent.surface!,
+      }),
+      textColor: WidgetStateColor.fromMap({
+        WidgetState.disabled: RadixColorScheme.kLight.neutral.radixScale_8.alphaVariant,
+        WidgetState.any: RadixColorScheme.kLight.accent.radixScale_11.alphaVariant,
+      }),
+      shapeBorder: WidgetStateProperty.fromMap({
+        WidgetState.hovered: BoxBorder.fromBorderSide(
+          BorderSide(
+            width: 1.0,
+            color: RadixColorScheme.kLight.accent.radixScale_8.alphaVariant,
+            strokeAlign: BorderSide.strokeAlignInside,
+          ),
+        ),
+        WidgetState.pressed: BoxBorder.fromBorderSide(
+          BorderSide(
+            width: 1.0,
+            color: RadixColorScheme.kLight.accent.radixScale_8.alphaVariant,
+            strokeAlign: BorderSide.strokeAlignInside,
+          ),
+        ),
+        WidgetState.disabled: BoxBorder.fromBorderSide(
+          BorderSide(
+            width: 1.0,
+            color: RadixColorScheme.kLight.neutral.radixScale_6.alphaVariant,
+            strokeAlign: BorderSide.strokeAlignInside,
+          ),
+        ),
+        WidgetState.any: BoxBorder.fromBorderSide(
+          BorderSide(
+            width: 1.0,
+            color: RadixColorScheme.kLight.accent.radixScale_7.alphaVariant,
+            strokeAlign: BorderSide.strokeAlignInside,
+          ),
+        ),
+      }),
+      sizeSwatch: RadixButtonSizeSwatch.kChrome,
+    ),
+    outline: RadixButtonVariantStyle.from(
+      debugVariant: RadixButtonVariant.outline,
+      backgroundColor: WidgetStateColor.fromMap({
+        WidgetState.hovered: RadixColorScheme.kLight.accent.radixScale_2.alphaVariant,
+        WidgetState.pressed: RadixColorScheme.kLight.accent.radixScale_3.alphaVariant,
+        WidgetState.any: RadixColors.transparent,
+      }),
+      textColor: WidgetStateColor.fromMap({
+        WidgetState.disabled: RadixColorScheme.kLight.neutral.radixScale_8.alphaVariant,
+        WidgetState.any: RadixColorScheme.kLight.accent.radixScale_11.alphaVariant,
+      }),
+      shapeBorder: WidgetStateProperty.fromMap({
+        WidgetState.disabled: BoxBorder.fromBorderSide(
+          BorderSide(
+            width: 1.0,
+            color: RadixColorScheme.kLight.neutral.radixScale_7.alphaVariant,
+            strokeAlign: BorderSide.strokeAlignInside,
+          ),
+        ),
+        WidgetState.any: BoxBorder.fromBorderSide(
+          BorderSide(
+            width: 1.0,
+            color: RadixColorScheme.kLight.accent.radixScale_8.alphaVariant,
+            strokeAlign: BorderSide.strokeAlignInside,
+          ),
+        ),
+      }),
+      sizeSwatch: RadixButtonSizeSwatch.kChrome,
+    ),
+    ghost: RadixButtonVariantStyle.from(
+      debugVariant: RadixButtonVariant.ghost,
+      backgroundColor: WidgetStateColor.fromMap({
+        WidgetState.hovered: RadixColorScheme.kLight.accent.radixScale_3.alphaVariant,
+        WidgetState.pressed: RadixColorScheme.kLight.accent.radixScale_4.alphaVariant,
+        WidgetState.disabled: RadixColors.transparent,
+        WidgetState.any: RadixColors.transparent,
+      }),
+      textColor: WidgetStateColor.fromMap({
+        WidgetState.disabled: RadixColorScheme.kLight.neutral.radixScale_8.alphaVariant,
+        WidgetState.any: RadixColorScheme.kLight.accent.radixScale_11.alphaVariant,
+      }),
+      sizeSwatch: RadixButtonSizeSwatch.kGhost,
+    ),
+  );
+
   static final RadixButtonThemeData kDark = RadixButtonThemeData(
     solid: RadixButtonVariantStyle.from(
       debugVariant: RadixButtonVariant.solid,
@@ -470,6 +593,129 @@ class RadixButtonThemeData {
       }),
       textColor: WidgetStateColor.fromMap({
         WidgetState.disabled: RadixColorScheme.kDark.gray.radixScale_8.alphaVariant,
+        WidgetState.any: RadixColorScheme.kDark.accent.radixScale_11.alphaVariant,
+      }),
+      sizeSwatch: RadixButtonSizeSwatch.kGhost,
+    ),
+  );
+
+  /// The visual styles are derived by reconciling the Figma design.
+  /// They use a neutral color instead of gray for disabled state,
+  /// when widgets cannot be interacted with.
+  static final RadixButtonThemeData kFigmaDark = RadixButtonThemeData(
+    solid: RadixButtonVariantStyle.from(
+      debugVariant: RadixButtonVariant.solid,
+      backgroundColor: WidgetStateColor.fromMap({
+        WidgetState.hovered: RadixColorScheme.kDark.accent.scale_10,
+        WidgetState.pressed: RadixColorScheme.kDark.accent.scale_10,
+        WidgetState.disabled: RadixColorScheme.kDark.neutral.radixScale_3.alphaVariant,
+        WidgetState.any: RadixColorScheme.kDark.accent.scale_9,
+      }),
+      textColor: WidgetStateColor.fromMap({
+        WidgetState.disabled: RadixColorScheme.kDark.neutral.radixScale_8.alphaVariant,
+        WidgetState.any: RadixColorScheme.kDark.accent.contrast!,
+      }),
+      filter: WidgetStateProperty.fromMap({
+        WidgetState.pressed: CSSFilterMatrix().brightness(1.08),
+      }),
+      sizeSwatch: RadixButtonSizeSwatch.kChrome,
+    ),
+    soft: RadixButtonVariantStyle.from(
+      debugVariant: RadixButtonVariant.soft,
+      backgroundColor: WidgetStateColor.fromMap({
+        WidgetState.hovered: RadixColorScheme.kDark.accent.radixScale_4.alphaVariant,
+        WidgetState.pressed: RadixColorScheme.kDark.accent.radixScale_5.alphaVariant,
+        WidgetState.disabled: RadixColorScheme.kDark.neutral.radixScale_3.alphaVariant,
+        WidgetState.any: RadixColorScheme.kDark.accent.radixScale_3.alphaVariant,
+      }),
+      textColor: WidgetStateColor.fromMap({
+        WidgetState.disabled: RadixColorScheme.kDark.neutral.radixScale_8.alphaVariant,
+        WidgetState.any: RadixColorScheme.kDark.accent.radixScale_11.alphaVariant,
+      }),
+      sizeSwatch: RadixButtonSizeSwatch.kChrome,
+    ),
+    surface: RadixButtonVariantStyle.from(
+      debugVariant: RadixButtonVariant.surface,
+      backgroundColor: WidgetStateColor.fromMap({
+        WidgetState.pressed: RadixColorScheme.kDark.accent.radixScale_3.alphaVariant,
+        WidgetState.disabled: RadixColorScheme.kDark.neutral.radixScale_2.alphaVariant,
+        WidgetState.any: RadixColorScheme.kDark.accent.surface!,
+      }),
+      textColor: WidgetStateColor.fromMap({
+        WidgetState.disabled: RadixColorScheme.kDark.neutral.radixScale_8.alphaVariant,
+        WidgetState.any: RadixColorScheme.kDark.accent.radixScale_11.alphaVariant,
+      }),
+      shapeBorder: WidgetStateProperty.fromMap({
+        WidgetState.hovered: BoxBorder.fromBorderSide(
+          BorderSide(
+            width: 1.0,
+            color: RadixColorScheme.kDark.accent.radixScale_8.alphaVariant,
+            strokeAlign: BorderSide.strokeAlignInside,
+          ),
+        ),
+        WidgetState.pressed: BoxBorder.fromBorderSide(
+          BorderSide(
+            width: 1.0,
+            color: RadixColorScheme.kDark.accent.radixScale_8.alphaVariant,
+            strokeAlign: BorderSide.strokeAlignInside,
+          ),
+        ),
+        WidgetState.disabled: BoxBorder.fromBorderSide(
+          BorderSide(
+            width: 1.0,
+            color: RadixColorScheme.kDark.neutral.radixScale_6.alphaVariant,
+            strokeAlign: BorderSide.strokeAlignInside,
+          ),
+        ),
+        WidgetState.any: BoxBorder.fromBorderSide(
+          BorderSide(
+            width: 1.0,
+            color: RadixColorScheme.kDark.accent.radixScale_7.alphaVariant,
+            strokeAlign: BorderSide.strokeAlignInside,
+          ),
+        ),
+      }),
+      sizeSwatch: RadixButtonSizeSwatch.kChrome,
+    ),
+    outline: RadixButtonVariantStyle.from(
+      debugVariant: RadixButtonVariant.outline,
+      backgroundColor: WidgetStateColor.fromMap({
+        WidgetState.hovered: RadixColorScheme.kDark.accent.radixScale_2.alphaVariant,
+        WidgetState.pressed: RadixColorScheme.kDark.accent.radixScale_3.alphaVariant,
+        WidgetState.any: RadixColors.transparent,
+      }),
+      textColor: WidgetStateColor.fromMap({
+        WidgetState.disabled: RadixColorScheme.kDark.neutral.radixScale_8.alphaVariant,
+        WidgetState.any: RadixColorScheme.kDark.accent.radixScale_11.alphaVariant,
+      }),
+      shapeBorder: WidgetStateProperty.fromMap({
+        WidgetState.disabled: BoxBorder.fromBorderSide(
+          BorderSide(
+            width: 1.0,
+            color: RadixColorScheme.kDark.neutral.radixScale_7.alphaVariant,
+            strokeAlign: BorderSide.strokeAlignInside,
+          ),
+        ),
+        WidgetState.any: BoxBorder.fromBorderSide(
+          BorderSide(
+            width: 1.0,
+            color: RadixColorScheme.kDark.accent.radixScale_8.alphaVariant,
+            strokeAlign: BorderSide.strokeAlignInside,
+          ),
+        ),
+      }),
+      sizeSwatch: RadixButtonSizeSwatch.kChrome,
+    ),
+    ghost: RadixButtonVariantStyle.from(
+      debugVariant: RadixButtonVariant.ghost,
+      backgroundColor: WidgetStateColor.fromMap({
+        WidgetState.hovered: RadixColorScheme.kDark.accent.radixScale_3.alphaVariant,
+        WidgetState.pressed: RadixColorScheme.kDark.accent.radixScale_4.alphaVariant,
+        WidgetState.disabled: RadixColors.transparent,
+        WidgetState.any: RadixColors.transparent,
+      }),
+      textColor: WidgetStateColor.fromMap({
+        WidgetState.disabled: RadixColorScheme.kDark.neutral.radixScale_8.alphaVariant,
         WidgetState.any: RadixColorScheme.kDark.accent.radixScale_11.alphaVariant,
       }),
       sizeSwatch: RadixButtonSizeSwatch.kGhost,
