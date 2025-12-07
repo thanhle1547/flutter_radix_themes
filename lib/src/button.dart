@@ -1841,6 +1841,52 @@ class RadixSolidButton extends RadixButton {
       borderRadius: borderRadius,
     );
   }
+
+  /// A static convenience method that constructs a solid button
+  /// [RadixButtonStyleModifier] given simple values follow the Figma design.
+  ///
+  /// All parameters default to null, by default this method returns
+  /// a [RadixButtonStyleModifier] that doesn't override anything.
+  static RadixButtonStyleModifier figmaStyleFrom({
+    RadixColorsSwatch? neutralSwatch,
+    RadixColorsSwatch? accentColorSwatch,
+    Color? backgroundColor,
+    Color? disabledBackgroundColor,
+    EdgeInsets? padding,
+    TextStyle? textStyle,
+    Color? textColor,
+    Color? disabledTextColor,
+    double? textScaleFactor,
+    TextScaler? textScaler,
+    double? gap,
+    BorderRadiusGeometry? borderRadius,
+  }) {
+    assert(accentColorSwatch == null || (backgroundColor == null || disabledBackgroundColor == null));
+    assert(accentColorSwatch == null || (textColor == null || disabledTextColor == null));
+
+    return RadixButtonStyleModifier(
+      backgroundColor: accentColorSwatch == null || neutralSwatch == null
+          ? RadixButton.defaultColor(backgroundColor, disabledBackgroundColor)
+          : WidgetStateProperty.fromMap({
+              WidgetState.hovered: accentColorSwatch.scale_10,
+              WidgetState.pressed: accentColorSwatch.scale_10,
+              WidgetState.disabled: neutralSwatch.radixScale_3.alphaVariant,
+              WidgetState.any: accentColorSwatch.scale_9,
+            }),
+      padding: padding,
+      textStyle: textStyle,
+      textColor: accentColorSwatch == null || neutralSwatch == null
+          ? RadixButton.defaultColor(textColor, disabledTextColor)
+          : WidgetStateColor.fromMap({
+              WidgetState.disabled: neutralSwatch.radixScale_8.alphaVariant,
+              WidgetState.any: accentColorSwatch.contrast!,
+            }),
+      textScaleFactor: textScaleFactor,
+      textScaler: textScaler,
+      gap: gap,
+      borderRadius: borderRadius,
+    );
+  }
 }
 
 /// The static [styleFrom] method is a convenient way to create a
@@ -1938,6 +1984,52 @@ class RadixSoftButton extends RadixButton {
           ? RadixButton.defaultColor(textColor, disabledTextColor)
           : WidgetStateColor.fromMap({
               WidgetState.disabled: graySwatch.radixScale_8.alphaVariant,
+              WidgetState.any: accentColorSwatch.scale_11,
+            }),
+      textScaleFactor: textScaleFactor,
+      textScaler: textScaler,
+      gap: gap,
+      borderRadius: borderRadius,
+    );
+  }
+
+  /// A static convenience method that constructs a soft button
+  /// [RadixButtonStyleModifier] given simple values follow the Figma design.
+  ///
+  /// All parameters default to null, by default this method returns
+  /// a [RadixButtonStyleModifier] that doesn't override anything.
+  static RadixButtonStyleModifier figmaStyleFrom({
+    RadixColorsSwatch? neutralSwatch,
+    RadixColorsSwatch? accentColorSwatch,
+    Color? backgroundColor,
+    Color? disabledBackgroundColor,
+    EdgeInsets? padding,
+    TextStyle? textStyle,
+    Color? textColor,
+    Color? disabledTextColor,
+    double? textScaleFactor,
+    TextScaler? textScaler,
+    double? gap,
+    BorderRadiusGeometry? borderRadius,
+  }) {
+    assert(accentColorSwatch == null || (backgroundColor == null || disabledBackgroundColor == null));
+    assert(accentColorSwatch == null || (textColor == null || disabledTextColor == null));
+
+    return RadixButtonStyleModifier(
+      backgroundColor: accentColorSwatch == null || neutralSwatch == null
+          ? RadixButton.defaultColor(backgroundColor, disabledBackgroundColor)
+          : WidgetStateProperty.fromMap({
+              WidgetState.hovered: accentColorSwatch.radixScale_4.alphaVariant,
+              WidgetState.pressed: accentColorSwatch.radixScale_5.alphaVariant,
+              WidgetState.disabled: neutralSwatch.radixScale_3.alphaVariant,
+              WidgetState.any: accentColorSwatch.radixScale_3.alphaVariant,
+            }),
+      padding: padding,
+      textStyle: textStyle,
+      textColor: accentColorSwatch == null || neutralSwatch == null
+          ? RadixButton.defaultColor(textColor, disabledTextColor)
+          : WidgetStateColor.fromMap({
+              WidgetState.disabled: neutralSwatch.radixScale_8.alphaVariant,
               WidgetState.any: accentColorSwatch.scale_11,
             }),
       textScaleFactor: textScaleFactor,
@@ -2117,6 +2209,118 @@ class RadixSurfaceButton extends RadixButton {
       shapeBorder: shapeBorder,
     );
   }
+
+  /// A static convenience method that constructs a surface button
+  /// [RadixButtonStyleModifier] given simple values follow the Figma design.
+  ///
+  /// All parameters default to null, by default this method returns
+  /// a [RadixButtonStyleModifier] that doesn't override anything.
+  static RadixButtonStyleModifier figmaStyleFrom({
+    RadixColorsSwatch? neutralSwatch,
+    RadixColorsSwatch? accentColorSwatch,
+    Color? backgroundColor,
+    Color? disabledBackgroundColor,
+    EdgeInsets? padding,
+    TextStyle? textStyle,
+    Color? textColor,
+    Color? disabledTextColor,
+    double? textScaleFactor,
+    TextScaler? textScaler,
+    double? gap,
+    BorderSide? side,
+    BorderRadiusGeometry? borderRadius,
+    ShapeBorder? shapeBorder,
+  }) {
+    assert(accentColorSwatch == null || (backgroundColor == null || disabledBackgroundColor == null));
+    assert(accentColorSwatch == null || (textColor == null || disabledTextColor == null));
+
+    assert(side == null || shapeBorder == null);
+    assert(borderRadius == null || shapeBorder == null);
+
+    return RadixButtonStyleModifier(
+      backgroundColor: accentColorSwatch == null || neutralSwatch == null
+          ? RadixButton.defaultColor(backgroundColor, disabledBackgroundColor)
+          : WidgetStateProperty.fromMap({
+              WidgetState.pressed: accentColorSwatch.radixScale_3.alphaVariant,
+              WidgetState.disabled: neutralSwatch.radixScale_2.alphaVariant,
+              WidgetState.any: accentColorSwatch.surface!,
+            }),
+      padding: padding,
+      textStyle: textStyle,
+      textColor: accentColorSwatch == null || neutralSwatch == null
+          ? RadixButton.defaultColor(textColor, disabledTextColor)
+          : WidgetStateColor.fromMap({
+              WidgetState.disabled: neutralSwatch.radixScale_8.alphaVariant,
+              WidgetState.any: accentColorSwatch.radixScale_11.alphaVariant,
+            }),
+      textScaleFactor: textScaleFactor,
+      textScaler: textScaler,
+      gap: gap,
+      border: side == null
+          ? shapeBorder != null
+              ? null
+              : accentColorSwatch == null || neutralSwatch == null
+                  ? null
+                  : WidgetStateProperty.fromMap({
+                      WidgetState.hovered: BoxBorder.fromBorderSide(
+                        BorderSide(
+                          width: 1.0,
+                          color: accentColorSwatch.radixScale_8.alphaVariant,
+                          strokeAlign: BorderSide.strokeAlignInside,
+                        ),
+                      ),
+                      WidgetState.pressed: BoxBorder.fromBorderSide(
+                        BorderSide(
+                          width: 1.0,
+                          color: accentColorSwatch.radixScale_8.alphaVariant,
+                          strokeAlign: BorderSide.strokeAlignInside,
+                        ),
+                      ),
+                      WidgetState.disabled: BoxBorder.fromBorderSide(
+                        BorderSide(
+                          width: 1.0,
+                          color: neutralSwatch.radixScale_6.alphaVariant,
+                          strokeAlign: BorderSide.strokeAlignInside,
+                        ),
+                      ),
+                      WidgetState.any: BoxBorder.fromBorderSide(
+                        BorderSide(
+                          width: 1.0,
+                          color: accentColorSwatch.radixScale_7.alphaVariant,
+                          strokeAlign: BorderSide.strokeAlignInside,
+                        ),
+                      ),
+                    })
+          : shapeBorder != null
+              ? null
+              : accentColorSwatch == null || neutralSwatch == null
+                  ? WidgetStatePropertyAll(BoxBorder.fromBorderSide(side))
+                  : WidgetStateProperty.fromMap({
+                      WidgetState.hovered: BoxBorder.fromBorderSide(
+                        side.copyWith(
+                          color: accentColorSwatch.radixScale_8.alphaVariant,
+                        ),
+                      ),
+                      WidgetState.pressed: BoxBorder.fromBorderSide(
+                        side.copyWith(
+                          color: accentColorSwatch.radixScale_8.alphaVariant,
+                        ),
+                      ),
+                      WidgetState.disabled: BoxBorder.fromBorderSide(
+                        side.copyWith(
+                          color: neutralSwatch.radixScale_6.alphaVariant,
+                        ),
+                      ),
+                      WidgetState.any: BoxBorder.fromBorderSide(
+                        side.copyWith(
+                          color: accentColorSwatch.radixScale_7.alphaVariant,
+                        ),
+                      ),
+                    }),
+      borderRadius: borderRadius,
+      shapeBorder: shapeBorder,
+    );
+  }
 }
 
 /// The static [styleFrom] method is a convenient way to create a
@@ -2264,6 +2468,94 @@ class RadixOutlineButton extends RadixButton {
       shapeBorder: shapeBorder,
     );
   }
+
+  /// A static convenience method that constructs a outline button
+  /// [RadixButtonStyleModifier] given simple values follow the Figma design.
+  ///
+  /// All parameters default to null, by default this method returns
+  /// a [RadixButtonStyleModifier] that doesn't override anything.
+  static RadixButtonStyleModifier figmaStyleFrom({
+    RadixColorsSwatch? neutralSwatch,
+    RadixColorsSwatch? accentColorSwatch,
+    Color? backgroundColor,
+    Color? disabledBackgroundColor,
+    EdgeInsets? padding,
+    TextStyle? textStyle,
+    Color? textColor,
+    Color? disabledTextColor,
+    double? textScaleFactor,
+    TextScaler? textScaler,
+    double? gap,
+    BorderSide? side,
+    BorderRadiusGeometry? borderRadius,
+    ShapeBorder? shapeBorder,
+  }) {
+    assert(accentColorSwatch == null || (backgroundColor == null || disabledBackgroundColor == null));
+    assert(accentColorSwatch == null || (textColor == null || disabledTextColor == null));
+
+    assert(side == null || shapeBorder == null);
+    assert(borderRadius == null || shapeBorder == null);
+
+    return RadixButtonStyleModifier(
+      backgroundColor: accentColorSwatch == null || neutralSwatch == null
+          ? RadixButton.defaultColor(backgroundColor, disabledBackgroundColor)
+          : WidgetStateColor.fromMap({
+              WidgetState.hovered: accentColorSwatch.radixScale_2.alphaVariant,
+              WidgetState.pressed: accentColorSwatch.radixScale_3.alphaVariant,
+              WidgetState.any: RadixColors.transparent,
+            }),
+      padding: padding,
+      textStyle: textStyle,
+      textColor: accentColorSwatch == null || neutralSwatch == null
+          ? RadixButton.defaultColor(textColor, disabledTextColor)
+          : WidgetStateColor.fromMap({
+              WidgetState.disabled: neutralSwatch.radixScale_8.alphaVariant,
+              WidgetState.any: accentColorSwatch.radixScale_11.alphaVariant,
+            }),
+      textScaleFactor: textScaleFactor,
+      textScaler: textScaler,
+      gap: gap,
+      border: side == null
+          ? shapeBorder != null
+              ? null
+              : accentColorSwatch == null || neutralSwatch == null
+                  ? null
+                  : WidgetStateProperty.fromMap({
+                      WidgetState.disabled: BoxBorder.fromBorderSide(
+                        BorderSide(
+                          width: 1.0,
+                          color: neutralSwatch.radixScale_7.alphaVariant,
+                          strokeAlign: BorderSide.strokeAlignInside,
+                        ),
+                      ),
+                      WidgetState.any: BoxBorder.fromBorderSide(
+                        BorderSide(
+                          width: 1.0,
+                          color: accentColorSwatch.radixScale_8.alphaVariant,
+                          strokeAlign: BorderSide.strokeAlignInside,
+                        ),
+                      ),
+                    })
+          : shapeBorder != null
+              ? null
+              : accentColorSwatch == null || neutralSwatch == null
+                  ? WidgetStatePropertyAll(BoxBorder.fromBorderSide(side))
+                  : WidgetStateProperty.fromMap({
+                      WidgetState.disabled: BoxBorder.fromBorderSide(
+                        side.copyWith(
+                          color: neutralSwatch.radixScale_7.alphaVariant,
+                        ),
+                      ),
+                      WidgetState.any: BoxBorder.fromBorderSide(
+                        side.copyWith(
+                          color: accentColorSwatch.radixScale_8.alphaVariant,
+                        ),
+                      ),
+                    }),
+      borderRadius: borderRadius,
+      shapeBorder: shapeBorder,
+    );
+  }
 }
 
 /// The ghost variant displays a button without any visible borders or
@@ -2361,6 +2653,52 @@ class RadixGhostButton extends RadixButton {
           ? RadixButton.defaultColor(textColor, disabledTextColor)
           : WidgetStateColor.fromMap({
               WidgetState.disabled: graySwatch.radixScale_8.alphaVariant,
+              WidgetState.any: accentColorSwatch.radixScale_11.alphaVariant,
+            }),
+      textScaleFactor: textScaleFactor,
+      textScaler: textScaler,
+      gap: gap,
+      borderRadius: borderRadius,
+    );
+  }
+
+  /// A static convenience method that constructs a ghost button
+  /// [RadixButtonStyleModifier] given simple values follow the Figma design.
+  ///
+  /// All parameters default to null, by default this method returns
+  /// a [RadixButtonStyleModifier] that doesn't override anything.
+  static RadixButtonStyleModifier figmaStyleFrom({
+    RadixColorsSwatch? neutralSwatch,
+    RadixColorsSwatch? accentColorSwatch,
+    Color? backgroundColor,
+    Color? disabledBackgroundColor,
+    EdgeInsets? padding,
+    TextStyle? textStyle,
+    Color? textColor,
+    Color? disabledTextColor,
+    double? textScaleFactor,
+    TextScaler? textScaler,
+    double? gap,
+    BorderRadiusGeometry? borderRadius,
+  }) {
+    assert(accentColorSwatch == null || (backgroundColor == null || disabledBackgroundColor == null));
+    assert(accentColorSwatch == null || (textColor == null || disabledTextColor == null));
+
+    return RadixButtonStyleModifier(
+      backgroundColor: accentColorSwatch == null || neutralSwatch == null
+          ? RadixButton.defaultColor(backgroundColor, disabledBackgroundColor)
+          : WidgetStateProperty.fromMap({
+              WidgetState.hovered: accentColorSwatch.radixScale_3.alphaVariant,
+              WidgetState.pressed: accentColorSwatch.radixScale_4.alphaVariant,
+              WidgetState.disabled: RadixColors.transparent,
+              WidgetState.any: RadixColors.transparent,
+            }),
+      padding: padding,
+      textStyle: textStyle,
+      textColor: accentColorSwatch == null || neutralSwatch == null
+          ? RadixButton.defaultColor(textColor, disabledTextColor)
+          : WidgetStateColor.fromMap({
+              WidgetState.disabled: neutralSwatch.radixScale_8.alphaVariant,
               WidgetState.any: accentColorSwatch.radixScale_11.alphaVariant,
             }),
       textScaleFactor: textScaleFactor,
