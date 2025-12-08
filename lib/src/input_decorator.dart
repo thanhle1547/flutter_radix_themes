@@ -2629,15 +2629,14 @@ class RadixInputDecoration {
 
     final WidgetStateColor efffectiveFillColor = WidgetStateExtension.merge(fillColorMapper, fillColor);
 
-    InputBorder? effectiveEnabledBorder;
+    InputBorder? effectiveEnabledBorder = enabledBorder;
     if (variant.side case final BorderSide side) {
-      effectiveEnabledBorder = OutlineInputBorder(
+      effectiveEnabledBorder ??= OutlineInputBorder(
         borderSide: side,
         borderRadius: size.borderRadius ?? BorderRadius.zero,
         gapPadding: 0.0,
       );
     }
-    effectiveEnabledBorder ??= enabledBorder;
     if (effectiveEnabledBorder == null && variant.debugVariant == RadixInputVariant.soft) {
       // Prevent the RadixInputDecorationThemeData from applying the enabled border.
       effectiveEnabledBorder = InputBorder.none;
@@ -2654,15 +2653,14 @@ class RadixInputDecoration {
       );
     }
 
-    InputBorder? effectiveDisabledBorder;
+    InputBorder? effectiveDisabledBorder = disabledBorder;
     if (variant.disabledSide case final BorderSide side) {
-      effectiveDisabledBorder = OutlineInputBorder(
+      effectiveDisabledBorder ??= OutlineInputBorder(
         borderSide: side,
         borderRadius: size.borderRadius ?? BorderRadius.zero,
         gapPadding: 0.0,
       );
     }
-    effectiveDisabledBorder ??= disabledBorder;
     if (effectiveDisabledBorder == null && variant.debugVariant == RadixInputVariant.soft) {
       // Prevent the RadixInputDecorationThemeData from applying the enabled border.
       effectiveDisabledBorder = InputBorder.none;
@@ -3963,37 +3961,32 @@ class RadixInputDecorationThemeData with Diagnosticable {
 
     final WidgetStateColor efffectiveFillColor = WidgetStateExtension.merge(fillColorMapper, fillColor);
 
-    InputBorder? effectiveEnabledBorder;
+    InputBorder? effectiveEnabledBorder = enabledBorder;
     if (variant.side case final BorderSide side) {
-      effectiveEnabledBorder = OutlineInputBorder(
+      effectiveEnabledBorder ??= OutlineInputBorder(
         borderSide: side,
         borderRadius: size.borderRadius ?? BorderRadius.zero,
         gapPadding: 0.0,
       );
     }
-    effectiveEnabledBorder ??= enabledBorder;
 
-    InputBorder? effectiveFocusedBorder;
+    InputBorder? effectiveFocusedBorder = focusedBorder;
     if (variant.focusedSide case final BorderSide side) {
-      effectiveFocusedBorder = OutlineInputBorder(
+      effectiveFocusedBorder ??= OutlineInputBorder(
         borderSide: side,
         borderRadius: size.borderRadius ?? BorderRadius.zero,
         gapPadding: 0.0,
       );
-    }
-    if (focusedBorder != null) {
-      effectiveFocusedBorder = focusedBorder;
     }
 
-    InputBorder? effectiveDisabledBorder;
+    InputBorder? effectiveDisabledBorder = disabledBorder;
     if (variant.disabledSide case final BorderSide side) {
-      effectiveDisabledBorder = OutlineInputBorder(
+      effectiveDisabledBorder ??= OutlineInputBorder(
         borderSide: side,
         borderRadius: size.borderRadius ?? BorderRadius.zero,
         gapPadding: 0.0,
       );
     }
-    effectiveDisabledBorder ??= disabledBorder;
 
     return RadixInputDecorationThemeData._withVariant(
       textStyle: effectiveTextStyle,
