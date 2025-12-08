@@ -2622,7 +2622,7 @@ class RadixInputDecoration {
     );
 
     final WidgetStateMap<Color> fillColorMapper = {
-      if (!enabled) WidgetState.disabled  : variant.disabledBackgroundColor,
+      WidgetState.disabled                : variant.disabledBackgroundColor,
       WidgetStateExtension.readOnly       : variant.readOnlyBackgroundColor,
       WidgetState.any                     : variant.backgroundColor,
     };
@@ -3956,6 +3956,7 @@ class RadixInputDecorationThemeData with Diagnosticable {
     );
 
     final WidgetStateMap<Color> fillColorMapper = {
+      WidgetState.disabled                : variant.disabledBackgroundColor,
       WidgetStateExtension.readOnly       : variant.readOnlyBackgroundColor,
       WidgetState.any                     : variant.backgroundColor,
     };
