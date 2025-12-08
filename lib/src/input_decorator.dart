@@ -1547,6 +1547,10 @@ class _RadixInputDecoratorState extends State<RadixInputDecorator> with TickerPr
     } else if (isFocused) {
       border = _hasError ? decoration.focusedErrorBorder : decoration.focusedBorder;
     } else {
+      if (!widget.isEmpty && !_hasError) {
+        border = decoration.filledBorder;
+      }
+
       border = _hasError ? decoration.errorBorder : decoration.enabledBorder;
     }
 
@@ -1933,6 +1937,7 @@ class RadixInputDecorationVariant {
     this.debugVariant,
     this.debugSize,
     required this.backgroundColor,
+    Color? focusedBackgroundColor,
     required this.disabledBackgroundColor,
     required this.readOnlyBackgroundColor,
     required this.textColor,
@@ -1940,6 +1945,7 @@ class RadixInputDecorationVariant {
     required this.readOnlyTextColor,
     required this.hintColor,
     this.side,
+    BorderSide? filledSide,
     required this.focusedSide,
     this.disabledSide,
     this.readOnlySide,
@@ -1947,11 +1953,13 @@ class RadixInputDecorationVariant {
     required this.selectionColor,
     required this.disabledSelectionColor,
     required this.readOnlySelectionColor,
-  });
+  }) : filledSide = filledSide ?? side,
+       focusedBackgroundColor = focusedBackgroundColor ?? backgroundColor;
 
   final RadixInputVariant? debugVariant;
   final RadixInputSize? debugSize;
   final Color backgroundColor;
+  final Color focusedBackgroundColor;
   final Color disabledBackgroundColor;
   final Color readOnlyBackgroundColor;
   final Color textColor;
@@ -1959,6 +1967,10 @@ class RadixInputDecorationVariant {
   final Color readOnlyTextColor;
   final Color hintColor;
   final BorderSide? side;
+
+  /// The state of a form field that is not empty.
+  final BorderSide? filledSide;
+
   final BorderSide focusedSide;
   final BorderSide? disabledSide;
   final BorderSide? readOnlySide;
@@ -1985,6 +1997,7 @@ class RadixInputDecorationSurfaceVariant extends RadixInputDecorationVariant {
     required super.readOnlyTextColor,
     required super.hintColor,
     required BorderSide super.side,
+    super.filledSide,
     required super.focusedSide,
     required BorderSide super.disabledSide,
     required BorderSide super.readOnlySide,
@@ -2036,6 +2049,53 @@ class RadixInputDecorationSurfaceVariant extends RadixInputDecorationVariant {
       readOnlySelectionColor: graySwatch.radixScale_5.alphaVariant,
     );
   }
+
+  factory RadixInputDecorationSurfaceVariant.figmaDesign({
+    required RadixColorsSwatch neutralSwatch,
+    required RadixColorsSwatch accentColorSwatch,
+    required Color surfaceColor,
+  }) {
+    return RadixInputDecorationSurfaceVariant(
+      backgroundColor: surfaceColor,
+      disabledBackgroundColor: neutralSwatch.radixScale_3.alphaVariant,
+      readOnlyBackgroundColor: neutralSwatch.radixScale_3.alphaVariant,
+      textColor: neutralSwatch.scale_12,
+      disabledTextColor: neutralSwatch.scale_12,
+      readOnlyTextColor: neutralSwatch.scale_12,
+      hintColor: neutralSwatch.radixScale_9.alphaVariant,
+      side: BorderSide(
+        width: 1.0,
+        color: neutralSwatch.radixScale_5.alphaVariant,
+        strokeAlign: BorderSide.strokeAlignInside,
+      ),
+      filledSide: BorderSide(
+        width: 1.0,
+        color: neutralSwatch.radixScale_6.alphaVariant,
+        strokeAlign: BorderSide.strokeAlignInside,
+      ),
+      focusedSide: BorderSide(
+        width: 1.0,
+        color: accentColorSwatch.radixScale_8.alphaVariant,
+        strokeAlign: BorderSide.strokeAlignInside,
+      ),
+      disabledSide: BorderSide(
+        width: 1.0,
+        color: neutralSwatch.radixScale_6.alphaVariant,
+        strokeAlign: BorderSide.strokeAlignInside,
+      ),
+      readOnlySide: BorderSide(
+        width: 1.0,
+        color: neutralSwatch.radixScale_6.alphaVariant,
+        strokeAlign: BorderSide.strokeAlignInside,
+      ),
+      // The Figma design does not specify slot or selection colors,
+      // so we fall back to the web spec instead.
+      slotColor: neutralSwatch.radixScale_11.alphaVariant,
+      selectionColor: accentColorSwatch.radixScale_5.alphaVariant,
+      disabledSelectionColor: neutralSwatch.radixScale_5.alphaVariant,
+      readOnlySelectionColor: neutralSwatch.radixScale_5.alphaVariant,
+    );
+  }
 }
 
 class RadixInputDecorationSoftVariant extends RadixInputDecorationVariant {
@@ -2076,6 +2136,32 @@ class RadixInputDecorationSoftVariant extends RadixInputDecorationVariant {
       selectionColor: accentColorSwatch.radixScale_5.alphaVariant,
       disabledSelectionColor: graySwatch.radixScale_5.alphaVariant,
       readOnlySelectionColor: graySwatch.radixScale_5.alphaVariant,
+    );
+  }
+
+  factory RadixInputDecorationSoftVariant.figmaDesign({
+    required RadixColorsSwatch neutralSwatch,
+    required RadixColorsSwatch accentColorSwatch,
+  }) {
+    return RadixInputDecorationSoftVariant(
+      backgroundColor: accentColorSwatch.radixScale_3.alphaVariant,
+      disabledBackgroundColor: neutralSwatch.radixScale_3.alphaVariant,
+      readOnlyBackgroundColor: neutralSwatch.radixScale_3.alphaVariant,
+      textColor: neutralSwatch.scale_12,
+      disabledTextColor: neutralSwatch.scale_12,
+      readOnlyTextColor: neutralSwatch.scale_12,
+      hintColor: neutralSwatch.radixScale_9.alphaVariant,
+      focusedSide: BorderSide(
+        width: 1.0,
+        color: accentColorSwatch.radixScale_8.alphaVariant,
+        strokeAlign: BorderSide.strokeAlignInside,
+      ),
+      // The Figma design does not specify slot or selection colors,
+      // so we fall back to the web spec instead.
+      slotColor: neutralSwatch.scale_12,
+      selectionColor: accentColorSwatch.radixScale_5.alphaVariant,
+      disabledSelectionColor: neutralSwatch.radixScale_5.alphaVariant,
+      readOnlySelectionColor: neutralSwatch.radixScale_5.alphaVariant,
     );
   }
 }
@@ -2218,6 +2304,76 @@ class RadixInputDecorationVariantTheme {
     sizeSwatch: RadixInputSwatch.kDefault,
   );
 
+  /// The visual styles are derived by reconciling the Figma design.
+  /// They use a neutral color instead of gray for disabled state,
+  /// when widgets cannot be interacted with.
+  static RadixInputDecorationVariantTheme kFigmaLight = RadixInputDecorationVariantTheme(
+    surface: RadixInputDecorationVariant(
+      debugVariant: RadixInputVariant.surface,
+      backgroundColor: RadixColorScheme.kLight.surfaceColor,
+      disabledBackgroundColor: RadixColorScheme.kLight.neutral.radixScale_3.alphaVariant,
+      readOnlyBackgroundColor: RadixColorScheme.kLight.neutral.radixScale_3.alphaVariant,
+      textColor: RadixColorScheme.kLight.neutral.scale_12,
+      disabledTextColor: RadixColorScheme.kLight.neutral.scale_12,
+      readOnlyTextColor: RadixColorScheme.kLight.neutral.scale_12,
+      hintColor: RadixColorScheme.kLight.neutral.radixScale_9.alphaVariant,
+      side: BorderSide(
+        width: 1.0,
+        color: RadixColorScheme.kLight.neutral.radixScale_5.alphaVariant,
+        strokeAlign: BorderSide.strokeAlignInside,
+      ),
+      filledSide: BorderSide(
+        width: 1.0,
+        color: RadixColorScheme.kLight.neutral.radixScale_6.alphaVariant,
+        strokeAlign: BorderSide.strokeAlignInside,
+      ),
+      focusedSide: BorderSide(
+        width: 1.0,
+        color: RadixColorScheme.kLight.accent.radixScale_8.alphaVariant,
+        strokeAlign: BorderSide.strokeAlignInside,
+      ),
+      disabledSide: BorderSide(
+        width: 1.0,
+        color: RadixColorScheme.kLight.neutral.radixScale_6.alphaVariant,
+        strokeAlign: BorderSide.strokeAlignInside,
+      ),
+      readOnlySide: BorderSide(
+        width: 1.0,
+        color: RadixColorScheme.kLight.neutral.radixScale_6.alphaVariant,
+        strokeAlign: BorderSide.strokeAlignInside,
+      ),
+      // The Figma design does not specify slot or selection colors,
+      // so we fall back to the web spec instead.
+      slotColor: RadixColorScheme.kLight.neutral.radixScale_11.alphaVariant,
+      selectionColor: RadixColorScheme.kLight.focus.radixScale_5.alphaVariant,
+      disabledSelectionColor: RadixColorScheme.kLight.neutral.radixScale_5.alphaVariant,
+      readOnlySelectionColor: RadixColorScheme.kLight.neutral.radixScale_5.alphaVariant,
+    ),
+    soft: RadixInputDecorationVariant(
+      debugVariant: RadixInputVariant.soft,
+      backgroundColor: RadixColorScheme.kLight.accent.radixScale_3.alphaVariant,
+      focusedBackgroundColor: RadixColorScheme.kLight.accent.radixScale_5.alphaVariant,
+      disabledBackgroundColor: RadixColorScheme.kLight.neutral.radixScale_3.alphaVariant,
+      readOnlyBackgroundColor: RadixColorScheme.kLight.neutral.radixScale_3.alphaVariant,
+      textColor: RadixColorScheme.kLight.neutral.scale_12,
+      disabledTextColor: RadixColorScheme.kLight.neutral.scale_12,
+      readOnlyTextColor: RadixColorScheme.kLight.neutral.scale_12,
+      hintColor: RadixColorScheme.kLight.neutral.radixScale_9.alphaVariant,
+      focusedSide: BorderSide(
+        width: 1.0,
+        color: RadixColorScheme.kLight.accent.radixScale_8.alphaVariant,
+        strokeAlign: BorderSide.strokeAlignInside,
+      ),
+      // The Figma design does not specify slot or selection colors,
+      // so we fall back to the web spec instead.
+      slotColor: RadixColorScheme.kLight.neutral.scale_12,
+      selectionColor: RadixColorScheme.kLight.accent.radixScale_5.alphaVariant,
+      disabledSelectionColor: RadixColorScheme.kLight.neutral.radixScale_5.alphaVariant,
+      readOnlySelectionColor: RadixColorScheme.kLight.neutral.radixScale_5.alphaVariant,
+    ),
+    sizeSwatch: RadixInputSwatch.kDefault,
+  );
+
   static RadixInputDecorationVariantTheme kDark = RadixInputDecorationVariantTheme(
     surface: RadixInputDecorationVariant(
       debugVariant: RadixInputVariant.surface,
@@ -2275,6 +2431,75 @@ class RadixInputDecorationVariantTheme {
     sizeSwatch: RadixInputSwatch.kDefault,
   );
 
+  /// The visual styles are derived by reconciling the Figma design.
+  /// They use a neutral color instead of gray for disabled state,
+  /// when widgets cannot be interacted with.
+  static RadixInputDecorationVariantTheme kFigmaDark = RadixInputDecorationVariantTheme(
+    surface: RadixInputDecorationVariant(
+      debugVariant: RadixInputVariant.surface,
+      backgroundColor: RadixColorScheme.kDark.surfaceColor,
+      disabledBackgroundColor: RadixColorScheme.kDark.neutral.radixScale_3.alphaVariant,
+      readOnlyBackgroundColor: RadixColorScheme.kDark.neutral.radixScale_3.alphaVariant,
+      textColor: RadixColorScheme.kDark.neutral.scale_12,
+      disabledTextColor: RadixColorScheme.kDark.neutral.scale_12,
+      readOnlyTextColor: RadixColorScheme.kDark.neutral.scale_12,
+      hintColor: RadixColorScheme.kDark.neutral.radixScale_9.alphaVariant,
+      side: BorderSide(
+        width: 1.0,
+        color: RadixColorScheme.kDark.neutral.radixScale_5.alphaVariant,
+        strokeAlign: BorderSide.strokeAlignInside,
+      ),
+      filledSide: BorderSide(
+        width: 1.0,
+        color: RadixColorScheme.kDark.neutral.radixScale_6.alphaVariant,
+        strokeAlign: BorderSide.strokeAlignInside,
+      ),
+      focusedSide: BorderSide(
+        width: 1.0,
+        color: RadixColorScheme.kDark.accent.radixScale_8.alphaVariant,
+        strokeAlign: BorderSide.strokeAlignInside,
+      ),
+      disabledSide: BorderSide(
+        width: 1.0,
+        color: RadixColorScheme.kDark.neutral.radixScale_6.alphaVariant,
+        strokeAlign: BorderSide.strokeAlignInside,
+      ),
+      readOnlySide: BorderSide(
+        width: 1.0,
+        color: RadixColorScheme.kDark.neutral.radixScale_6.alphaVariant,
+        strokeAlign: BorderSide.strokeAlignInside,
+      ),
+      // The Figma design does not specify slot or selection colors,
+      // so we fall back to the web spec instead.
+      slotColor: RadixColorScheme.kDark.neutral.radixScale_11.alphaVariant,
+      selectionColor: RadixColorScheme.kDark.focus.radixScale_5.alphaVariant,
+      disabledSelectionColor: RadixColorScheme.kDark.neutral.radixScale_5.alphaVariant,
+      readOnlySelectionColor: RadixColorScheme.kDark.neutral.radixScale_5.alphaVariant,
+    ),
+    soft: RadixInputDecorationVariant(
+      debugVariant: RadixInputVariant.soft,
+      backgroundColor: RadixColorScheme.kDark.accent.radixScale_3.alphaVariant,
+      focusedBackgroundColor: RadixColorScheme.kDark.accent.radixScale_5.alphaVariant,
+      disabledBackgroundColor: RadixColorScheme.kDark.neutral.radixScale_3.alphaVariant,
+      readOnlyBackgroundColor: RadixColorScheme.kDark.neutral.radixScale_3.alphaVariant,
+      textColor: RadixColorScheme.kDark.neutral.scale_12,
+      disabledTextColor: RadixColorScheme.kDark.neutral.scale_12,
+      readOnlyTextColor: RadixColorScheme.kDark.neutral.scale_12,
+      hintColor: RadixColorScheme.kDark.neutral.radixScale_9.alphaVariant,
+      focusedSide: BorderSide(
+        width: 1.0,
+        color: RadixColorScheme.kDark.accent.radixScale_8.alphaVariant,
+        strokeAlign: BorderSide.strokeAlignInside,
+      ),
+      // The Figma design does not specify slot or selection colors,
+      // so we fall back to the web spec instead.
+      slotColor: RadixColorScheme.kDark.neutral.scale_12,
+      selectionColor: RadixColorScheme.kDark.accent.radixScale_5.alphaVariant,
+      disabledSelectionColor: RadixColorScheme.kDark.neutral.radixScale_5.alphaVariant,
+      readOnlySelectionColor: RadixColorScheme.kDark.neutral.radixScale_5.alphaVariant,
+    ),
+    sizeSwatch: RadixInputSwatch.kDefault,
+  );
   /// The [RadixThemeData.inputDecorationVariantTheme] property of the ambient [RadixTheme].
   ///
   /// Equivalent to `RadixTheme.of(context).inputDecorationVariantTheme`.
@@ -2414,6 +2639,7 @@ class RadixInputDecoration {
     this.focusedBorder,
     this.focusedErrorBorder,
     this.disabledBorder,
+    this.filledBorder,
     this.enabledBorder,
     this.borderRadius,
     this.enabled = true,
@@ -2500,6 +2726,7 @@ class RadixInputDecoration {
     this.focusedBorder,
     this.focusedErrorBorder,
     this.disabledBorder,
+    this.filledBorder,
     this.enabledBorder,
     this.borderRadius,
     this.enabled = true,
@@ -2599,6 +2826,7 @@ class RadixInputDecoration {
     InputBorder? focusedBorder,
     InputBorder? focusedErrorBorder,
     InputBorder? disabledBorder,
+    InputBorder? filledBorder,
     InputBorder? enabledBorder,
     BorderRadius? borderRadius,
     bool enabled = true,
@@ -2622,6 +2850,7 @@ class RadixInputDecoration {
     );
 
     final WidgetStateMap<Color> fillColorMapper = {
+      WidgetState.focused                 : variant.focusedBackgroundColor,
       WidgetState.disabled                : variant.disabledBackgroundColor,
       WidgetStateExtension.readOnly       : variant.readOnlyBackgroundColor,
       WidgetState.any                     : variant.backgroundColor,
@@ -2640,6 +2869,19 @@ class RadixInputDecoration {
     if (effectiveEnabledBorder == null && variant.debugVariant == RadixInputVariant.soft) {
       // Prevent the RadixInputDecorationThemeData from applying the enabled border.
       effectiveEnabledBorder = InputBorder.none;
+    }
+
+    InputBorder? effectiveFilledBorder = filledBorder;
+    if (variant.filledSide case final BorderSide side) {
+      effectiveFilledBorder ??= OutlineInputBorder(
+        borderSide: side,
+        borderRadius: size.borderRadius ?? BorderRadius.zero,
+        gapPadding: 0.0,
+      );
+    }
+    if (effectiveFilledBorder == null && variant.debugVariant == RadixInputVariant.soft) {
+      // Prevent the RadixInputDecorationThemeData from applying the filled border.
+      effectiveFilledBorder = InputBorder.none;
     }
 
     InputBorder effectiveFocusedBorder;
@@ -2717,6 +2959,7 @@ class RadixInputDecoration {
       focusedBorder: effectiveFocusedBorder,
       focusedErrorBorder: focusedErrorBorder,
       disabledBorder: effectiveDisabledBorder,
+      filledBorder: effectiveFilledBorder,
       enabledBorder: effectiveEnabledBorder,
       borderRadius: borderRadius ?? size.borderRadius,
       enabled: enabled,
@@ -3266,6 +3509,10 @@ class RadixInputDecoration {
   ///    and [RadixInputDecoration.errorText] is null.
   final InputBorder? disabledBorder;
 
+  /// The border to display when the [RadixInputDecorator] is enabled, is not
+  /// showing an error, and the editable part of the text field is filled.
+  final InputBorder? filledBorder;
+
   /// The border to display when the [RadixInputDecorator] is enabled and is not
   /// showing an error.
   ///
@@ -3401,6 +3648,7 @@ class RadixInputDecoration {
     InputBorder? focusedBorder,
     InputBorder? focusedErrorBorder,
     InputBorder? disabledBorder,
+    InputBorder? filledBorder,
     InputBorder? enabledBorder,
     BorderRadius? borderRadius,
     bool? enabled,
@@ -3464,6 +3712,7 @@ class RadixInputDecoration {
       focusedBorder: focusedBorder ?? this.focusedBorder,
       focusedErrorBorder: focusedErrorBorder ?? this.focusedErrorBorder,
       disabledBorder: disabledBorder ?? this.disabledBorder,
+      filledBorder: filledBorder ?? this.filledBorder,
       enabledBorder: enabledBorder ?? this.enabledBorder,
       borderRadius: borderRadius ?? this.borderRadius,
       enabled: enabled ?? this.enabled,
@@ -3515,6 +3764,7 @@ class RadixInputDecoration {
       focusedBorder: focusedBorder ?? theme.focusedBorder,
       focusedErrorBorder: focusedErrorBorder ?? theme.focusedErrorBorder,
       disabledBorder: disabledBorder ?? theme.disabledBorder,
+      filledBorder: filledBorder ?? theme.filledBorder,
       enabledBorder: enabledBorder ?? theme.enabledBorder,
       borderRadius: borderRadius ?? theme.borderRadius,
       constraints: constraints ?? theme.constraints,
@@ -3585,6 +3835,7 @@ class RadixInputDecoration {
         other.focusedBorder == focusedBorder &&
         other.focusedErrorBorder == focusedErrorBorder &&
         other.disabledBorder == disabledBorder &&
+        other.filledBorder == filledBorder &&
         other.enabledBorder == enabledBorder &&
         other.borderRadius == borderRadius &&
         other.enabled == enabled &&
@@ -3651,6 +3902,7 @@ class RadixInputDecoration {
       focusedBorder,
       focusedErrorBorder,
       disabledBorder,
+      filledBorder,
       enabledBorder,
       borderRadius,
       enabled,
@@ -3714,6 +3966,7 @@ class RadixInputDecoration {
       if (focusedBorder != null) 'focusedBorder: $focusedBorder',
       if (focusedErrorBorder != null) 'focusedErrorBorder: $focusedErrorBorder',
       if (disabledBorder != null) 'disabledBorder: $disabledBorder',
+      if (filledBorder != null) 'filledBorder: $filledBorder',
       if (enabledBorder != null) 'enabledBorder: $enabledBorder',
       if (borderRadius != null) 'borderRadius: $borderRadius',
       if (!enabled) 'enabled: false',
@@ -3838,6 +4091,7 @@ class RadixInputDecorationThemeData with Diagnosticable {
     this.focusedBorder,
     this.focusedErrorBorder,
     this.disabledBorder,
+    this.filledBorder,
     this.enabledBorder,
     this.borderRadius,
     this.constraints,
@@ -3882,6 +4136,7 @@ class RadixInputDecorationThemeData with Diagnosticable {
     this.focusedBorder,
     this.focusedErrorBorder,
     this.disabledBorder,
+    this.filledBorder,
     this.enabledBorder,
     this.borderRadius,
     this.constraints,
@@ -3937,6 +4192,7 @@ class RadixInputDecorationThemeData with Diagnosticable {
     InputBorder? focusedBorder,
     InputBorder? focusedErrorBorder,
     InputBorder? disabledBorder,
+    InputBorder? filledBorder,
     InputBorder? enabledBorder,
     BorderRadius? borderRadius,
     BoxConstraints? constraints,
@@ -3954,6 +4210,7 @@ class RadixInputDecorationThemeData with Diagnosticable {
     );
 
     final WidgetStateMap<Color> fillColorMapper = {
+      WidgetState.focused                 : variant.focusedBackgroundColor,
       WidgetState.disabled                : variant.disabledBackgroundColor,
       WidgetStateExtension.readOnly       : variant.readOnlyBackgroundColor,
       WidgetState.any                     : variant.backgroundColor,
@@ -3964,6 +4221,15 @@ class RadixInputDecorationThemeData with Diagnosticable {
     InputBorder? effectiveEnabledBorder = enabledBorder;
     if (variant.side case final BorderSide side) {
       effectiveEnabledBorder ??= OutlineInputBorder(
+        borderSide: side,
+        borderRadius: size.borderRadius ?? BorderRadius.zero,
+        gapPadding: 0.0,
+      );
+    }
+
+    InputBorder? effectiveFilledBorder = filledBorder;
+    if (variant.filledSide case final BorderSide side) {
+      effectiveFilledBorder ??= OutlineInputBorder(
         borderSide: side,
         borderRadius: size.borderRadius ?? BorderRadius.zero,
         gapPadding: 0.0,
@@ -4020,6 +4286,7 @@ class RadixInputDecorationThemeData with Diagnosticable {
       focusedBorder: effectiveFocusedBorder,
       focusedErrorBorder: focusedErrorBorder,
       disabledBorder: effectiveDisabledBorder,
+      filledBorder: effectiveFilledBorder,
       enabledBorder: effectiveEnabledBorder,
       borderRadius: borderRadius ?? size.borderRadius,
       constraints: constraints,
@@ -4316,6 +4583,10 @@ class RadixInputDecorationThemeData with Diagnosticable {
   ///    and [RadixInputDecoration.errorText] is null.
   final InputBorder? disabledBorder;
 
+  /// The border to display when the [RadixInputDecorator] is enabled, is not
+  /// showing an error, and the editable part of the text field is filled.
+  final InputBorder? filledBorder;
+
   /// The border to display when the [RadixInputDecorator] is enabled and is not
   /// showing an error.
   ///
@@ -4427,6 +4698,7 @@ class RadixInputDecorationThemeData with Diagnosticable {
     InputBorder? focusedBorder,
     InputBorder? focusedErrorBorder,
     InputBorder? disabledBorder,
+    InputBorder? filledBorder,
     InputBorder? enabledBorder,
     BorderRadius? borderRadius,
     BoxConstraints? constraints,
@@ -4470,6 +4742,7 @@ class RadixInputDecorationThemeData with Diagnosticable {
       focusedBorder: focusedBorder ?? this.focusedBorder,
       focusedErrorBorder: focusedErrorBorder ?? this.focusedErrorBorder,
       disabledBorder: disabledBorder ?? this.disabledBorder,
+      filledBorder: filledBorder ?? this.filledBorder,
       enabledBorder: enabledBorder ?? this.enabledBorder,
       borderRadius: borderRadius ?? this.borderRadius,
       constraints: constraints ?? this.constraints,
@@ -4526,6 +4799,7 @@ class RadixInputDecorationThemeData with Diagnosticable {
       focusedBorder: focusedBorder ?? other.focusedBorder,
       focusedErrorBorder: focusedErrorBorder ?? other.focusedErrorBorder,
       disabledBorder: disabledBorder ?? other.disabledBorder,
+      filledBorder: filledBorder ?? other.filledBorder,
       enabledBorder: enabledBorder ?? other.enabledBorder,
       borderRadius: borderRadius ?? other.borderRadius,
       constraints: constraints ?? other.constraints,
@@ -4572,14 +4846,15 @@ class RadixInputDecorationThemeData with Diagnosticable {
       focusedBorder,
       focusedErrorBorder,
       disabledBorder,
+      filledBorder,
       enabledBorder,
       borderRadius,
       constraints,
       cursorWidth,
       cursorHeight,
       cursorRadius,
-      cursorOpacityAnimates,
       Object.hash(
+        cursorOpacityAnimates,
         cursorColor,
         cursorErrorColor,
         selectionColor,
@@ -4626,6 +4901,7 @@ class RadixInputDecorationThemeData with Diagnosticable {
         other.focusedBorder == focusedBorder &&
         other.focusedErrorBorder == focusedErrorBorder &&
         other.disabledBorder == disabledBorder &&
+        other.filledBorder == filledBorder &&
         other.enabledBorder == enabledBorder &&
         other.borderRadius == borderRadius &&
         other.hintMaxLines == hintMaxLines &&
@@ -4822,6 +5098,13 @@ class RadixInputDecorationThemeData with Diagnosticable {
         'disabledBorder',
         disabledBorder,
         defaultValue: defaultTheme.disabledBorder,
+      ),
+    );
+    properties.add(
+      DiagnosticsProperty<InputBorder>(
+        'filledBorder',
+        filledBorder,
+        defaultValue: defaultTheme.filledBorder,
       ),
     );
     properties.add(
