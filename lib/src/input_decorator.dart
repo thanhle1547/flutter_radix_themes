@@ -1277,6 +1277,7 @@ class RadixInputDecorator extends StatefulWidget {
     this.isFocused = false,
     this.isHovering = false,
     this.readOnly = false,
+    this.tighContentHeight = true,
     this.expands = false,
     this.isEmpty = false,
     this.child,
@@ -1330,6 +1331,8 @@ class RadixInputDecorator extends StatefulWidget {
 
   /// {@macro flutter.widgets.editableText.readOnly}
   final bool readOnly;
+
+  final bool tighContentHeight;
 
   /// If true, the height of the input field will be as large as possible.
   ///
@@ -1644,17 +1647,19 @@ class _RadixInputDecoratorState extends State<RadixInputDecorator> with TickerPr
     final double? contentHeight = decoration.contentHeight ?? defaults.contentHeight;
 
     if (contentHeight != null) {
-      final Alignment alignment = textDirection == TextDirection.ltr
-          ? Alignment.centerLeft
-          : Alignment.centerRight;
+      final BoxConstraints constraints = widget.tighContentHeight
+          ? BoxConstraints.tightFor(
+              height: contentHeight,
+            )
+          : BoxConstraints(
+              minHeight: contentHeight,
+            );
 
       if (input != null) {
         input = ConstrainedBox(
-          constraints: BoxConstraints.tightFor(
-            height: contentHeight,
-          ),
+          constraints:constraints,
           child: Align(
-            alignment: alignment,
+            alignment: decoration.contentAlignment,
             heightFactor: 1,
             child: input,
           ),
@@ -1663,11 +1668,9 @@ class _RadixInputDecoratorState extends State<RadixInputDecorator> with TickerPr
 
       if (input == null && hint != null) {
         hint = ConstrainedBox(
-          constraints: BoxConstraints.tightFor(
-            height: contentHeight,
-          ),
+          constraints: constraints,
           child: Align(
-            alignment: alignment,
+            alignment: decoration.contentAlignment,
             heightFactor: 1,
             child: hint,
           ),
@@ -2613,6 +2616,7 @@ class RadixInputDecoration {
     this.errorMaxLines,
     this.subtextGap,
     this.contentPadding,
+    this.contentAlignment = AlignmentDirectional.centerStart,
     this.prefixIcon,
     this.prefixIconConstraints,
     this.prefixPadding,
@@ -2698,6 +2702,7 @@ class RadixInputDecoration {
     this.errorMaxLines,
     this.subtextGap,
     this.contentPadding,
+    this.contentAlignment = AlignmentDirectional.centerStart,
     EdgeInsets variantContentPadding = EdgeInsets.zero,
     this.prefixIcon,
     this.prefixIconConstraints,
@@ -2799,6 +2804,7 @@ class RadixInputDecoration {
     double? subtextGap,
     double? contentHeight,
     EdgeInsetsGeometry? contentPadding,
+    AlignmentDirectional contentAlignment = AlignmentDirectional.centerStart,
     Widget? prefixIcon,
     Widget? prefix,
     String? prefixText,
@@ -2931,6 +2937,7 @@ class RadixInputDecoration {
       subtextGap: subtextGap,
       contentHeight: contentHeight ?? size.height,
       contentPadding: contentPadding ?? size.padding + EdgeInsets.symmetric(horizontal: size.textIndent),
+      contentAlignment: contentAlignment,
       variantContentPadding: size.padding,
       prefixIcon: prefixIcon,
       prefixIconConstraints: prefixIconConstraints,
@@ -3182,6 +3189,11 @@ class RadixInputDecoration {
   ///
   /// By default the [contentPadding] reflects the type of the [border].
   final EdgeInsetsGeometry? contentPadding;
+
+  /// The alignment of the input fieldwithin the input decoration's container.
+  ///
+  /// Always defaults to [AlignmentDirectional.centerStart].
+  final AlignmentDirectional contentAlignment;
 
   final EdgeInsets _variantContentPadding;
 
@@ -3621,6 +3633,7 @@ class RadixInputDecoration {
     double? subtextGap,
     double? contentHeight,
     EdgeInsetsGeometry? contentPadding,
+    AlignmentDirectional? contentAlignment,
     Widget? prefixIcon,
     Widget? prefix,
     String? prefixText,
@@ -3684,6 +3697,7 @@ class RadixInputDecoration {
       subtextGap: subtextGap ?? this.subtextGap,
       contentHeight: contentHeight ?? this.contentHeight,
       contentPadding: contentPadding ?? this.contentPadding,
+      contentAlignment: contentAlignment ?? this.contentAlignment,
       variantContentPadding: _variantContentPadding,
       prefixIcon: prefixIcon ?? this.prefixIcon,
       prefix: prefix ?? this.prefix,
@@ -3807,6 +3821,7 @@ class RadixInputDecoration {
         other.subtextGap == subtextGap &&
         other.contentHeight == contentHeight &&
         other.contentPadding == contentPadding &&
+        other.contentAlignment == contentAlignment &&
         other._variantContentPadding == _variantContentPadding &&
         other.prefixIcon == prefixIcon &&
         other.prefixIconColor == prefixIconColor &&
@@ -3874,6 +3889,7 @@ class RadixInputDecoration {
       subtextGap,
       contentHeight,
       contentPadding,
+      contentAlignment,
       _variantContentPadding,
       backgroundColor,
       readOnlyBackgroundColor,
@@ -3940,6 +3956,7 @@ class RadixInputDecoration {
       if (subtextGap != null) 'subtextGap: "$subtextGap"',
       if (contentHeight != null) 'contentHeight: $contentHeight',
       if (contentPadding != null) 'contentPadding: $contentPadding',
+      'contentAlignment: $contentAlignment',
       if (prefixIcon != null) 'prefixIcon: $prefixIcon',
       if (prefixIconColor != null) 'prefixIconColor: $prefixIconColor',
       if (prefix != null) 'prefix: $prefix',
