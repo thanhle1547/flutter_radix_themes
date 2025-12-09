@@ -1589,6 +1589,7 @@ class _RadixTextFieldState extends State<RadixTextField>
             isHovering: _isHovering,
             isFocused: focusNode.hasFocus,
             isEmpty: controller.value.text.isEmpty,
+            readOnly: widget.readOnly,
             expands: widget.expands,
             child: child,
           );
