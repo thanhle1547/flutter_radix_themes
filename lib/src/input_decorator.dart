@@ -3802,6 +3802,7 @@ class RadixInputDecoration {
       return false;
     }
     return other is RadixInputDecoration &&
+        other.textStyle == textStyle &&
         other.icon == icon &&
         other.iconSize == iconSize &&
         other.iconColor == iconColor &&
@@ -3870,6 +3871,7 @@ class RadixInputDecoration {
   @override
   int get hashCode {
     final List<Object?> values = <Object?>[
+      textStyle,
       icon,
       iconSize,
       iconColor,
@@ -3940,6 +3942,7 @@ class RadixInputDecoration {
   @override
   String toString() {
     final List<String> description = <String>[
+      if (textStyle != null) 'textStyle: $textStyle',
       if (icon != null) 'icon: $icon',
       if (iconSize != null) 'iconSize: $iconSize',
       if (iconColor != null) 'iconColor: $iconColor',
