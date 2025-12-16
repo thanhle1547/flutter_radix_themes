@@ -3612,6 +3612,7 @@ class RadixInputDecoration {
   /// Creates a copy of this input decoration with the given fields replaced
   /// by the new values.
   RadixInputDecoration copyWith({
+    TextStyle? textStyle,
     Widget? icon,
     double? iconSize,
     Color? iconColor,
@@ -3676,6 +3677,7 @@ class RadixInputDecoration {
     Color? selectionColor,
   }) {
     return RadixInputDecoration._withVariant(
+      textStyle: textStyle ?? this.textStyle,
       icon: icon ?? this.icon,
       iconSize: iconSize ?? this.iconSize,
       iconColor: iconColor ?? this.iconColor,
