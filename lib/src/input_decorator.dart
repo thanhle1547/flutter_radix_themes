@@ -2503,6 +2503,7 @@ class RadixInputDecorationVariantTheme {
     ),
     sizeSwatch: RadixInputSizeSwatch.kDefault,
   );
+
   /// The [RadixThemeData.inputDecorationVariantTheme] property of the ambient [RadixTheme].
   ///
   /// Equivalent to `RadixTheme.of(context).inputDecorationVariantTheme`.
@@ -2816,7 +2817,6 @@ class RadixInputDecoration {
     Widget? suffixIcon,
     RadixButtonStyleFactor? suffixGhostIconButtonStyleFactor,
     Widget? suffix,
-    bool? suffixIsGhostButton,
     String? suffixText,
     TextStyle? suffixStyle,
     Color? suffixIconColor,
