@@ -3751,6 +3751,7 @@ class RadixInputDecoration {
   /// by the corresponding values from [theme].
   RadixInputDecoration applyDefaults(RadixInputDecorationThemeData theme) {
     return copyWith(
+      textStyle: textStyle ?? theme.textStyle,
       helperStyle: helperStyle ?? theme.helperStyle,
       helperMaxLines: helperMaxLines ?? theme.helperMaxLines,
       hintStyle: hintStyle ?? theme.hintStyle,
