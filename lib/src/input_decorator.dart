@@ -2169,8 +2169,8 @@ class RadixInputDecorationSoftVariant extends RadixInputDecorationVariant {
   }
 }
 
-class RadixInputSwatch {
-  const RadixInputSwatch({
+class RadixInputSizeSwatch {
+  const RadixInputSizeSwatch({
     required this.s1,
     required this.s2,
     required this.s3,
@@ -2184,7 +2184,7 @@ class RadixInputSwatch {
   /// does not account with border width (i.e., it is not subtracted by
   /// `--text-field-border-width`). This difference exists because the Flutter 
   /// implementation deviates from the original web behavior.
-  static final RadixInputSwatch kDefault = RadixInputSwatch(
+  static final RadixInputSizeSwatch kDefault = RadixInputSizeSwatch(
     s1: RadixInputDecorationVariantFactor(
       height: RadixSpace.kDefault.scale_5,
       padding: EdgeInsets.all(1.0),
@@ -2223,11 +2223,11 @@ class RadixInputSwatch {
     ),
   );
 
-  /// Linearly interpolate between two [RadixInputSwatch]es.
+  /// Linearly interpolate between two [RadixInputSizeSwatch]es.
   ///
   /// {@macro dart.ui.shadow.lerp}
-  static RadixInputSwatch lerp(RadixInputSwatch a, RadixInputSwatch b, double t) {
-    return RadixInputSwatch(
+  static RadixInputSizeSwatch lerp(RadixInputSizeSwatch a, RadixInputSizeSwatch b, double t) {
+    return RadixInputSizeSwatch(
       s1: a.s1.lerp(b.s1, t),
       s2: a.s2.lerp(b.s2, t),
       s3: a.s3.lerp(b.s3, t),
@@ -2248,7 +2248,7 @@ class RadixInputDecorationVariantTheme {
   final RadixInputDecorationVariant surface;
   final RadixInputDecorationVariant soft;
 
-  final RadixInputSwatch sizeSwatch;
+  final RadixInputSizeSwatch sizeSwatch;
 
   static RadixInputDecorationVariantTheme kLight = RadixInputDecorationVariantTheme(
     surface: RadixInputDecorationVariant(
@@ -2304,7 +2304,7 @@ class RadixInputDecorationVariantTheme {
       disabledSelectionColor: RadixColorScheme.kLight.gray.radixScale_5.alphaVariant,
       readOnlySelectionColor: RadixColorScheme.kLight.gray.radixScale_5.alphaVariant,
     ),
-    sizeSwatch: RadixInputSwatch.kDefault,
+    sizeSwatch: RadixInputSizeSwatch.kDefault,
   );
 
   /// The visual styles are derived by reconciling the Figma design.
@@ -2374,7 +2374,7 @@ class RadixInputDecorationVariantTheme {
       disabledSelectionColor: RadixColorScheme.kLight.neutral.radixScale_5.alphaVariant,
       readOnlySelectionColor: RadixColorScheme.kLight.neutral.radixScale_5.alphaVariant,
     ),
-    sizeSwatch: RadixInputSwatch.kDefault,
+    sizeSwatch: RadixInputSizeSwatch.kDefault,
   );
 
   static RadixInputDecorationVariantTheme kDark = RadixInputDecorationVariantTheme(
@@ -2431,7 +2431,7 @@ class RadixInputDecorationVariantTheme {
       disabledSelectionColor: RadixColorScheme.kDark.gray.radixScale_5.alphaVariant,
       readOnlySelectionColor: RadixColorScheme.kDark.gray.radixScale_5.alphaVariant,
     ),
-    sizeSwatch: RadixInputSwatch.kDefault,
+    sizeSwatch: RadixInputSizeSwatch.kDefault,
   );
 
   /// The visual styles are derived by reconciling the Figma design.
@@ -2501,7 +2501,7 @@ class RadixInputDecorationVariantTheme {
       disabledSelectionColor: RadixColorScheme.kDark.neutral.radixScale_5.alphaVariant,
       readOnlySelectionColor: RadixColorScheme.kDark.neutral.radixScale_5.alphaVariant,
     ),
-    sizeSwatch: RadixInputSwatch.kDefault,
+    sizeSwatch: RadixInputSizeSwatch.kDefault,
   );
   /// The [RadixThemeData.inputDecorationVariantTheme] property of the ambient [RadixTheme].
   ///
