@@ -34,6 +34,8 @@ class _LerpEffectiveStateColor extends WidgetStateColor {
 }
 
 extension WidgetStateExtension on WidgetState {
+  /// The state where this widget is enabled and can receive focus, 
+  /// but the associated content cannot be modified or edited by the user.
   static const WidgetStatesConstraint readOnly = _ReadOnlyWidgetState();
 
   // TODO: rewrite this after the WidgetState has readOnly
@@ -62,7 +64,7 @@ extension WidgetStateExtension on WidgetState {
   }
 }
 
-// A private class, used to create [WidgetStateExtension.readOnly].
+/// A private class, used to create [WidgetStateExtension.readOnly].
 @immutable
 class _ReadOnlyWidgetState implements WidgetStatesConstraint {
   const _ReadOnlyWidgetState();

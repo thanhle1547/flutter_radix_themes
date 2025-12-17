@@ -2856,10 +2856,9 @@ class RadixInputDecoration {
     );
 
     final WidgetStateMap<Color> fillColorMapper = {
-      WidgetState.focused                 : variant.focusedBackgroundColor,
-      WidgetState.disabled                : variant.disabledBackgroundColor,
-      WidgetStateExtension.readOnly       : variant.readOnlyBackgroundColor,
-      WidgetState.any                     : variant.backgroundColor,
+      WidgetState.focused   : variant.focusedBackgroundColor,
+      WidgetState.disabled  : variant.disabledBackgroundColor,
+      WidgetState.any       : variant.backgroundColor,
     };
 
     final WidgetStateColor efffectiveFillColor = WidgetStateExtension.merge(fillColorMapper, fillColor);
@@ -4235,10 +4234,9 @@ class RadixInputDecorationThemeData with Diagnosticable {
     );
 
     final WidgetStateMap<Color> fillColorMapper = {
-      WidgetState.focused                 : variant.focusedBackgroundColor,
-      WidgetState.disabled                : variant.disabledBackgroundColor,
-      WidgetStateExtension.readOnly       : variant.readOnlyBackgroundColor,
-      WidgetState.any                     : variant.backgroundColor,
+      WidgetState.focused     : variant.focusedBackgroundColor,
+      WidgetState.disabled    : variant.disabledBackgroundColor,
+      WidgetState.any         : variant.backgroundColor,
     };
 
     final WidgetStateColor efffectiveFillColor = WidgetStateExtension.merge(fillColorMapper, fillColor);
