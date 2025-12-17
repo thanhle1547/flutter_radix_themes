@@ -4014,8 +4014,8 @@ class RadixInputDecoration {
 ///
 ///  * [RadixInputDecorationThemeData], which describes the actual configuration of an
 ///    input decoration theme.
-///  * [ThemeData.inputDecorationTheme], which specifies an input decoration theme as
-///    part of the overall Material theme.
+///  * [RadixThemeData.inputDecorationTheme], which specifies an input decoration theme as
+///    part of the overall Radix theme.
 class RadixInputDecorationTheme extends InheritedTheme with Diagnosticable {
   /// Creates a [RadixInputDecorationTheme] that controls visual parameters for
   /// descendant [RadixInputDecorator]s.
