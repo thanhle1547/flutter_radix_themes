@@ -3952,6 +3952,8 @@ class RadixInputDecoration {
       if (helperMaxLines != null) 'helperMaxLines: "$helperMaxLines"',
       if (hintText != null) 'hintText: "$hintText"',
       if (hint != null) 'hint: $hint',
+      if (hintStyle != null) 'hintStyle: $hintStyle',
+      if (hintTextDirection != null) 'hintTextDirection: $hintTextDirection',
       if (hintMaxLines != null) 'hintMaxLines: "$hintMaxLines"',
       if (hintFadeDuration != null) 'hintFadeDuration: "$hintFadeDuration"',
       if (!maintainHintSize) 'maintainHintSize: false',
