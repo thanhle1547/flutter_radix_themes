@@ -2867,7 +2867,7 @@ class RadixInputDecoration {
     if (variant.side case final BorderSide side) {
       effectiveEnabledBorder ??= OutlineInputBorder(
         borderSide: side,
-        borderRadius: size.borderRadius ?? BorderRadius.zero,
+        borderRadius: borderRadius ?? size.borderRadius ?? BorderRadius.zero,
         gapPadding: 0.0,
       );
     }
@@ -2880,7 +2880,7 @@ class RadixInputDecoration {
     if (variant.filledSide case final BorderSide side) {
       effectiveFilledBorder ??= OutlineInputBorder(
         borderSide: side,
-        borderRadius: size.borderRadius ?? BorderRadius.zero,
+        borderRadius: borderRadius ?? size.borderRadius ?? BorderRadius.zero,
         gapPadding: 0.0,
       );
     }
@@ -2895,7 +2895,7 @@ class RadixInputDecoration {
     } else {
       effectiveFocusedBorder = OutlineInputBorder(
         borderSide: variant.focusedSide,
-        borderRadius: size.borderRadius ?? BorderRadius.zero,
+        borderRadius: borderRadius ?? size.borderRadius ?? BorderRadius.zero,
         gapPadding: 0.0,
       );
     }
@@ -2904,7 +2904,7 @@ class RadixInputDecoration {
     if (variant.disabledSide case final BorderSide side) {
       effectiveDisabledBorder ??= OutlineInputBorder(
         borderSide: side,
-        borderRadius: size.borderRadius ?? BorderRadius.zero,
+        borderRadius: borderRadius ?? size.borderRadius ?? BorderRadius.zero,
         gapPadding: 0.0,
       );
     }
@@ -4248,7 +4248,7 @@ class RadixInputDecorationThemeData with Diagnosticable {
     if (variant.side case final BorderSide side) {
       effectiveEnabledBorder ??= OutlineInputBorder(
         borderSide: side,
-        borderRadius: size.borderRadius ?? BorderRadius.zero,
+        borderRadius: borderRadius ?? size.borderRadius ?? BorderRadius.zero,
         gapPadding: 0.0,
       );
     }
@@ -4257,7 +4257,7 @@ class RadixInputDecorationThemeData with Diagnosticable {
     if (variant.filledSide case final BorderSide side) {
       effectiveFilledBorder ??= OutlineInputBorder(
         borderSide: side,
-        borderRadius: size.borderRadius ?? BorderRadius.zero,
+        borderRadius: borderRadius ?? size.borderRadius ?? BorderRadius.zero,
         gapPadding: 0.0,
       );
     }
@@ -4266,7 +4266,7 @@ class RadixInputDecorationThemeData with Diagnosticable {
     if (variant.focusedSide case final BorderSide side) {
       effectiveFocusedBorder ??= OutlineInputBorder(
         borderSide: side,
-        borderRadius: size.borderRadius ?? BorderRadius.zero,
+        borderRadius: borderRadius ?? size.borderRadius ?? BorderRadius.zero,
         gapPadding: 0.0,
       );
     }
@@ -4275,7 +4275,7 @@ class RadixInputDecorationThemeData with Diagnosticable {
     if (variant.disabledSide case final BorderSide side) {
       effectiveDisabledBorder ??= OutlineInputBorder(
         borderSide: side,
-        borderRadius: size.borderRadius ?? BorderRadius.zero,
+        borderRadius: borderRadius ?? size.borderRadius ?? BorderRadius.zero,
         gapPadding: 0.0,
       );
     }

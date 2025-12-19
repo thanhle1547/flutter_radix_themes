@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 
 import 'badge.dart';
 import 'button.dart';
+import 'input_decorator.dart';
 import 'theme.dart';
 import 'theme_data.dart';
 
@@ -309,6 +310,18 @@ extension RadixRadiusExtension on RadixRadius {
       RadixBadgeSize.$1 => max.scale_1,
       RadixBadgeSize.$2 => max.scale_2,
       RadixBadgeSize.$3 => max.scale_3,
+    };
+
+    return BorderRadius.all(radius);
+  }
+
+  BorderRadius resolveForInput({
+    required RadixInputSize inputSize,
+  }) {
+    final Radius radius = switch (inputSize) {
+      RadixInputSize.$1 => max.scale_1,
+      RadixInputSize.$2 => max.scale_2,
+      RadixInputSize.$3 => max.scale_3,
     };
 
     return BorderRadius.all(radius);
