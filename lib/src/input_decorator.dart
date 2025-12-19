@@ -1678,7 +1678,7 @@ class _RadixInputDecoratorState extends State<RadixInputDecorator> with TickerPr
       }
     }
 
-    final double? iconSize = decoration.iconSize;
+    final double? iconSize = decoration.iconSize ?? defaults.iconSize;
 
     final Widget? icon = decoration.icon == null
         ? null
@@ -3761,6 +3761,7 @@ class RadixInputDecoration {
       subtextGap: subtextGap ?? theme.subtextGap,
       contentHeight: contentHeight ?? theme.contentHeight,
       contentPadding: contentPadding ?? theme.contentPadding,
+      iconSize: iconSize ?? theme.iconSize,
       iconColor: iconColor ?? theme.iconColor,
       prefixStyle: prefixStyle ?? theme.prefixStyle,
       prefixIconColor: prefixIconColor ?? theme.prefixIconColor,
@@ -4096,6 +4097,7 @@ class RadixInputDecorationThemeData with Diagnosticable {
     this.subtextGap,
     this.contentHeight,
     this.contentPadding,
+    this.iconSize,
     this.iconColor,
     this.prefixStyle,
     this.prefixIconColor,
@@ -4141,6 +4143,7 @@ class RadixInputDecorationThemeData with Diagnosticable {
     this.contentHeight,
     this.contentPadding,
     EdgeInsets variantContentPadding = EdgeInsets.zero,
+    this.iconSize,
     this.iconColor,
     this.prefixStyle,
     this.prefixIconColor,
@@ -4409,6 +4412,8 @@ class RadixInputDecorationThemeData with Diagnosticable {
   final EdgeInsetsGeometry? contentPadding;
 
   final EdgeInsets _variantContentPadding;
+
+  final double? iconSize;
 
   /// The Color to use for the [RadixInputDecoration.icon].
   ///
@@ -4702,6 +4707,7 @@ class RadixInputDecorationThemeData with Diagnosticable {
     double? subtextGap,
     double? contentHeight,
     EdgeInsetsGeometry? contentPadding,
+    double? iconSize,
     Color? iconColor,
     TextStyle? prefixStyle,
     Color? prefixIconColor,
@@ -4746,6 +4752,7 @@ class RadixInputDecorationThemeData with Diagnosticable {
       contentHeight: contentHeight ?? this.contentHeight,
       contentPadding: contentPadding ?? this.contentPadding,
       variantContentPadding: _variantContentPadding,
+      iconSize: iconSize ?? this.iconSize,
       iconColor: iconColor ?? this.iconColor,
       prefixStyle: prefixStyle ?? this.prefixStyle,
       prefixIconColor: prefixIconColor ?? this.prefixIconColor,
@@ -4803,6 +4810,7 @@ class RadixInputDecorationThemeData with Diagnosticable {
       subtextGap: subtextGap ?? other.subtextGap,
       contentHeight: contentHeight ?? other.contentHeight,
       contentPadding: contentPadding ?? other.contentPadding,
+      iconSize: iconSize ?? other.iconSize,
       iconColor: iconColor ?? other.iconColor,
       prefixStyle: prefixStyle ?? other.prefixStyle,
       prefixIconColor: prefixIconColor ?? other.prefixIconColor,
@@ -4849,14 +4857,15 @@ class RadixInputDecorationThemeData with Diagnosticable {
     contentHeight,
     contentPadding,
     _variantContentPadding,
+    iconSize,
     iconColor,
     prefixStyle,
     prefixIconColor,
     prefixIconConstraints,
     prefixPadding,
     prefixToInputGap,
-    suffixStyle,
     Object.hash(
+      suffixStyle,
       suffixIconColor,
       suffixIconConstraints,
       suffixPadding,
@@ -4875,8 +4884,8 @@ class RadixInputDecorationThemeData with Diagnosticable {
       constraints,
       cursorWidth,
       cursorHeight,
-      cursorRadius,
       Object.hash(
+        cursorRadius,
         cursorOpacityAnimates,
         cursorColor,
         cursorErrorColor,
@@ -4905,6 +4914,7 @@ class RadixInputDecorationThemeData with Diagnosticable {
         other.contentHeight == contentHeight &&
         other.contentPadding == contentPadding &&
         other._variantContentPadding == _variantContentPadding &&
+        other.iconSize == iconSize &&
         other.iconColor == iconColor &&
         other.prefixStyle == prefixStyle &&
         other.prefixIconColor == prefixIconColor &&
@@ -4997,6 +5007,9 @@ class RadixInputDecorationThemeData with Diagnosticable {
         contentPadding,
         defaultValue: defaultTheme.contentPadding,
       ),
+    );
+    properties.add(
+      DoubleProperty('iconSize', iconSize, defaultValue: defaultTheme.iconSize),
     );
     properties.add(
       DiagnosticsProperty<Color>('iconColor', iconColor, defaultValue: defaultTheme.iconColor),
