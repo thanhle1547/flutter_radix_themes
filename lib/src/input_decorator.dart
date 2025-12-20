@@ -1459,7 +1459,13 @@ class _RadixInputDecoratorState extends State<RadixInputDecorator> with TickerPr
 
     final TextStyle? style = WidgetStateProperty.resolveAs(decoration.hintStyle, widgetState);
 
-    return defaultStyle.merge(style);
+    Color? color;
+    if (!widget.enabled) {
+      color = decoration.disabledHintColor ?? defaults.disabledHintColor;
+    }
+    color ??= decoration.hintColor ?? defaults.hintColor;
+
+    return defaultStyle.merge(style).copyWith(color: color);
   }
 
   TextStyle? _getErrorStyle(RadixInputDecorationThemeData defaults) {
@@ -2607,6 +2613,8 @@ class RadixInputDecoration {
     this.hintText,
     this.hint,
     this.hintStyle,
+    this.hintColor,
+    this.disabledHintColor,
     this.hintTextDirection,
     this.hintMaxLines,
     this.hintFadeDuration,
@@ -2693,6 +2701,8 @@ class RadixInputDecoration {
     this.hintText,
     this.hint,
     this.hintStyle,
+    this.hintColor,
+    this.disabledHintColor,
     this.hintTextDirection,
     this.hintMaxLines,
     this.hintFadeDuration,
@@ -2846,14 +2856,11 @@ class RadixInputDecoration {
     Color? cursorErrorColor,
     Color? selectionColor,
   }) {
-    TextStyle? effectiveTextStyle = textStyle;
-    effectiveTextStyle ??= size.textStyle.copyWith(
-      color: enabled ? variant.textColor : variant.disabledTextColor,
-    );
-
     assert(
       suffixIcon is! RadixGhostButton || !suffixIcon.isIconButton ||  suffixGhostIconButtonStyleFactor != null,
     );
+
+    final TextStyle effectiveTextStyle = textStyle?.merge(size.textStyle) ?? size.textStyle;
 
     final WidgetStateMap<Color> fillColorMapper = {
       WidgetState.focused   : variant.focusedBackgroundColor,
@@ -2924,7 +2931,8 @@ class RadixInputDecoration {
       helperMaxLines: helperMaxLines,
       hintText: hintText,
       hint: hint,
-      hintStyle: hintStyle ?? size.textStyle.copyWith(color: variant.hintColor),
+      hintStyle: hintStyle ?? effectiveTextStyle,
+      hintColor: variant.hintColor,
       hintTextDirection: hintTextDirection,
       hintMaxLines: hintMaxLines,
       hintFadeDuration: hintFadeDuration,
@@ -3092,6 +3100,9 @@ class RadixInputDecoration {
   /// If null, defaults to a value derived from the base [TextStyle] for the
   /// input field and the current [Theme].
   final TextStyle? hintStyle;
+
+  final Color? hintColor;
+  final Color? disabledHintColor;
 
   /// The direction to use for the [hintText].
   ///
@@ -3622,6 +3633,8 @@ class RadixInputDecoration {
     String? hintText,
     Widget? hint,
     TextStyle? hintStyle,
+    Color? hintColor,
+    Color? disabledHintColor,
     TextDirection? hintTextDirection,
     Duration? hintFadeDuration,
     int? hintMaxLines,
@@ -3687,6 +3700,8 @@ class RadixInputDecoration {
       hintText: hintText ?? this.hintText,
       hint: hint ?? this.hint,
       hintStyle: hintStyle ?? this.hintStyle,
+      hintColor: hintColor ?? this.hintColor,
+      disabledHintColor: disabledHintColor ?? this.disabledHintColor,
       hintTextDirection: hintTextDirection ?? this.hintTextDirection,
       hintMaxLines: hintMaxLines ?? this.hintMaxLines,
       hintFadeDuration: hintFadeDuration ?? this.hintFadeDuration,
@@ -3754,6 +3769,8 @@ class RadixInputDecoration {
       helperStyle: helperStyle ?? theme.helperStyle,
       helperMaxLines: helperMaxLines ?? theme.helperMaxLines,
       hintStyle: hintStyle ?? theme.hintStyle,
+      hintColor: hintColor ?? theme.hintColor,
+      disabledHintColor: disabledHintColor ?? theme.disabledHintColor,
       hintFadeDuration: hintFadeDuration ?? theme.hintFadeDuration,
       hintMaxLines: hintMaxLines ?? theme.hintMaxLines,
       errorStyle: errorStyle ?? theme.errorStyle,
@@ -3814,6 +3831,8 @@ class RadixInputDecoration {
         other.hintText == hintText &&
         other.hint == hint &&
         other.hintStyle == hintStyle &&
+        other.hintColor == hintColor &&
+        other.disabledHintColor == disabledHintColor &&
         other.hintTextDirection == hintTextDirection &&
         other.hintMaxLines == hintMaxLines &&
         other.hintFadeDuration == hintFadeDuration &&
@@ -3883,6 +3902,8 @@ class RadixInputDecoration {
       hintText,
       hint,
       hintStyle,
+      hintColor,
+      disabledHintColor,
       hintTextDirection,
       hintMaxLines,
       hintFadeDuration,
@@ -3953,6 +3974,8 @@ class RadixInputDecoration {
       if (hintText != null) 'hintText: "$hintText"',
       if (hint != null) 'hint: $hint',
       if (hintStyle != null) 'hintStyle: $hintStyle',
+      if (hintColor != null) 'hintColor: $hintColor',
+      if (disabledHintColor != null) 'disabledHintColor: $disabledHintColor',
       if (hintTextDirection != null) 'hintTextDirection: $hintTextDirection',
       if (hintMaxLines != null) 'hintMaxLines: "$hintMaxLines"',
       if (hintFadeDuration != null) 'hintFadeDuration: "$hintFadeDuration"',
@@ -4090,6 +4113,8 @@ class RadixInputDecorationThemeData with Diagnosticable {
     this.helperStyle,
     this.helperMaxLines,
     required this.hintStyle,
+    this.hintColor,
+    this.disabledHintColor,
     this.hintFadeDuration,
     this.hintMaxLines,
     this.errorStyle,
@@ -4135,6 +4160,8 @@ class RadixInputDecorationThemeData with Diagnosticable {
     this.helperStyle,
     this.helperMaxLines,
     required this.hintStyle,
+    this.hintColor,
+    this.disabledHintColor,
     this.hintFadeDuration,
     this.hintMaxLines,
     this.errorStyle,
@@ -4231,10 +4258,7 @@ class RadixInputDecorationThemeData with Diagnosticable {
     Color? cursorErrorColor,
     Color? selectionColor,
   }) {
-    TextStyle? effectiveTextStyle = textStyle;
-    effectiveTextStyle ??= size.textStyle.copyWith(
-      color: variant.textColor,
-    );
+    final TextStyle effectiveTextStyle = textStyle?.merge(size.textStyle) ?? size.textStyle;
 
     final WidgetStateMap<Color> fillColorMapper = {
       WidgetState.focused     : variant.focusedBackgroundColor,
@@ -4285,7 +4309,8 @@ class RadixInputDecorationThemeData with Diagnosticable {
       iconColor: iconColor,
       helperStyle: helperStyle,
       helperMaxLines: helperMaxLines,
-      hintStyle: hintStyle ?? size.textStyle.copyWith(color: variant.hintColor),
+      hintStyle: hintStyle ?? effectiveTextStyle,
+      hintColor: variant.hintColor,
       hintMaxLines: hintMaxLines,
       hintFadeDuration: hintFadeDuration,
       errorStyle: errorStyle,
@@ -4365,6 +4390,9 @@ class RadixInputDecorationThemeData with Diagnosticable {
   /// If null, defaults to a value derived from the base [TextStyle] for the
   /// input field and the current [Theme].
   final TextStyle hintStyle;
+
+  final Color? hintColor;
+  final Color? disabledHintColor;
 
   /// The duration of the [RadixInputDecoration.hintText] fade in and fade out animations.
   final Duration? hintFadeDuration;
@@ -4700,6 +4728,8 @@ class RadixInputDecorationThemeData with Diagnosticable {
     TextStyle? helperStyle,
     int? helperMaxLines,
     TextStyle? hintStyle,
+    Color? hintColor,
+    Color? disabledHintColor,
     Duration? hintFadeDuration,
     int? hintMaxLines,
     TextStyle? errorStyle,
@@ -4744,6 +4774,8 @@ class RadixInputDecorationThemeData with Diagnosticable {
       helperStyle: helperStyle ?? this.helperStyle,
       helperMaxLines: helperMaxLines ?? this.helperMaxLines,
       hintStyle: hintStyle ?? this.hintStyle,
+      hintColor: hintColor ?? this.hintColor,
+      disabledHintColor: disabledHintColor ?? this.disabledHintColor,
       hintFadeDuration: hintFadeDuration ?? this.hintFadeDuration,
       hintMaxLines: hintMaxLines ?? this.hintMaxLines,
       errorStyle: errorStyle ?? this.errorStyle,
@@ -4803,6 +4835,8 @@ class RadixInputDecorationThemeData with Diagnosticable {
     return copyWith(
       helperStyle: helperStyle ?? other.helperStyle,
       helperMaxLines: helperMaxLines ?? other.helperMaxLines,
+      hintColor: hintColor ?? other.hintColor,
+      disabledHintColor: disabledHintColor ?? other.disabledHintColor,
       hintFadeDuration: hintFadeDuration ?? other.hintFadeDuration,
       hintMaxLines: hintMaxLines ?? other.hintMaxLines,
       errorStyle: errorStyle ?? other.errorStyle,
@@ -4849,6 +4883,8 @@ class RadixInputDecorationThemeData with Diagnosticable {
     helperStyle,
     helperMaxLines,
     hintStyle,
+    hintColor,
+    disabledHintColor,
     hintFadeDuration,
     hintMaxLines,
     errorStyle,
@@ -4862,9 +4898,9 @@ class RadixInputDecorationThemeData with Diagnosticable {
     prefixStyle,
     prefixIconColor,
     prefixIconConstraints,
-    prefixPadding,
-    prefixToInputGap,
     Object.hash(
+      prefixPadding,
+      prefixToInputGap,
       suffixStyle,
       suffixIconColor,
       suffixIconConstraints,
@@ -4882,9 +4918,9 @@ class RadixInputDecorationThemeData with Diagnosticable {
       enabledBorder,
       borderRadius,
       constraints,
-      cursorWidth,
-      cursorHeight,
       Object.hash(
+        cursorWidth,
+        cursorHeight,
         cursorRadius,
         cursorOpacityAnimates,
         cursorColor,
@@ -4907,6 +4943,8 @@ class RadixInputDecorationThemeData with Diagnosticable {
         other.helperStyle == helperStyle &&
         other.helperMaxLines == helperMaxLines &&
         other.hintStyle == hintStyle &&
+        other.hintColor == hintColor &&
+        other.disabledHintColor == disabledHintColor &&
         other.hintFadeDuration == hintFadeDuration &&
         other.errorStyle == errorStyle &&
         other.errorMaxLines == errorMaxLines &&
@@ -4974,6 +5012,18 @@ class RadixInputDecorationThemeData with Diagnosticable {
     );
     properties.add(
       DiagnosticsProperty<TextStyle>('hintStyle', hintStyle, defaultValue: defaultTheme.hintStyle),
+    );
+    properties.add(
+      ColorProperty(
+        'hintColor',
+        hintColor,
+      ),
+    );
+    properties.add(
+      ColorProperty(
+        'disabledHintColor',
+        disabledHintColor,
+      ),
     );
     properties.add(
       DiagnosticsProperty<Duration>(
