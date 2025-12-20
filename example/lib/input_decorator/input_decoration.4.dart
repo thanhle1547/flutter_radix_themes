@@ -42,7 +42,6 @@ class RadixInputDecorationExample extends StatelessWidget {
         hintText: 'Hint Text',
         helperText: 'Helper Text',
         counterText: '0 characters',
-        enabledBorder: OutlineInputBorder(),
         contentPadding: EdgeInsets.all(RadixSpace.kDefault.scale_3),
         contentHeight: 64,
         contentAlignment: AlignmentDirectional.topStart

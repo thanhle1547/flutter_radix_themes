@@ -39,7 +39,6 @@ class InputDecorationExample extends StatelessWidget {
       decoration: const RadixInputDecoration(
         prefix: Text('Prefix'),
         suffix: Text('Suffix'),
-        enabledBorder: OutlineInputBorder(),
       ),
     );
   }

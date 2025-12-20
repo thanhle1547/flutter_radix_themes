@@ -38,7 +38,9 @@ class InputDecorationExample extends StatelessWidget {
       decoration: RadixInputDecoration(
         hintText: 'Hint Text',
         errorText: 'Error Text',
-        enabledBorder: OutlineInputBorder(),
+        enabledBorder: OutlineInputBorder(
+          gapPadding: 0.0,
+        ),
       ),
     );
   }

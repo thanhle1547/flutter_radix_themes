@@ -44,7 +44,6 @@ class InputDecorationExample extends StatelessWidget {
         prefixText: 'Prefix',
         suffixText: 'Suffix',
         affixColor: RadixColors.green.light.scale_8,
-        enabledBorder: OutlineInputBorder(),
       ),
     );
   }
