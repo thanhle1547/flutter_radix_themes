@@ -2409,6 +2409,7 @@ class _RadixSelectState<T> extends State<RadixSelect<T>> with WidgetsBindingObse
     if (widget.pushPopupContentRoute != null) {
       _selectContentRoute?._dismiss();
     }
+    focusNode.unfocus();
     _isMenuExpanded = false;
     _selectContentRoute = null;
     _lastOrientation = null;
