@@ -1040,6 +1040,7 @@ abstract class RadixButton extends StatefulWidget {
     this.onFocusChange,
     this.onTap,
   }) : isIconButton = false,
+       centeredAlignment = false,
        _child = null;
 
   const RadixButton.ghost({
@@ -1061,6 +1062,7 @@ abstract class RadixButton extends StatefulWidget {
     this.onTap,
   })  : variant = RadixButtonVariant.ghost,
         isIconButton = false,
+        centeredAlignment = false,
         _child = null;
 
   const RadixButton.min({
@@ -1082,6 +1084,7 @@ abstract class RadixButton extends StatefulWidget {
   })  : mainAxisSize = MainAxisSize.min,
         width = null,
         isIconButton = false,
+        centeredAlignment = false,
         _child = null;
 
   const RadixButton.icon({
@@ -1105,6 +1108,7 @@ abstract class RadixButton extends StatefulWidget {
         iconStart = null,
         iconEnd = null,
         isIconButton = true,
+        centeredAlignment = false,
         _child = icon;
 
   const RadixButton.custom({
@@ -1113,6 +1117,7 @@ abstract class RadixButton extends StatefulWidget {
     required Widget child,
     this.size = RadixButtonSize.$2,
     this.variant = RadixButtonVariant.solid,
+    this.centeredAlignment = true,
     this.styleModifier,
     this.disabled = false,
     this.highContrast = false,
@@ -1165,6 +1170,8 @@ abstract class RadixButton extends StatefulWidget {
   final Widget? iconEnd;
 
   final bool isIconButton;
+
+  final bool centeredAlignment;
 
   final Widget? _child;
 
@@ -1554,6 +1561,8 @@ class _RadixButtonState extends State<RadixButton> with SingleTickerProviderStat
 
     final Color textColor = styleModifier?.textColor?.resolve(states) ?? style.textColor.resolve(states);
 
+    final TextStyle textStyle = (styleModifier?.textStyle ?? style.textStyle).copyWith(color: textColor);
+
     final IconThemeData iconThemeData = _getEffectiveIconThemeData(
       context,
       hasIcon: widget._child != null || iconStart != null || iconEnd != null,
@@ -1561,16 +1570,15 @@ class _RadixButtonState extends State<RadixButton> with SingleTickerProviderStat
     );
 
     if (widget._child case final Widget customChild) {
-      child = IconTheme(
-        data: iconThemeData,
-        child: customChild,
+      child = DefaultTextStyle(
+        style: textStyle,
+        child: IconTheme(
+          data: iconThemeData,
+          child: customChild,
+        ),
       );
     } else {
       final String? text = widget.text;
-
-      TextStyle textStyle = styleModifier?.textStyle ?? style.textStyle;
-
-      textStyle = textStyle.copyWith(color: textColor);
 
       if (text != null && text.isNotEmpty) {
         child = Text(text, style: textStyle);
@@ -1610,17 +1618,19 @@ class _RadixButtonState extends State<RadixButton> with SingleTickerProviderStat
     }
 
     if (iconStart == null && iconEnd == null) {
-      child = Center(
-        widthFactor: widget.mainAxisSize == MainAxisSize.min ? 1 : null,
-        // The ghost button's height is based on its content.
-        // When the button is placed inside a Row and only contains
-        // the loading spinner or the text (not both),
-        // the Center widget normally expands to the Row's full height.
-        // Setting `heightFactor: 1` ensures the Center shrinks to the child's actual size,
-        // preventing unintended vertical expansion in the Row.
-        heightFactor: 1,
-        child: child,
-      );
+      if (widget.centeredAlignment) {
+        child = Center(
+          widthFactor: widget.mainAxisSize == MainAxisSize.min ? 1 : null,
+          // The ghost button's height is based on its content.
+          // When the button is placed inside a Row and only contains
+          // the loading spinner or the text (not both),
+          // the Center widget normally expands to the Row's full height.
+          // Setting `heightFactor: 1` ensures the Center shrinks to the child's actual size,
+          // preventing unintended vertical expansion in the Row.
+          heightFactor: 1,
+          child: child,
+        );
+      }
     } else {
       final Widget gap = SizedBox(width: styleModifier?.gap ?? style.gap);
 
@@ -3103,6 +3113,24 @@ class RadixGhostButton extends RadixButton {
     super.onFocusChange,
     super.onTap,
   }) : super.icon(variant: RadixButtonVariant.ghost);
+
+  const RadixGhostButton.custom({
+    super.key,
+    super.width,
+    required super.child,
+    super.size = RadixButtonSize.$2,
+    super.variant = RadixButtonVariant.ghost,
+    super.centeredAlignment,
+    super.styleModifier,
+    super.disabled = false,
+    super.highContrast = false,
+    super.loading = false,
+    super.cacheLoadingState = false,
+    super.mouseCursor,
+    super.focusNode,
+    super.onFocusChange,
+    super.onTap,
+  }) : super.custom();
 
   /// A static convenience method that constructs a ghost button
   /// [RadixButtonStyleModifier] given simple values.

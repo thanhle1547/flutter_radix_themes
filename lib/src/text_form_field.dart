@@ -145,7 +145,7 @@ class RadixTextFormField extends FormField<String> {
     super.validator,
     super.errorBuilder,
     List<TextInputFormatter>? inputFormatters,
-    bool? enabled,
+    super.enabled,
     bool? ignorePointers,
     Brightness? keyboardAppearance,
     EdgeInsets scrollPadding = const EdgeInsets.all(20.0),
@@ -195,7 +195,6 @@ class RadixTextFormField extends FormField<String> {
        assert(maxLength == null || maxLength == TextField.noMaxLength || maxLength > 0),
        super(
          initialValue: controller != null ? controller.text : (initialValue ?? ''),
-         enabled: enabled ?? decoration?.enabled ?? true,
          autovalidateMode: autovalidateMode ?? AutovalidateMode.disabled,
          builder: (FormFieldState<String> field) {
            final _RadixTextFormFieldState state = field as _RadixTextFormFieldState;
@@ -269,7 +268,7 @@ class RadixTextFormField extends FormField<String> {
                onEditingComplete: onEditingComplete,
                onSubmitted: onFieldSubmitted,
                inputFormatters: inputFormatters,
-               enabled: enabled ?? decoration?.enabled ?? true,
+               enabled: enabled,
                ignorePointers: ignorePointers,
                scrollPadding: scrollPadding,
                scrollPhysics: scrollPhysics,

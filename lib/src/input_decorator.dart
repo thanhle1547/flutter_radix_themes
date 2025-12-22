@@ -8,6 +8,7 @@ import 'package:radix_themes/src/button.dart';
 
 import 'colors.dart';
 import 'radius.dart';
+import 'select.dart';
 import 'space.dart';
 import 'state.dart';
 import 'text_theme.dart';
@@ -222,6 +223,7 @@ class _Decoration {
     this.suffix,
     this.prefixIcon,
     this.suffixIcon,
+    required this.affixIconPosition,
     this.prefixToInputGap,
     this.inputToSuffixGap,
     this.helperError,
@@ -244,6 +246,7 @@ class _Decoration {
   final Widget? suffix;
   final Widget? prefixIcon;
   final Widget? suffixIcon;
+  final AffixIconPosition affixIconPosition;
   final double? prefixToInputGap;
   final double? inputToSuffixGap;
   final Widget? helperError;
@@ -331,13 +334,15 @@ class _RenderDecoration extends RenderBox
     required _Decoration decoration,
     required TextDirection textDirection,
     required bool isFocused,
-    required bool expands,
+    required bool expandHeight,
+    required bool expandWidth,
     TextAlignVertical? textAlignVertical,
   }) : _decoration = decoration,
        _textDirection = textDirection,
        _textAlignVertical = textAlignVertical,
        _isFocused = isFocused,
-       _expands = expands;
+       _expandHeight = expandHeight,
+       _expandWidth = expandWidth;
 
   RenderBox? get icon => childForSlot(_DecorationSlot.icon);
   RenderBox? get input => childForSlot(_DecorationSlot.input);
@@ -414,13 +419,23 @@ class _RenderDecoration extends RenderBox
     markNeedsSemanticsUpdate();
   }
 
-  bool get expands => _expands;
-  bool _expands = false;
-  set expands(bool value) {
-    if (_expands == value) {
+  bool get expandHeight => _expandHeight;
+  bool _expandHeight = false;
+  set expandHeight(bool value) {
+    if (_expandHeight == value) {
       return;
     }
-    _expands = value;
+    _expandHeight = value;
+    markNeedsLayout();
+  }
+
+  bool get expandWidth => _expandWidth;
+  bool _expandWidth = true;
+  set expandWidth(bool value) {
+    if (_expandWidth == value) {
+      return;
+    }
+    _expandWidth = value;
     markNeedsLayout();
   }
 
@@ -590,23 +605,26 @@ class _RenderDecoration extends RenderBox
               : suffixIconSize.width + inputToSuffixGap),
     );
 
-    final double inputWidth = math.max(
-      0.0,
-      constraints.maxWidth - accessoryHorizontalInsets.horizontal,
-    );
-
     // The height of the input needs to accommodate label above and counter and
     // helperError below, when they exist.
     final double bottomHeight = subtextSize?.bottomHeight ?? 0.0;
-    final BoxConstraints inputConstraints = boxConstraints
+    BoxConstraints inputConstraints = boxConstraints
         .deflate(
           EdgeInsets.only(
             top: contentPadding.vertical + bottomHeight,
           ),
-        )
-        .tighten(width: inputWidth);
+        );
+    BoxConstraints hintConstraints = boxConstraints;
 
-    final BoxConstraints hintConstraints = boxConstraints.tighten(width: inputWidth);
+    if (expandWidth) {
+      final double inputWidth = math.max(
+        0.0,
+        constraints.maxWidth - accessoryHorizontalInsets.horizontal,
+      );
+
+      inputConstraints = inputConstraints.tighten(width: inputWidth);
+      hintConstraints = hintConstraints.tighten(width: inputWidth);
+    }
 
     final RenderBox? input = this.input;
     final RenderBox? hint = this.hint;
@@ -666,9 +684,26 @@ class _RenderDecoration extends RenderBox
         : kMinInteractiveDimension;
     */
     final double maxContainerHeight = math.max(0.0, boxConstraints.maxHeight - bottomHeight);
-    final double containerHeight = expands
+    final double containerHeight = expandHeight
         ? maxContainerHeight
         : math.min(math.max(contentHeight, minContainerHeight), maxContainerHeight);
+
+    final double containerWidth;
+    if (expandWidth) {
+      containerWidth = constraints.maxWidth;
+    } else {
+      // Calculate the width of the input text container.
+      final double inputWidth = math.max(
+        decoration.isEmpty || decoration.maintainHintSize ? hintSize.width : 0.0,
+        inputSize.width,
+      );
+      final double contentWidth = (prefixIcon == null ? 0.0 : contentPadding.start) +
+            accessoryHorizontalInsets.start +
+            inputWidth +
+            accessoryHorizontalInsets.end +
+            (suffixIcon == null ? 0.0 : contentPadding.end);
+      containerWidth = contentWidth;
+    }
 
     // Ensure the text is vertically centered in cases where the content is
     // shorter than kMinInteractiveDimension.
@@ -730,7 +765,7 @@ class _RenderDecoration extends RenderBox
       containerHeight: containerHeight,
       baseline: baseline,
       subtextSize: subtextSize,
-      size: Size(constraints.maxWidth, containerHeight + (subtextSize?.subtextHeight ?? 0.0)),
+      size: Size(containerWidth, containerHeight + (subtextSize?.subtextHeight ?? 0.0)),
     );
   }
 
@@ -858,7 +893,7 @@ class _RenderDecoration extends RenderBox
       prefixIconHeight,
       suffixIconHeight,
     ].reduce(math.max);
-    final double minContainerHeight = expands
+    final double minContainerHeight = expandHeight
         ? 0.0
         : kMinInteractiveDimension;
 
@@ -1002,7 +1037,9 @@ class _RenderDecoration extends RenderBox
       case TextDirection.rtl:
         {
           if (prefixIcon != null) {
-            start += contentPadding.start;
+            if (decoration.affixIconPosition == AffixIconPosition.insideContainer) {
+              start += contentPadding.start;
+            }
             start -= centerLayout(prefixIcon!, start - prefixIcon!.size.width);
             start -= prefixToInputGap;
           } else {
@@ -1018,7 +1055,9 @@ class _RenderDecoration extends RenderBox
             baselineLayout(hint!, start - hint!.size.width);
           }
           if (suffixIcon != null) {
-            end -= contentPadding.end;
+            if (decoration.affixIconPosition == AffixIconPosition.insideContainer) {
+              end -= contentPadding.end;
+            }
             end += centerLayout(suffixIcon!, end);
             end += inputToSuffixGap;
           } else {
@@ -1032,7 +1071,9 @@ class _RenderDecoration extends RenderBox
       case TextDirection.ltr:
         {
           if (prefixIcon != null) {
-            start -= contentPadding.start;
+            if (decoration.affixIconPosition == AffixIconPosition.insideContainer) {
+              start -= contentPadding.start;
+            }
             start += centerLayout(prefixIcon!, start);
             start += prefixToInputGap;
           } else {
@@ -1048,7 +1089,9 @@ class _RenderDecoration extends RenderBox
             baselineLayout(hint!, start);
           }
           if (suffixIcon != null) {
-            end += contentPadding.end;
+            if (decoration.affixIconPosition == AffixIconPosition.insideContainer) {
+              end += contentPadding.end;
+            }
             end -= centerLayout(suffixIcon!, end - suffixIcon!.size.width);
             end -= inputToSuffixGap;
           } else {
@@ -1149,14 +1192,16 @@ class _Decorator extends SlottedMultiChildRenderObjectWidget<_DecorationSlot, Re
     required this.decoration,
     required this.textDirection,
     required this.isFocused,
-    required this.expands,
+    required this.expandHeight,
+    required this.expandWidth,
   });
 
   final _Decoration decoration;
   final TextDirection textDirection;
   final TextAlignVertical? textAlignVertical;
   final bool isFocused;
-  final bool expands;
+  final bool expandHeight;
+  final bool expandWidth;
 
   @override
   Iterable<_DecorationSlot> get slots => _DecorationSlot.values;
@@ -1184,7 +1229,8 @@ class _Decorator extends SlottedMultiChildRenderObjectWidget<_DecorationSlot, Re
       textDirection: textDirection,
       textAlignVertical: textAlignVertical,
       isFocused: isFocused,
-      expands: expands,
+      expandHeight: expandHeight,
+      expandWidth: expandWidth,
     );
   }
 
@@ -1192,7 +1238,8 @@ class _Decorator extends SlottedMultiChildRenderObjectWidget<_DecorationSlot, Re
   void updateRenderObject(BuildContext context, _RenderDecoration renderObject) {
     renderObject
       ..decoration = decoration
-      ..expands = expands
+      ..expandHeight = expandHeight
+      ..expandWidth = expandWidth
       ..isFocused = isFocused
       ..textAlignVertical = textAlignVertical
       ..textDirection = textDirection;
@@ -1241,6 +1288,8 @@ class _AffixText extends StatelessWidget {
   }
 }
 
+enum AffixIconPosition { insideContainer, insideContent }
+
 /// Defines the appearance of a Radix text field.
 ///
 /// [RadixInputDecorator] displays the visual elements of a Radix text field
@@ -1267,19 +1316,23 @@ class RadixInputDecorator extends StatefulWidget {
   /// Creates a widget that displays a border, labels, and icons,
   /// for a [RadixTextField].
   ///
-  /// The [isFocused], [isHovering], [expands], and [isEmpty] arguments must not
+  /// The [isFocused], [isHovering], [expandHeight], and [isEmpty] arguments must not
   /// be null.
   const RadixInputDecorator({
     super.key,
     required this.decoration,
+    this.affixIconPosition = AffixIconPosition.insideContainer,
     this.textAlign,
     this.textAlignVertical,
     this.isFocused = false,
     this.isHovering = false,
+    this.enabled = true,
     this.readOnly = false,
     this.tighContentHeight = true,
-    this.expands = false,
+    this.expandHeight = false,
+    this.expandWidth = true,
     this.isEmpty = false,
+    required this.getDefaultDecoration,
     this.child,
   });
 
@@ -1288,6 +1341,8 @@ class RadixInputDecorator extends StatefulWidget {
   /// Null [RadixInputDecoration] properties are initialized with the corresponding
   /// values from the ambient [RadixInputDecorationThemeData].
   final RadixInputDecoration decoration;
+
+  final AffixIconPosition affixIconPosition;
 
   /// How the text in the decoration should be aligned horizontally.
   final TextAlign? textAlign;
@@ -1329,6 +1384,9 @@ class RadixInputDecorator extends StatefulWidget {
   /// Defaults to false.
   final bool isHovering;
 
+  /// This property is true by default.
+  final bool enabled;
+
   /// {@macro flutter.widgets.editableText.readOnly}
   final bool readOnly;
 
@@ -1337,15 +1395,20 @@ class RadixInputDecorator extends StatefulWidget {
   /// If true, the height of the input field will be as large as possible.
   ///
   /// If wrapped in a widget that constrains its child's height, like Expanded
-  /// or SizedBox, the input field will only be affected if [expands] is set to
+  /// or SizedBox, the input field will only be affected if [expandHeight] is set to
   /// true.
   ///
   /// See [RadixTextField.minLines] and [RadixTextField.maxLines] for related ways to
-  /// affect the height of an input. When [expands] is true, both must be null
+  /// affect the height of an input. When [expandHeight] is true, both must be null
   /// in order to avoid ambiguity in determining the height.
   ///
   /// Defaults to false.
-  final bool expands;
+  final bool expandHeight;
+
+  /// If false, the width of the input field will be as small as possible.
+  ///
+  /// Defaults to true.
+  final bool expandWidth;
 
   /// Whether the input field is empty.
   ///
@@ -1359,6 +1422,8 @@ class RadixInputDecorator extends StatefulWidget {
   ///
   /// Typically an [EditableText], [DropdownButton], or [InkWell].
   final Widget? child;
+
+  final RadixInputDecorationThemeData Function(BuildContext context) getDefaultDecoration;
 
   @override
   State<RadixInputDecorator> createState() => _RadixInputDecoratorState();
@@ -1380,7 +1445,8 @@ class RadixInputDecorator extends StatefulWidget {
     super.debugFillProperties(properties);
     properties.add(DiagnosticsProperty<RadixInputDecoration>('decoration', decoration));
     properties.add(DiagnosticsProperty<bool>('isFocused', isFocused));
-    properties.add(DiagnosticsProperty<bool>('expands', expands, defaultValue: false));
+    properties.add(DiagnosticsProperty<bool>('expandHeight', expandHeight, defaultValue: false));
+    properties.add(DiagnosticsProperty<bool>('expandWidth', expandWidth, defaultValue: false));
     properties.add(DiagnosticsProperty<bool>('isEmpty', isEmpty));
   }
 }
@@ -1417,23 +1483,10 @@ class _RadixInputDecoratorState extends State<RadixInputDecorator> with TickerPr
   RadixInputDecoration? _effectiveDecoration;
   RadixInputDecoration get decoration => _effectiveDecoration!;
 
-  RadixInputDecorationThemeData _getDefaultDecoration(ThemeData theme) {
-    RadixInputDecorationThemeData? defaultDecoration = RadixInputDecorationTheme.of(context);
-    if (defaultDecoration == null) {
-      final RadixThemeData? radixThemeData = RadixTheme.maybeOf(context);
-      defaultDecoration = radixThemeData?.inputDecorationTheme;
-    }
-    if (defaultDecoration == null) {
-      final RadixInputDecorationThemeData decorationTheme = RadixInputDecorationTheme.extensionFrom(theme);
-      defaultDecoration = decorationTheme;
-    }
-    return defaultDecoration;
-  }
-
   TextAlign? get textAlign => widget.textAlign;
   bool get isFocused => widget.isFocused;
   bool get _hasError => decoration.errorText != null || decoration.error != null;
-  bool get isHovering => widget.isHovering && decoration.enabled;
+  bool get isHovering => widget.isHovering && widget.enabled;
   bool get isEmpty => widget.isEmpty;
 
   @override
@@ -1487,7 +1540,7 @@ class _RadixInputDecoratorState extends State<RadixInputDecorator> with TickerPr
   }
 
   Set<WidgetState> get widgetState => <WidgetState>{
-    if (!decoration.enabled) WidgetState.disabled,
+    if (!widget.enabled) WidgetState.disabled,
     if (isFocused) WidgetState.focused,
     if (isHovering) WidgetState.hovered,
     if (_hasError) WidgetState.error,
@@ -1510,9 +1563,7 @@ class _RadixInputDecoratorState extends State<RadixInputDecorator> with TickerPr
 
   @override
   Widget build(BuildContext context) {
-    final ThemeData themeData = Theme.of(context);
-
-    final RadixInputDecorationThemeData defaults = _getDefaultDecoration(themeData);
+    final RadixInputDecorationThemeData defaults = widget.getDefaultDecoration(context);
     _effectiveDecoration ??= widget.decoration.applyDefaults(defaults);
 
     final Set<WidgetState> widgetState = this.widgetState;
@@ -1551,7 +1602,7 @@ class _RadixInputDecoratorState extends State<RadixInputDecorator> with TickerPr
     }
 
     InputBorder? border;
-    if (!decoration.enabled) {
+    if (!widget.enabled) {
       border = _hasError ? decoration.errorBorder : decoration.disabledBorder;
     } else if (isFocused) {
       border = _hasError ? decoration.focusedErrorBorder : decoration.focusedBorder;
@@ -1565,12 +1616,18 @@ class _RadixInputDecoratorState extends State<RadixInputDecorator> with TickerPr
 
     Widget? container;
 
-    final Color? fillColor = widget.readOnly
-        ? decoration.readOnlyBackgroundColor ?? defaults.readOnlyBackgroundColor
-        : WidgetStateProperty.resolveAs<Color?>(
-            decoration.backgroundColor ?? defaults.backgroundColor,
-            widgetState,
-          );
+    Color? fillColor;
+    Color? backgroundColor = WidgetStateProperty.resolveAs<Color?>(
+      decoration.backgroundColor ?? defaults.backgroundColor,
+      widgetState,
+    );
+    if (!widget.isEmpty) {
+      backgroundColor = decoration.filledBackgroundColor ?? defaults.filledBackgroundColor;
+    }
+    if (widget.readOnly) {
+      fillColor = decoration.readOnlyBackgroundColor ?? defaults.readOnlyBackgroundColor;
+    }
+    fillColor ??= backgroundColor;
 
     final BorderRadius? borderRadius = decoration.borderRadius ?? defaults.borderRadius;
 
@@ -1667,6 +1724,7 @@ class _RadixInputDecoratorState extends State<RadixInputDecorator> with TickerPr
           child: Align(
             alignment: decoration.contentAlignment,
             heightFactor: 1,
+            widthFactor: widget.expandWidth ? null : 1,
             child: input,
           ),
         );
@@ -1678,6 +1736,7 @@ class _RadixInputDecoratorState extends State<RadixInputDecorator> with TickerPr
           child: Align(
             alignment: decoration.contentAlignment,
             heightFactor: 1,
+            widthFactor: widget.expandWidth ? null : 1,
             child: hint,
           ),
         );
@@ -1702,7 +1761,14 @@ class _RadixInputDecoratorState extends State<RadixInputDecorator> with TickerPr
         prefixIcon = Padding(padding: prefixPadding, child: icon);
       }
 
-      final Color? prefixIconColor = WidgetStateProperty.resolveAs(decoration.prefixIconColor, widgetState) ??
+      Color? prefixIconColor;
+      if (!widget.isEmpty) {
+        prefixIconColor = decoration.filledPrefixIconColor ?? defaults.filledPrefixIconColor;
+      }
+      if (widget.readOnly) {
+        prefixIconColor = decoration.readOnlyPrefixIconColor ?? defaults.readOnlyPrefixIconColor;
+      }
+      prefixIconColor ??= WidgetStateProperty.resolveAs(decoration.prefixIconColor, widgetState) ??
           WidgetStateProperty.resolveAs(defaults.prefixIconColor, widgetState);
 
       prefixIcon = IconTheme.merge(
@@ -1743,7 +1809,14 @@ class _RadixInputDecoratorState extends State<RadixInputDecorator> with TickerPr
         suffixIcon = Padding(padding: padding, child: icon);
       }
 
-      final Color? suffixIconColor = WidgetStateProperty.resolveAs(decoration.suffixIconColor, widgetState) ??
+      Color? suffixIconColor;
+      if (!widget.isEmpty) {
+        suffixIconColor = decoration.filledSuffixIconColor ?? defaults.filledSuffixIconColor;
+      }
+      if (widget.readOnly) {
+        suffixIconColor = decoration.readOnlySuffixIconColor ?? defaults.readOnlySuffixIconColor;
+      }
+      suffixIconColor ??= WidgetStateProperty.resolveAs(decoration.suffixIconColor, widgetState) ??
           WidgetStateProperty.resolveAs(defaults.suffixIconColor, widgetState);
 
       suffixIcon = IconTheme.merge(
@@ -1854,6 +1927,7 @@ class _RadixInputDecoratorState extends State<RadixInputDecorator> with TickerPr
         suffix: suffix,
         prefixIcon: prefixIcon,
         suffixIcon: suffixIcon,
+        affixIconPosition: widget.affixIconPosition,
         prefixToInputGap: prefixToInputGap,
         inputToSuffixGap: inputToSuffixGap,
         helperError: helperError,
@@ -1864,7 +1938,8 @@ class _RadixInputDecoratorState extends State<RadixInputDecorator> with TickerPr
       textDirection: textDirection,
       textAlignVertical: widget.textAlignVertical,
       isFocused: isFocused,
-      expands: widget.expands,
+      expandHeight: widget.expandHeight,
+      expandWidth: widget.expandWidth,
     );
 
     final BoxConstraints? constraints = decoration.constraints;
@@ -2603,6 +2678,9 @@ class RadixInputDecoration {
   /// Similarly, only one of [suffix] and [suffixText] can be specified.
   const RadixInputDecoration({
     this.textStyle,
+    this.textColor,
+    this.disabledTextColor,
+    this.readOnlyTextColor,
     this.icon,
     this.iconSize,
     this.iconColor,
@@ -2634,11 +2712,15 @@ class RadixInputDecoration {
     this.prefixText,
     this.prefixStyle,
     this.prefixIconColor,
+    this.filledPrefixIconColor,
+    this.readOnlyPrefixIconColor,
     this.suffixIcon,
     this.suffix,
     this.suffixText,
     this.suffixStyle,
     this.suffixIconColor,
+    this.filledSuffixIconColor,
+    this.readOnlySuffixIconColor,
     this.suffixIconConstraints,
     this.suffixPadding,
     this.inputToSuffixGap,
@@ -2647,15 +2729,16 @@ class RadixInputDecoration {
     this.counterText,
     this.counterStyle,
     this.backgroundColor,
+    this.filledBackgroundColor,
     this.readOnlyBackgroundColor,
     this.errorBorder,
     this.focusedBorder,
     this.focusedErrorBorder,
     this.disabledBorder,
+    this.readOnlyBorder,
     this.filledBorder,
     this.enabledBorder,
     this.borderRadius,
-    this.enabled = true,
     this.semanticCounterText,
     this.contentHeight,
     this.constraints,
@@ -2691,6 +2774,9 @@ class RadixInputDecoration {
 
   const RadixInputDecoration._withVariant({
     this.textStyle,
+    this.textColor,
+    this.disabledTextColor,
+    this.readOnlyTextColor,
     this.icon,
     this.iconSize,
     this.iconColor,
@@ -2723,12 +2809,16 @@ class RadixInputDecoration {
     this.prefixText,
     this.prefixStyle,
     this.prefixIconColor,
+    this.filledPrefixIconColor,
+    this.readOnlyPrefixIconColor,
     this.suffixIcon,
     EdgeInsets? suffixGhostIconButtonUniformPadding,
     this.suffix,
     this.suffixText,
     this.suffixStyle,
     this.suffixIconColor,
+    this.filledSuffixIconColor,
+    this.readOnlySuffixIconColor,
     this.suffixIconConstraints,
     this.suffixPadding,
     this.inputToSuffixGap,
@@ -2737,15 +2827,16 @@ class RadixInputDecoration {
     this.counterText,
     this.counterStyle,
     this.backgroundColor,
+    this.filledBackgroundColor,
     this.readOnlyBackgroundColor,
     this.errorBorder,
     this.focusedBorder,
     this.focusedErrorBorder,
     this.disabledBorder,
+    this.readOnlyBorder,
     this.filledBorder,
     this.enabledBorder,
     this.borderRadius,
-    this.enabled = true,
     this.semanticCounterText,
     this.contentHeight,
     this.constraints,
@@ -2845,7 +2936,6 @@ class RadixInputDecoration {
     InputBorder? filledBorder,
     InputBorder? enabledBorder,
     BorderRadius? borderRadius,
-    bool enabled = true,
     String? semanticCounterText,
     BoxConstraints? constraints,
     double cursorWidth = 2.0,
@@ -2922,6 +3012,9 @@ class RadixInputDecoration {
 
     return RadixInputDecoration._withVariant(
       textStyle: effectiveTextStyle,
+      textColor: variant.textColor,
+      disabledTextColor: variant.disabledTextColor,
+      readOnlyTextColor: variant.readOnlyTextColor,
       icon: icon,
       iconSize: iconSize,
       iconColor: iconColor,
@@ -2976,7 +3069,6 @@ class RadixInputDecoration {
       filledBorder: effectiveFilledBorder,
       enabledBorder: effectiveEnabledBorder,
       borderRadius: borderRadius ?? size.borderRadius,
-      enabled: enabled,
       semanticCounterText: semanticCounterText,
       constraints: constraints,
       cursorWidth: cursorWidth,
@@ -2989,8 +3081,208 @@ class RadixInputDecoration {
     );
   }
 
+  /// Creates a bundle of the border, icons, and styles used to
+  /// decorate a Radix select, based on the default appearance
+  /// of a specific [variant] and [size]. It can then be used to override
+  /// the default appearance.
+  factory RadixInputDecoration.fromSelectVariant({
+    required RadixSelectDecorationVariant variant,
+    required RadixSelectDecorationVariantFactor size,
+    TextStyle? textStyle,
+    Widget? icon,
+    double? iconSize,
+    Color? iconColor,
+    Widget? helper,
+    String? helperText,
+    TextStyle? helperStyle,
+    int? helperMaxLines,
+    String? hintText,
+    Widget? hint,
+    TextStyle? hintStyle,
+    TextDirection? hintTextDirection,
+    int? hintMaxLines,
+    Duration? hintFadeDuration,
+    bool maintainHintSize = true,
+    Widget? error,
+    String? errorText,
+    TextStyle? errorStyle,
+    int? errorMaxLines,
+    double? subtextGap,
+    double? contentHeight,
+    EdgeInsetsGeometry? contentPadding,
+    AlignmentDirectional contentAlignment = AlignmentDirectional.centerStart,
+    Widget? prefixIcon,
+    Widget? prefix,
+    String? prefixText,
+    BoxConstraints? prefixIconConstraints,
+    EdgeInsetsGeometry? prefixPadding,
+    double? prefixToInputGap,
+    TextStyle? prefixStyle,
+    Color? prefixIconColor,
+    Widget? suffixIcon,
+    Widget? suffix,
+    String? suffixText,
+    TextStyle? suffixStyle,
+    Color? suffixIconColor,
+    BoxConstraints? suffixIconConstraints,
+    double? inputToSuffixGap,
+    Color? affixColor,
+    Color? fillColor,
+    InputBorder? errorBorder,
+    InputBorder? focusedBorder,
+    InputBorder? focusedErrorBorder,
+    InputBorder? disabledBorder,
+    InputBorder? readOnlyBorder,
+    InputBorder? filledBorder,
+    InputBorder? enabledBorder,
+    BorderRadius? borderRadius,
+    BoxConstraints? constraints,
+    double cursorWidth = 2.0,
+    double? cursorHeight,
+    Radius? cursorRadius,
+    bool? cursorOpacityAnimates,
+    Color? cursorColor,
+    Color? cursorErrorColor,
+  }) {
+    final TextStyle effectiveTextStyle = textStyle?.merge(size.textStyle) ?? size.textStyle;
+
+    final WidgetStateMap<Color> fillColorMapper = {
+      WidgetState.hovered   : variant.hoveredBackgroundColor,
+      WidgetState.focused   : variant.focusedBackgroundColor,
+      WidgetState.disabled  : variant.disabledBackgroundColor,
+      WidgetState.any       : variant.backgroundColor,
+    };
+
+    final WidgetStateColor efffectiveFillColor = WidgetStateExtension.merge(fillColorMapper, fillColor);
+
+    final WidgetStateMap<Color> iconColorMapper = {
+      WidgetState.disabled: variant.disabledIconColor,
+      WidgetState.any: variant.iconColor,
+    };
+    final WidgetStateColor efffectivePrefixIconColor = WidgetStateExtension.merge(iconColorMapper, prefixIconColor);
+    final WidgetStateColor efffectiveSuffixIconColor = WidgetStateExtension.merge(iconColorMapper, suffixIconColor);
+
+    InputBorder? effectiveEnabledBorder = enabledBorder;
+    if (variant.side case final BorderSide side) {
+      effectiveEnabledBorder ??= OutlineInputBorder(
+        borderSide: side,
+        borderRadius: borderRadius ?? size.borderRadius ?? BorderRadius.zero,
+        gapPadding: 0.0,
+      );
+    }
+
+    InputBorder? effectiveFilledBorder = filledBorder;
+    if (variant.filledSide case final BorderSide side) {
+      effectiveFilledBorder ??= OutlineInputBorder(
+        borderSide: side,
+        borderRadius: borderRadius ?? size.borderRadius ?? BorderRadius.zero,
+        gapPadding: 0.0,
+      );
+    }
+
+    InputBorder? effectiveFocusedBorder = focusedBorder;
+    if (variant.focusedSide case final BorderSide side) {
+      effectiveFocusedBorder = OutlineInputBorder(
+        borderSide: side,
+        borderRadius: borderRadius ?? size.borderRadius ?? BorderRadius.zero,
+        gapPadding: 0.0,
+      );
+    }
+
+    InputBorder? effectiveDisabledBorder = disabledBorder;
+    if (variant.disabledSide case final BorderSide side) {
+      effectiveDisabledBorder ??= OutlineInputBorder(
+        borderSide: side,
+        borderRadius: borderRadius ?? size.borderRadius ?? BorderRadius.zero,
+        gapPadding: 0.0,
+      );
+    }
+
+    InputBorder? effectiveReadOnlyBorder = readOnlyBorder;
+    if (variant.readOnlySide case final BorderSide side) {
+      effectiveReadOnlyBorder ??= OutlineInputBorder(
+        borderSide: side,
+        borderRadius: borderRadius ?? size.borderRadius ?? BorderRadius.zero,
+        gapPadding: 0.0,
+      );
+    }
+
+    return RadixInputDecoration._withVariant(
+      textStyle: effectiveTextStyle,
+      textColor: variant.textColor,
+      disabledTextColor: variant.disabledTextColor,
+      readOnlyTextColor: variant.readOnlyTextColor,
+      icon: icon,
+      iconSize: iconSize ?? size.iconSize,
+      iconColor: iconColor,
+      helper: helper,
+      helperText: helperText,
+      helperStyle: helperStyle,
+      helperMaxLines: helperMaxLines,
+      hintText: hintText,
+      hint: hint,
+      hintStyle: hintStyle ?? effectiveTextStyle,
+      hintColor: variant.hintColor,
+      disabledHintColor: variant.disabledHintColor,
+      hintTextDirection: hintTextDirection,
+      hintMaxLines: hintMaxLines,
+      hintFadeDuration: hintFadeDuration,
+      maintainHintSize: maintainHintSize,
+      error: error,
+      errorText: errorText,
+      errorStyle: errorStyle,
+      errorMaxLines: errorMaxLines,
+      subtextGap: subtextGap,
+      contentHeight: contentHeight ?? size.triggerHeight,
+      contentPadding: contentPadding ?? size.padding,
+      contentAlignment: contentAlignment,
+      prefixIcon: prefixIcon,
+      prefixIconConstraints: prefixIconConstraints,
+      prefixPadding: prefixPadding,
+      prefixToInputGap: prefixToInputGap ?? size.gap,
+      prefix: prefix,
+      prefixText: prefixText,
+      prefixStyle: prefixStyle,
+      prefixIconColor: efffectivePrefixIconColor,
+      filledPrefixIconColor: variant.filledIconColor,
+      readOnlyPrefixIconColor: variant.readOnlyIconColor,
+      suffixIcon: suffixIcon,
+      suffix: suffix,
+      suffixText: suffixText,
+      suffixStyle: suffixStyle,
+      suffixIconColor: efffectiveSuffixIconColor,
+      filledSuffixIconColor: variant.filledIconColor,
+      readOnlySuffixIconColor: variant.readOnlyIconColor,
+      suffixIconConstraints: suffixIconConstraints,
+      inputToSuffixGap: inputToSuffixGap ?? size.gap,
+      affixColor: affixColor ?? variant.iconColor,
+      backgroundColor: efffectiveFillColor,
+      filledBackgroundColor: variant.filledBackgroundColor,
+      readOnlyBackgroundColor: variant.readOnlyBackgroundColor,
+      errorBorder: errorBorder,
+      focusedBorder: effectiveFocusedBorder,
+      focusedErrorBorder: focusedErrorBorder,
+      disabledBorder: effectiveDisabledBorder,
+      readOnlyBorder: effectiveReadOnlyBorder,
+      filledBorder: effectiveFilledBorder,
+      enabledBorder: effectiveEnabledBorder,
+      borderRadius: borderRadius ?? size.borderRadius,
+      constraints: constraints,
+      cursorWidth: cursorWidth,
+      cursorHeight: cursorHeight,
+      cursorRadius: cursorRadius,
+      cursorOpacityAnimates: cursorOpacityAnimates,
+      cursorColor: cursorColor,
+      cursorErrorColor: cursorErrorColor,
+    );
+  }
+
   /// The style to use for the text being edited.
   final TextStyle? textStyle;
+
+  final Color? textColor;
+  final Color? disabledTextColor;
+  final Color? readOnlyTextColor;
 
   /// An icon to show before the input field and outside of the decoration's
   /// container.
@@ -3299,6 +3591,9 @@ class RadixInputDecoration {
   /// if the [RadixTextField] is focused or not.
   final Color? prefixIconColor;
 
+  final Color? filledPrefixIconColor;
+  final Color? readOnlyPrefixIconColor;
+
   /// An icon that appears after the editable part of the text field and
   /// after the [suffix] or [suffixText], within the decoration's container.
   ///
@@ -3381,6 +3676,9 @@ class RadixInputDecoration {
   /// if the [RadixTextField] is focused or not.
   final Color? suffixIconColor;
 
+  final Color? filledSuffixIconColor;
+  final Color? readOnlySuffixIconColor;
+
   /// The constraints for the suffix icon.
   ///
   /// This can be used to modify the [BoxConstraints] surrounding [suffixIcon].
@@ -3428,6 +3726,11 @@ class RadixInputDecoration {
   final Color? backgroundColor;
 
   /// The base fill color of the decoration's container color
+  /// when the input is enabled, is not showing an error,
+  /// and the editable part of the text field is filled.
+  final Color? filledBackgroundColor;
+
+  /// The base fill color of the decoration's container color
   /// when the input is read-only.
   final Color? readOnlyBackgroundColor;
 
@@ -3450,9 +3753,9 @@ class RadixInputDecoration {
   ///    and [RadixInputDecoration.errorText] is null.
   ///  * [focusedErrorBorder], displayed when [RadixInputDecorator.isFocused] is true
   ///    and [RadixInputDecoration.errorText] is non-null.
-  ///  * [disabledBorder], displayed when [RadixInputDecoration.enabled] is false
+  ///  * [disabledBorder], displayed when [RadixInputDecorator.enabled] is false
   ///    and [RadixInputDecoration.errorText] is null.
-  ///  * [enabledBorder], displayed when [RadixInputDecoration.enabled] is true
+  ///  * [enabledBorder], displayed when [RadixInputDecorator.enabled] is true
   ///    and [RadixInputDecoration.errorText] is null.
   final InputBorder? errorBorder;
 
@@ -3475,9 +3778,9 @@ class RadixInputDecoration {
   ///    and [RadixInputDecoration.errorText] is non-null.
   ///  * [focusedErrorBorder], displayed when [RadixInputDecorator.isFocused] is true
   ///    and [RadixInputDecoration.errorText] is non-null.
-  ///  * [disabledBorder], displayed when [RadixInputDecoration.enabled] is false
+  ///  * [disabledBorder], displayed when [RadixInputDecorator.enabled] is false
   ///    and [RadixInputDecoration.errorText] is null.
-  ///  * [enabledBorder], displayed when [RadixInputDecoration.enabled] is true
+  ///  * [enabledBorder], displayed when [RadixInputDecorator.enabled] is true
   ///    and [RadixInputDecoration.errorText] is null.
   final InputBorder? focusedBorder;
 
@@ -3500,9 +3803,9 @@ class RadixInputDecoration {
   ///    and [RadixInputDecoration.errorText] is non-null.
   ///  * [focusedBorder], displayed when [RadixInputDecorator.isFocused] is true
   ///    and [RadixInputDecoration.errorText] is null.
-  ///  * [disabledBorder], displayed when [RadixInputDecoration.enabled] is false
+  ///  * [disabledBorder], displayed when [RadixInputDecorator.enabled] is false
   ///    and [RadixInputDecoration.errorText] is null.
-  ///  * [enabledBorder], displayed when [RadixInputDecoration.enabled] is true
+  ///  * [enabledBorder], displayed when [RadixInputDecorator.enabled] is true
   ///    and [RadixInputDecoration.errorText] is null.
   final InputBorder? focusedErrorBorder;
 
@@ -3511,8 +3814,6 @@ class RadixInputDecoration {
   ///
   /// See also:
   ///
-  ///  * [RadixInputDecoration.enabled], which is false if
-  ///    the [RadixInputDecorator] is disabled.
   ///  * [RadixInputDecoration.errorText], the error shown by
   ///    the [RadixInputDecorator], if non-null.
   ///  * [border], for a description of where the [RadixInputDecorator] border appears.
@@ -3527,21 +3828,21 @@ class RadixInputDecoration {
   ///    and [RadixInputDecoration.errorText] is null.
   ///  * [focusedErrorBorder], displayed when [RadixInputDecorator.isFocused] is true
   ///    and [RadixInputDecoration.errorText] is non-null.
-  ///  * [enabledBorder], displayed when [RadixInputDecoration.enabled] is true
+  ///  * [enabledBorder], displayed when [RadixInputDecorator.enabled] is true
   ///    and [RadixInputDecoration.errorText] is null.
   final InputBorder? disabledBorder;
 
-  /// The border to display when the [RadixInputDecorator] is enabled, is not
-  /// showing an error, and the editable part of the text field is filled.
+  final InputBorder? readOnlyBorder;
+
+  /// The border to display when the [RadixInputDecorator.enabled] is true,
+  /// is not showing an error, and the editable part of the text field is filled.
   final InputBorder? filledBorder;
 
-  /// The border to display when the [RadixInputDecorator] is enabled and is not
-  /// showing an error.
+  /// The border to display when the [RadixInputDecorator.enabled] is true and
+  /// is not showing an error.
   ///
   /// See also:
   ///
-  ///  * [RadixInputDecoration.enabled], which is false if
-  ///    the [RadixInputDecorator] is disabled.
   ///  * [RadixInputDecoration.errorText], the error shown by
   ///    the [RadixInputDecorator], if non-null.
   ///  * [border], for a description of where the [RadixInputDecorator] border appears.
@@ -3556,14 +3857,11 @@ class RadixInputDecoration {
   ///    and [RadixInputDecoration.errorText] is null.
   ///  * [focusedErrorBorder], displayed when [RadixInputDecorator.isFocused] is true
   ///    and [RadixInputDecoration.errorText] is non-null.
-  ///  * [disabledBorder], displayed when [RadixInputDecoration.enabled] is false
+  ///  * [disabledBorder], displayed when [RadixInputDecorator.enabled] is false
   ///    and [RadixInputDecoration.errorText] is null.
   final InputBorder? enabledBorder;
 
   final BorderRadius? borderRadius;
-
-  /// This property is true by default.
-  final bool enabled;
 
   /// A semantic label for the [counterText].
   ///
@@ -3623,6 +3921,9 @@ class RadixInputDecoration {
   /// by the new values.
   RadixInputDecoration copyWith({
     TextStyle? textStyle,
+    Color? textColor,
+    Color? disabledTextColor,
+    Color? readOnlyTextColor,
     Widget? icon,
     double? iconSize,
     Color? iconColor,
@@ -3655,11 +3956,15 @@ class RadixInputDecoration {
     double? prefixToInputGap,
     TextStyle? prefixStyle,
     Color? prefixIconColor,
+    Color? filledPrefixIconColor,
+    Color? readOnlyPrefixIconColor,
     Widget? suffixIcon,
     Widget? suffix,
     String? suffixText,
     TextStyle? suffixStyle,
     Color? suffixIconColor,
+    Color? filledSuffixIconColor,
+    Color? readOnlySuffixIconColor,
     BoxConstraints? suffixIconConstraints,
     EdgeInsetsGeometry? suffixPadding,
     double? inputToSuffixGap,
@@ -3669,15 +3974,16 @@ class RadixInputDecoration {
     TextStyle? counterStyle,
     bool? filled,
     Color? backgroundColor,
+    Color? filledBackgroundColor,
     Color? readOnlyBackgroundColor,
     InputBorder? errorBorder,
     InputBorder? focusedBorder,
     InputBorder? focusedErrorBorder,
     InputBorder? disabledBorder,
+    InputBorder? readOnlyBorder,
     InputBorder? filledBorder,
     InputBorder? enabledBorder,
     BorderRadius? borderRadius,
-    bool? enabled,
     String? semanticCounterText,
     BoxConstraints? constraints,
     double? cursorWidth,
@@ -3690,6 +3996,9 @@ class RadixInputDecoration {
   }) {
     return RadixInputDecoration._withVariant(
       textStyle: textStyle ?? this.textStyle,
+      textColor: textColor ?? this.textColor,
+      disabledTextColor: disabledTextColor ?? this.disabledTextColor,
+      readOnlyTextColor: readOnlyTextColor ?? this.readOnlyTextColor,
       icon: icon ?? this.icon,
       iconSize: iconSize ?? this.iconSize,
       iconColor: iconColor ?? this.iconColor,
@@ -3720,6 +4029,8 @@ class RadixInputDecoration {
       prefixText: prefixText ?? this.prefixText,
       prefixStyle: prefixStyle ?? this.prefixStyle,
       prefixIconColor: prefixIconColor ?? this.prefixIconColor,
+      filledPrefixIconColor: filledPrefixIconColor ?? this.filledPrefixIconColor,
+      readOnlyPrefixIconColor: readOnlyPrefixIconColor ?? this.readOnlyPrefixIconColor,
       prefixIconConstraints: prefixIconConstraints ?? this.prefixIconConstraints,
       prefixPadding: prefixPadding ?? this.prefixPadding,
       prefixToInputGap: prefixToInputGap ?? this.prefixToInputGap,
@@ -3729,6 +4040,8 @@ class RadixInputDecoration {
       suffixText: suffixText ?? this.suffixText,
       suffixStyle: suffixStyle ?? this.suffixStyle,
       suffixIconColor: suffixIconColor ?? this.suffixIconColor,
+      filledSuffixIconColor: filledSuffixIconColor ?? this.filledSuffixIconColor,
+      readOnlySuffixIconColor: readOnlySuffixIconColor ?? this.readOnlySuffixIconColor,
       suffixIconConstraints: suffixIconConstraints ?? this.suffixIconConstraints,
       suffixPadding: suffixPadding ?? this.suffixPadding,
       inputToSuffixGap: inputToSuffixGap ?? this.inputToSuffixGap,
@@ -3737,15 +4050,16 @@ class RadixInputDecoration {
       counterText: counterText ?? this.counterText,
       counterStyle: counterStyle ?? this.counterStyle,
       backgroundColor: backgroundColor ?? this.backgroundColor,
+      filledBackgroundColor: filledBackgroundColor ?? this.filledBackgroundColor,
       readOnlyBackgroundColor: readOnlyBackgroundColor ?? this.readOnlyBackgroundColor,
       errorBorder: errorBorder ?? this.errorBorder,
       focusedBorder: focusedBorder ?? this.focusedBorder,
       focusedErrorBorder: focusedErrorBorder ?? this.focusedErrorBorder,
       disabledBorder: disabledBorder ?? this.disabledBorder,
+      readOnlyBorder: readOnlyBorder ?? this.readOnlyBorder,
       filledBorder: filledBorder ?? this.filledBorder,
       enabledBorder: enabledBorder ?? this.enabledBorder,
       borderRadius: borderRadius ?? this.borderRadius,
-      enabled: enabled ?? this.enabled,
       semanticCounterText: semanticCounterText ?? this.semanticCounterText,
       constraints: constraints ?? this.constraints,
       cursorWidth: cursorWidth ?? this.cursorWidth,
@@ -3766,6 +4080,9 @@ class RadixInputDecoration {
   RadixInputDecoration applyDefaults(RadixInputDecorationThemeData theme) {
     return copyWith(
       textStyle: textStyle ?? theme.textStyle,
+      textColor: textColor ?? theme.textColor,
+      disabledTextColor: disabledTextColor ?? theme.disabledTextColor,
+      readOnlyTextColor: readOnlyTextColor ?? theme.readOnlyTextColor,
       helperStyle: helperStyle ?? theme.helperStyle,
       helperMaxLines: helperMaxLines ?? theme.helperMaxLines,
       hintStyle: hintStyle ?? theme.hintStyle,
@@ -3782,22 +4099,28 @@ class RadixInputDecoration {
       iconColor: iconColor ?? theme.iconColor,
       prefixStyle: prefixStyle ?? theme.prefixStyle,
       prefixIconColor: prefixIconColor ?? theme.prefixIconColor,
+      filledPrefixIconColor: filledPrefixIconColor ?? theme.filledPrefixIconColor,
+      readOnlyPrefixIconColor: readOnlyPrefixIconColor ?? theme.readOnlyPrefixIconColor,
       prefixIconConstraints: prefixIconConstraints ?? theme.prefixIconConstraints,
       prefixPadding: prefixPadding ?? theme.prefixPadding,
       prefixToInputGap: prefixToInputGap ?? theme.prefixToInputGap,
       suffixStyle: suffixStyle ?? theme.suffixStyle,
       suffixIconColor: suffixIconColor ?? theme.suffixIconColor,
+      filledSuffixIconColor: filledSuffixIconColor ?? theme.filledSuffixIconColor,
+      readOnlySuffixIconColor: readOnlySuffixIconColor ?? theme.readOnlySuffixIconColor,
       suffixIconConstraints: suffixIconConstraints ?? theme.suffixIconConstraints,
       suffixPadding: suffixPadding ?? theme.suffixPadding,
       inputToSuffixGap: inputToSuffixGap ?? theme.inputToSuffixGap,
       affixColor: affixColor ?? theme.affixColor,
       counterStyle: counterStyle ?? theme.counterStyle,
       backgroundColor: backgroundColor ?? theme.backgroundColor,
+      filledBackgroundColor: filledBackgroundColor ?? theme.filledBackgroundColor,
       readOnlyBackgroundColor: readOnlyBackgroundColor ?? theme.readOnlyBackgroundColor,
       errorBorder: errorBorder ?? theme.errorBorder,
       focusedBorder: focusedBorder ?? theme.focusedBorder,
       focusedErrorBorder: focusedErrorBorder ?? theme.focusedErrorBorder,
       disabledBorder: disabledBorder ?? theme.disabledBorder,
+      readOnlyBorder: readOnlyBorder ?? theme.readOnlyBorder,
       filledBorder: filledBorder ?? theme.filledBorder,
       enabledBorder: enabledBorder ?? theme.enabledBorder,
       borderRadius: borderRadius ?? theme.borderRadius,
@@ -3821,6 +4144,9 @@ class RadixInputDecoration {
     }
     return other is RadixInputDecoration &&
         other.textStyle == textStyle &&
+        other.textColor == textColor &&
+        other.disabledTextColor == disabledTextColor &&
+        other.readOnlyTextColor == readOnlyTextColor &&
         other.icon == icon &&
         other.iconSize == iconSize &&
         other.iconColor == iconColor &&
@@ -3848,6 +4174,8 @@ class RadixInputDecoration {
         other._variantContentPadding == _variantContentPadding &&
         other.prefixIcon == prefixIcon &&
         other.prefixIconColor == prefixIconColor &&
+        other.filledPrefixIconColor == filledPrefixIconColor &&
+        other.readOnlyPrefixIconColor == readOnlyPrefixIconColor &&
         other.prefix == prefix &&
         other.prefixText == prefixText &&
         other.prefixStyle == prefixStyle &&
@@ -3857,6 +4185,8 @@ class RadixInputDecoration {
         other.suffixIcon == suffixIcon &&
         other._suffixGhostIconButtonUniformPadding == _suffixGhostIconButtonUniformPadding &&
         other.suffixIconColor == suffixIconColor &&
+        other.filledSuffixIconColor == filledSuffixIconColor &&
+        other.readOnlySuffixIconColor == readOnlySuffixIconColor &&
         other.suffix == suffix &&
         other.suffixText == suffixText &&
         other.suffixStyle == suffixStyle &&
@@ -3868,15 +4198,16 @@ class RadixInputDecoration {
         other.counterText == counterText &&
         other.counterStyle == counterStyle &&
         other.backgroundColor == backgroundColor &&
+        other.filledBackgroundColor == filledBackgroundColor &&
         other.readOnlyBackgroundColor == readOnlyBackgroundColor &&
         other.errorBorder == errorBorder &&
         other.focusedBorder == focusedBorder &&
         other.focusedErrorBorder == focusedErrorBorder &&
         other.disabledBorder == disabledBorder &&
+        other.readOnlyBorder == readOnlyBorder &&
         other.filledBorder == filledBorder &&
         other.enabledBorder == enabledBorder &&
         other.borderRadius == borderRadius &&
-        other.enabled == enabled &&
         other.semanticCounterText == semanticCounterText &&
         other.constraints == constraints &&
         other.cursorWidth == cursorWidth &&
@@ -3892,6 +4223,9 @@ class RadixInputDecoration {
   int get hashCode {
     final List<Object?> values = <Object?>[
       textStyle,
+      textColor,
+      disabledTextColor,
+      readOnlyTextColor,
       icon,
       iconSize,
       iconColor,
@@ -3918,9 +4252,12 @@ class RadixInputDecoration {
       contentAlignment,
       _variantContentPadding,
       backgroundColor,
+      filledBackgroundColor,
       readOnlyBackgroundColor,
       prefixIcon,
       prefixIconColor,
+      filledPrefixIconColor,
+      readOnlyPrefixIconColor,
       prefix,
       prefixText,
       prefixStyle,
@@ -3930,6 +4267,8 @@ class RadixInputDecoration {
       suffixIcon,
       _suffixGhostIconButtonUniformPadding,
       suffixIconColor,
+      filledSuffixIconColor,
+      readOnlySuffixIconColor,
       suffix,
       suffixText,
       suffixStyle,
@@ -3944,10 +4283,10 @@ class RadixInputDecoration {
       focusedBorder,
       focusedErrorBorder,
       disabledBorder,
+      readOnlyBorder,
       filledBorder,
       enabledBorder,
       borderRadius,
-      enabled,
       semanticCounterText,
       constraints,
       cursorWidth,
@@ -3965,6 +4304,9 @@ class RadixInputDecoration {
   String toString() {
     final List<String> description = <String>[
       if (textStyle != null) 'textStyle: $textStyle',
+      if (textColor != null) 'textColor: $textColor',
+      if (disabledTextColor != null) 'disabledTextColor: $disabledTextColor',
+      if (readOnlyTextColor != null) 'readOnlyTextColor: $readOnlyTextColor',
       if (icon != null) 'icon: $icon',
       if (iconSize != null) 'iconSize: $iconSize',
       if (iconColor != null) 'iconColor: $iconColor',
@@ -3990,6 +4332,8 @@ class RadixInputDecoration {
       'contentAlignment: $contentAlignment',
       if (prefixIcon != null) 'prefixIcon: $prefixIcon',
       if (prefixIconColor != null) 'prefixIconColor: $prefixIconColor',
+      if (filledPrefixIconColor != null) 'filledPrefixIconColor: $filledPrefixIconColor',
+      if (readOnlyPrefixIconColor != null) 'readOnlyPrefixIconColor: $readOnlyPrefixIconColor',
       if (prefix != null) 'prefix: $prefix',
       if (prefixText != null) 'prefixText: $prefixText',
       if (prefixStyle != null) 'prefixStyle: $prefixStyle',
@@ -3998,6 +4342,8 @@ class RadixInputDecoration {
       if (prefixToInputGap != null) 'prefixToInputGap: $prefixToInputGap',
       if (suffixIcon != null) 'suffixIcon: $suffixIcon',
       if (suffixIconColor != null) 'suffixIconColor: $suffixIconColor',
+      if (filledSuffixIconColor != null) 'filledSuffixIconColor: $filledSuffixIconColor',
+      if (readOnlySuffixIconColor != null) 'readOnlySuffixIconColor: $readOnlySuffixIconColor',
       if (suffix != null) 'suffix: $suffix',
       if (suffixText != null) 'suffixText: $suffixText',
       if (suffixStyle != null) 'suffixStyle: $suffixStyle',
@@ -4009,15 +4355,16 @@ class RadixInputDecoration {
       if (counterText != null) 'counterText: $counterText',
       if (counterStyle != null) 'counterStyle: $counterStyle',
       if (backgroundColor != null) 'backgroundColor: $backgroundColor',
+      if (filledBackgroundColor != null) 'filledBackgroundColor: $filledBackgroundColor',
       if (readOnlyBackgroundColor != null) 'readOnlyBackgroundColor: $readOnlyBackgroundColor',
       if (errorBorder != null) 'errorBorder: $errorBorder',
       if (focusedBorder != null) 'focusedBorder: $focusedBorder',
       if (focusedErrorBorder != null) 'focusedErrorBorder: $focusedErrorBorder',
       if (disabledBorder != null) 'disabledBorder: $disabledBorder',
+      if (readOnlyBorder != null) 'readOnlyBorder: $readOnlyBorder',
       if (filledBorder != null) 'filledBorder: $filledBorder',
       if (enabledBorder != null) 'enabledBorder: $enabledBorder',
       if (borderRadius != null) 'borderRadius: $borderRadius',
-      if (!enabled) 'enabled: false',
       if (semanticCounterText != null) 'semanticCounterText: $semanticCounterText',
       if (constraints != null) 'constraints: $constraints',
       'cursorWidth: $cursorWidth',
@@ -4110,6 +4457,9 @@ class RadixInputDecorationThemeData with Diagnosticable {
   /// properties in a [RadixInputDecorationTheme] widget.
   const RadixInputDecorationThemeData({
     required this.textStyle,
+    this.textColor,
+    this.disabledTextColor,
+    this.readOnlyTextColor,
     this.helperStyle,
     this.helperMaxLines,
     required this.hintStyle,
@@ -4126,22 +4476,28 @@ class RadixInputDecorationThemeData with Diagnosticable {
     this.iconColor,
     this.prefixStyle,
     this.prefixIconColor,
+    this.filledPrefixIconColor,
+    this.readOnlyPrefixIconColor,
     this.prefixIconConstraints,
     this.prefixPadding,
     this.prefixToInputGap,
     this.suffixStyle,
     this.suffixIconColor,
+    this.filledSuffixIconColor,
+    this.readOnlySuffixIconColor,
     this.suffixIconConstraints,
     this.suffixPadding,
     this.inputToSuffixGap,
     this.affixColor,
     this.counterStyle,
     this.backgroundColor,
+    this.filledBackgroundColor,
     this.readOnlyBackgroundColor,
     this.errorBorder,
     this.focusedBorder,
     this.focusedErrorBorder,
     this.disabledBorder,
+    this.readOnlyBorder,
     this.filledBorder,
     this.enabledBorder,
     this.borderRadius,
@@ -4157,6 +4513,9 @@ class RadixInputDecorationThemeData with Diagnosticable {
 
   const RadixInputDecorationThemeData._withVariant({
     required this.textStyle,
+    this.textColor,
+    this.disabledTextColor,
+    this.readOnlyTextColor,
     this.helperStyle,
     this.helperMaxLines,
     required this.hintStyle,
@@ -4174,22 +4533,28 @@ class RadixInputDecorationThemeData with Diagnosticable {
     this.iconColor,
     this.prefixStyle,
     this.prefixIconColor,
+    this.filledPrefixIconColor,
+    this.readOnlyPrefixIconColor,
     this.prefixIconConstraints,
     this.prefixPadding,
     this.prefixToInputGap,
     this.suffixStyle,
     this.suffixIconColor,
+    this.filledSuffixIconColor,
+    this.readOnlySuffixIconColor,
     this.suffixIconConstraints,
     this.suffixPadding,
     this.inputToSuffixGap,
     this.affixColor,
     this.counterStyle,
     this.backgroundColor,
+    this.filledBackgroundColor,
     this.readOnlyBackgroundColor,
     this.errorBorder,
     this.focusedBorder,
     this.focusedErrorBorder,
     this.disabledBorder,
+    this.readOnlyBorder,
     this.filledBorder,
     this.enabledBorder,
     this.borderRadius,
@@ -4306,6 +4671,9 @@ class RadixInputDecorationThemeData with Diagnosticable {
 
     return RadixInputDecorationThemeData._withVariant(
       textStyle: effectiveTextStyle,
+      textColor: variant.textColor,
+      disabledTextColor: variant.disabledTextColor,
+      readOnlyTextColor: variant.readOnlyTextColor,
       iconColor: iconColor,
       helperStyle: helperStyle,
       helperMaxLines: helperMaxLines,
@@ -4351,10 +4719,178 @@ class RadixInputDecorationThemeData with Diagnosticable {
     );
   }
 
+  /// Creates a bundle of the border, icons, and styles used to
+  /// decorate a Radix select, based on the default appearance
+  /// of a specific [variant] and [size]. It can then be used to override
+  /// the default appearance.
+  factory RadixInputDecorationThemeData.fromSelectVariant({
+    required RadixSelectDecorationVariant variant,
+    required RadixSelectDecorationVariantFactor size,
+    TextStyle? textStyle,
+    double? iconSize,
+    Color? iconColor,
+    TextStyle? helperStyle,
+    int? helperMaxLines,
+    TextStyle? hintStyle,
+    int? hintMaxLines,
+    Duration? hintFadeDuration,
+    TextStyle? errorStyle,
+    int? errorMaxLines,
+    double? subtextGap,
+    double? contentHeight,
+    EdgeInsetsGeometry? contentPadding,
+    BoxConstraints? prefixIconConstraints,
+    EdgeInsetsGeometry? prefixPadding,
+    double? prefixToInputGap,
+    TextStyle? prefixStyle,
+    Color? prefixIconColor,
+    TextStyle? suffixStyle,
+    Color? suffixIconColor,
+    BoxConstraints? suffixIconConstraints,
+    double? inputToSuffixGap,
+    Color? affixColor,
+    Color? fillColor,
+    InputBorder? errorBorder,
+    InputBorder? focusedBorder,
+    InputBorder? focusedErrorBorder,
+    InputBorder? disabledBorder,
+    InputBorder? readOnlyBorder,
+    InputBorder? filledBorder,
+    InputBorder? enabledBorder,
+    BorderRadius? borderRadius,
+    BoxConstraints? constraints,
+    double cursorWidth = 2.0,
+    double? cursorHeight,
+    Radius? cursorRadius,
+    bool? cursorOpacityAnimates,
+    Color? cursorColor,
+    Color? cursorErrorColor,
+  }) {
+    final TextStyle effectiveTextStyle = textStyle?.merge(size.textStyle) ?? size.textStyle;
+
+    final WidgetStateMap<Color> fillColorMapper = {
+      WidgetState.hovered   : variant.hoveredBackgroundColor,
+      WidgetState.focused   : variant.focusedBackgroundColor,
+      WidgetState.disabled  : variant.disabledBackgroundColor,
+      WidgetState.any       : variant.backgroundColor,
+    };
+
+    final WidgetStateColor efffectiveFillColor = WidgetStateExtension.merge(fillColorMapper, fillColor);
+
+    final WidgetStateMap<Color> iconColorMapper = {
+      WidgetState.disabled: variant.disabledIconColor,
+      WidgetState.any: variant.iconColor,
+    };
+    final WidgetStateColor efffectivePrefixIconColor = WidgetStateExtension.merge(iconColorMapper, prefixIconColor);
+    final WidgetStateColor efffectiveSuffixIconColor = WidgetStateExtension.merge(iconColorMapper, suffixIconColor);
+
+    InputBorder? effectiveEnabledBorder = enabledBorder;
+    if (variant.side case final BorderSide side) {
+      effectiveEnabledBorder ??= OutlineInputBorder(
+        borderSide: side,
+        borderRadius: borderRadius ?? size.borderRadius ?? BorderRadius.zero,
+        gapPadding: 0.0,
+      );
+    }
+
+    InputBorder? effectiveFilledBorder = filledBorder;
+    if (variant.filledSide case final BorderSide side) {
+      effectiveFilledBorder ??= OutlineInputBorder(
+        borderSide: side,
+        borderRadius: borderRadius ?? size.borderRadius ?? BorderRadius.zero,
+        gapPadding: 0.0,
+      );
+    }
+
+    InputBorder? effectiveFocusedBorder = focusedBorder;
+    if (variant.focusedSide case final BorderSide side) {
+      effectiveFocusedBorder = OutlineInputBorder(
+        borderSide: side,
+        borderRadius: borderRadius ?? size.borderRadius ?? BorderRadius.zero,
+        gapPadding: 0.0,
+      );
+    }
+
+    InputBorder? effectiveDisabledBorder = disabledBorder;
+    if (variant.disabledSide case final BorderSide side) {
+      effectiveDisabledBorder ??= OutlineInputBorder(
+        borderSide: side,
+        borderRadius: borderRadius ?? size.borderRadius ?? BorderRadius.zero,
+        gapPadding: 0.0,
+      );
+    }
+
+    InputBorder? effectiveReadOnlyBorder = readOnlyBorder;
+    if (variant.readOnlySide case final BorderSide side) {
+      effectiveReadOnlyBorder ??= OutlineInputBorder(
+        borderSide: side,
+        borderRadius: borderRadius ?? size.borderRadius ?? BorderRadius.zero,
+        gapPadding: 0.0,
+      );
+    }
+
+    return RadixInputDecorationThemeData._withVariant(
+      textStyle: effectiveTextStyle,
+      textColor: variant.textColor,
+      disabledTextColor: variant.disabledTextColor,
+      readOnlyTextColor: variant.readOnlyTextColor,
+      iconSize: iconSize ?? size.iconSize,
+      iconColor: iconColor,
+      helperStyle: helperStyle,
+      helperMaxLines: helperMaxLines,
+      hintStyle: hintStyle ?? effectiveTextStyle,
+      hintColor: variant.hintColor,
+      disabledHintColor: variant.disabledHintColor,
+      hintMaxLines: hintMaxLines,
+      hintFadeDuration: hintFadeDuration,
+      errorStyle: errorStyle,
+      errorMaxLines: errorMaxLines,
+      subtextGap: subtextGap,
+      contentHeight: contentHeight ?? size.triggerHeight,
+      contentPadding: contentPadding ?? size.padding,
+      prefixIconConstraints: prefixIconConstraints,
+      prefixPadding: prefixPadding,
+      prefixToInputGap: prefixToInputGap ?? size.gap,
+      prefixStyle: prefixStyle,
+      prefixIconColor: efffectivePrefixIconColor,
+      filledPrefixIconColor: variant.filledIconColor,
+      readOnlyPrefixIconColor: variant.readOnlyIconColor,
+      suffixStyle: suffixStyle,
+      suffixIconColor: efffectiveSuffixIconColor,
+      filledSuffixIconColor: variant.filledIconColor,
+      readOnlySuffixIconColor: variant.readOnlyIconColor,
+      suffixIconConstraints: suffixIconConstraints,
+      inputToSuffixGap: inputToSuffixGap ?? size.gap,
+      affixColor: affixColor ?? variant.iconColor,
+      backgroundColor: efffectiveFillColor,
+      filledBackgroundColor: variant.filledBackgroundColor,
+      readOnlyBackgroundColor: variant.readOnlyBackgroundColor,
+      errorBorder: errorBorder,
+      focusedBorder: effectiveFocusedBorder,
+      focusedErrorBorder: focusedErrorBorder,
+      disabledBorder: effectiveDisabledBorder,
+      readOnlyBorder: effectiveReadOnlyBorder,
+      filledBorder: effectiveFilledBorder,
+      enabledBorder: effectiveEnabledBorder,
+      borderRadius: borderRadius ?? size.borderRadius,
+      constraints: constraints,
+      cursorWidth: cursorWidth,
+      cursorHeight: cursorHeight,
+      cursorRadius: cursorRadius,
+      cursorOpacityAnimates: cursorOpacityAnimates,
+      cursorColor: cursorColor,
+      cursorErrorColor: cursorErrorColor,
+    );
+  }
+
   /// The style to use for the text being edited.
   ///
   /// This text style is also used as the base style for the [RadixInputDecoration].
   final TextStyle textStyle;
+
+  final Color? textColor;
+  final Color? disabledTextColor;
+  final Color? readOnlyTextColor;
 
   /// The style to use for [RadixInputDecoration.helperText].
   ///
@@ -4466,6 +5002,9 @@ class RadixInputDecorationThemeData with Diagnosticable {
   /// if the [RadixTextField] is focused or not.
   final Color? prefixIconColor;
 
+  final Color? filledPrefixIconColor;
+  final Color? readOnlyPrefixIconColor;
+
   /// The constraints to use for [RadixInputDecoration.prefixIconConstraints].
   ///
   /// This can be used to modify the [BoxConstraints] surrounding
@@ -4502,6 +5041,9 @@ class RadixInputDecorationThemeData with Diagnosticable {
   /// if the [RadixTextField] is focused or not.
   final Color? suffixIconColor;
 
+  final Color? filledSuffixIconColor;
+  final Color? readOnlySuffixIconColor;
+
   /// The constraints to use for [RadixInputDecoration.suffixIconConstraints].
   ///
   /// This can be used to modify the [BoxConstraints] surrounding
@@ -4537,6 +5079,11 @@ class RadixInputDecorationThemeData with Diagnosticable {
   /// [InputBorder.getOuterPath], which is filled and bordered per the [border].
   final Color? backgroundColor;
 
+  /// The base fill color of the decoration's container color
+  /// when the input is enabled, is not showing an error,
+  /// and the editable part of the text field is filled.
+  final Color? filledBackgroundColor;
+
   final Color? readOnlyBackgroundColor;
 
   /// The border to display when the [RadixInputDecorator] does not have the focus and
@@ -4558,9 +5105,9 @@ class RadixInputDecorationThemeData with Diagnosticable {
   ///    and [RadixInputDecoration.errorText] is null.
   ///  * [focusedErrorBorder], displayed when [RadixInputDecorator.isFocused] is true
   ///    and [RadixInputDecoration.errorText] is non-null.
-  ///  * [disabledBorder], displayed when [RadixInputDecoration.enabled] is false
+  ///  * [disabledBorder], displayed when [RadixInputDecorator.enabled] is false
   ///    and [RadixInputDecoration.errorText] is null.
-  ///  * [enabledBorder], displayed when [RadixInputDecoration.enabled] is true
+  ///  * [enabledBorder], displayed when [RadixInputDecorator.enabled] is true
   ///    and [RadixInputDecoration.errorText] is null.
   final InputBorder? errorBorder;
 
@@ -4583,9 +5130,9 @@ class RadixInputDecorationThemeData with Diagnosticable {
   ///    and [RadixInputDecoration.errorText] is non-null.
   ///  * [focusedErrorBorder], displayed when [RadixInputDecorator.isFocused] is true
   ///    and [RadixInputDecoration.errorText] is non-null.
-  ///  * [disabledBorder], displayed when [RadixInputDecoration.enabled] is false
+  ///  * [disabledBorder], displayed when [RadixInputDecorator.enabled] is false
   ///    and [RadixInputDecoration.errorText] is null.
-  ///  * [enabledBorder], displayed when [RadixInputDecoration.enabled] is true
+  ///  * [enabledBorder], displayed when [RadixInputDecorator.enabled] is true
   ///    and [RadixInputDecoration.errorText] is null.
   final InputBorder? focusedBorder;
 
@@ -4608,9 +5155,9 @@ class RadixInputDecorationThemeData with Diagnosticable {
   ///    and [RadixInputDecoration.errorText] is non-null.
   ///  * [focusedBorder], displayed when [RadixInputDecorator.isFocused] is true
   ///    and [RadixInputDecoration.errorText] is null.
-  ///  * [disabledBorder], displayed when [RadixInputDecoration.enabled] is false
+  ///  * [disabledBorder], displayed when [RadixInputDecorator.enabled] is false
   ///    and [RadixInputDecoration.errorText] is null.
-  ///  * [enabledBorder], displayed when [RadixInputDecoration.enabled] is true
+  ///  * [enabledBorder], displayed when [RadixInputDecorator.enabled] is true
   ///    and [RadixInputDecoration.errorText] is null.
   final InputBorder? focusedErrorBorder;
 
@@ -4619,8 +5166,6 @@ class RadixInputDecorationThemeData with Diagnosticable {
   ///
   /// See also:
   ///
-  ///  * [RadixInputDecoration.enabled], which is false if
-  ///    the [RadixInputDecorator] is disabled.
   ///  * [RadixInputDecoration.errorText], the error shown by
   ///    the [RadixInputDecorator], if non-null.
   ///  * [border], for a description of where the [RadixInputDecorator] border appears.
@@ -4635,21 +5180,21 @@ class RadixInputDecorationThemeData with Diagnosticable {
   ///    and [RadixInputDecoration.errorText] is null.
   ///  * [focusedErrorBorder], displayed when [RadixInputDecorator.isFocused] is true
   ///    and [RadixInputDecoration.errorText] is non-null.
-  ///  * [enabledBorder], displayed when [RadixInputDecoration.enabled] is true
+  ///  * [enabledBorder], displayed when [RadixInputDecorator.enabled] is true
   ///    and [RadixInputDecoration.errorText] is null.
   final InputBorder? disabledBorder;
 
-  /// The border to display when the [RadixInputDecorator] is enabled, is not
-  /// showing an error, and the editable part of the text field is filled.
+  final InputBorder? readOnlyBorder;
+
+  /// The border to display when the [RadixInputDecorator.enabled] is true,
+  /// is not showing an error, and the editable part of the text field is filled.
   final InputBorder? filledBorder;
 
-  /// The border to display when the [RadixInputDecorator] is enabled and is not
-  /// showing an error.
+  /// The border to display when the [RadixInputDecorator.enabled] is true and
+  /// is not showing an error.
   ///
   /// See also:
   ///
-  ///  * [RadixInputDecoration.enabled], which is false if
-  ///    the [RadixInputDecorator] is disabled.
   ///  * [RadixInputDecoration.errorText], the error shown by
   ///    the [RadixInputDecorator], if non-null.
   ///  * [border], for a description of where the [RadixInputDecorator] border appears.
@@ -4664,7 +5209,7 @@ class RadixInputDecorationThemeData with Diagnosticable {
   ///    and [RadixInputDecoration.errorText] is null.
   ///  * [focusedErrorBorder], displayed when [RadixInputDecorator.isFocused] is true
   ///    and [RadixInputDecoration.errorText] is non-null.
-  ///  * [disabledBorder], displayed when [RadixInputDecoration.enabled] is false
+  ///  * [disabledBorder], displayed when [RadixInputDecorator.enabled] is false
   ///    and [RadixInputDecoration.errorText] is null.
   final InputBorder? enabledBorder;
 
@@ -4725,6 +5270,9 @@ class RadixInputDecorationThemeData with Diagnosticable {
   /// new values.
   RadixInputDecorationThemeData copyWith({
     TextStyle? textStyle,
+    Color? textColor,
+    Color? disabledTextColor,
+    Color? readOnlyTextColor,
     TextStyle? helperStyle,
     int? helperMaxLines,
     TextStyle? hintStyle,
@@ -4741,22 +5289,28 @@ class RadixInputDecorationThemeData with Diagnosticable {
     Color? iconColor,
     TextStyle? prefixStyle,
     Color? prefixIconColor,
+    Color? filledPrefixIconColor,
+    Color? readOnlyPrefixIconColor,
     BoxConstraints? prefixIconConstraints,
     EdgeInsetsGeometry? prefixPadding,
     double? prefixToInputGap,
     TextStyle? suffixStyle,
     Color? suffixIconColor,
+    Color? filledSuffixIconColor,
+    Color? readOnlySuffixIconColor,
     BoxConstraints? suffixIconConstraints,
     EdgeInsetsGeometry? suffixPadding,
     double? inputToSuffixGap,
     Color? affixColor,
     TextStyle? counterStyle,
     Color? backgroundColor,
+    Color? filledBackgroundColor,
     Color? readOnlyBackgroundColor,
     InputBorder? errorBorder,
     InputBorder? focusedBorder,
     InputBorder? focusedErrorBorder,
     InputBorder? disabledBorder,
+    InputBorder? readOnlyBorder,
     InputBorder? filledBorder,
     InputBorder? enabledBorder,
     BorderRadius? borderRadius,
@@ -4771,6 +5325,9 @@ class RadixInputDecorationThemeData with Diagnosticable {
   }) {
     return RadixInputDecorationThemeData._withVariant(
       textStyle: textStyle ?? this.textStyle,
+      textColor: textColor ?? this.textColor,
+      disabledTextColor: disabledTextColor ?? this.disabledTextColor,
+      readOnlyTextColor: readOnlyTextColor ?? this.readOnlyTextColor,
       helperStyle: helperStyle ?? this.helperStyle,
       helperMaxLines: helperMaxLines ?? this.helperMaxLines,
       hintStyle: hintStyle ?? this.hintStyle,
@@ -4788,22 +5345,28 @@ class RadixInputDecorationThemeData with Diagnosticable {
       iconColor: iconColor ?? this.iconColor,
       prefixStyle: prefixStyle ?? this.prefixStyle,
       prefixIconColor: prefixIconColor ?? this.prefixIconColor,
+      filledPrefixIconColor: filledPrefixIconColor ?? this.filledPrefixIconColor,
+      readOnlyPrefixIconColor: readOnlyPrefixIconColor ?? this.readOnlyPrefixIconColor,
       prefixIconConstraints: prefixIconConstraints ?? this.prefixIconConstraints,
       prefixPadding: prefixPadding ?? this.prefixPadding,
       prefixToInputGap: prefixToInputGap ?? this.prefixToInputGap,
       suffixStyle: suffixStyle ?? this.suffixStyle,
       suffixIconColor: suffixIconColor ?? this.suffixIconColor,
+      filledSuffixIconColor: filledSuffixIconColor ?? this.filledSuffixIconColor,
+      readOnlySuffixIconColor: readOnlySuffixIconColor ?? this.readOnlySuffixIconColor,
       suffixIconConstraints: suffixIconConstraints ?? this.suffixIconConstraints,
       suffixPadding: suffixPadding ?? this.suffixPadding,
       inputToSuffixGap: inputToSuffixGap ?? this.inputToSuffixGap,
       affixColor: affixColor ?? this.affixColor,
       counterStyle: counterStyle ?? this.counterStyle,
       backgroundColor: backgroundColor ?? this.backgroundColor,
+      filledBackgroundColor: filledBackgroundColor ?? this.filledBackgroundColor,
       readOnlyBackgroundColor: readOnlyBackgroundColor ?? this.readOnlyBackgroundColor,
       errorBorder: errorBorder ?? this.errorBorder,
       focusedBorder: focusedBorder ?? this.focusedBorder,
       focusedErrorBorder: focusedErrorBorder ?? this.focusedErrorBorder,
       disabledBorder: disabledBorder ?? this.disabledBorder,
+      readOnlyBorder: readOnlyBorder ?? this.readOnlyBorder,
       filledBorder: filledBorder ?? this.filledBorder,
       enabledBorder: enabledBorder ?? this.enabledBorder,
       borderRadius: borderRadius ?? this.borderRadius,
@@ -4833,6 +5396,9 @@ class RadixInputDecorationThemeData with Diagnosticable {
       return this;
     }
     return copyWith(
+      textColor: textColor ?? other.textColor,
+      disabledTextColor: disabledTextColor ?? other.disabledTextColor,
+      readOnlyTextColor: readOnlyTextColor ?? other.readOnlyTextColor,
       helperStyle: helperStyle ?? other.helperStyle,
       helperMaxLines: helperMaxLines ?? other.helperMaxLines,
       hintColor: hintColor ?? other.hintColor,
@@ -4848,22 +5414,28 @@ class RadixInputDecorationThemeData with Diagnosticable {
       iconColor: iconColor ?? other.iconColor,
       prefixStyle: prefixStyle ?? other.prefixStyle,
       prefixIconColor: prefixIconColor ?? other.prefixIconColor,
+      filledPrefixIconColor: filledPrefixIconColor ?? other.filledPrefixIconColor,
+      readOnlyPrefixIconColor: readOnlyPrefixIconColor ?? other.readOnlyPrefixIconColor,
       prefixIconConstraints: prefixIconConstraints ?? other.prefixIconConstraints,
       prefixPadding: prefixPadding ?? other.prefixPadding,
       prefixToInputGap: prefixToInputGap ?? other.prefixToInputGap,
       suffixStyle: suffixStyle ?? other.suffixStyle,
       suffixIconColor: suffixIconColor ?? other.suffixIconColor,
+      filledSuffixIconColor: filledSuffixIconColor ?? other.filledSuffixIconColor,
+      readOnlySuffixIconColor: readOnlySuffixIconColor ?? other.readOnlySuffixIconColor,
       suffixIconConstraints: suffixIconConstraints ?? other.suffixIconConstraints,
       suffixPadding: suffixPadding ?? other.suffixPadding,
       inputToSuffixGap: inputToSuffixGap ?? other.inputToSuffixGap,
       affixColor: affixColor ?? other.affixColor,
       counterStyle: counterStyle ?? other.counterStyle,
       backgroundColor: backgroundColor ?? other.backgroundColor,
+      filledBackgroundColor: filledBackgroundColor ?? other.filledBackgroundColor,
       readOnlyBackgroundColor: readOnlyBackgroundColor ?? other.readOnlyBackgroundColor,
       errorBorder: errorBorder ?? other.errorBorder,
       focusedBorder: focusedBorder ?? other.focusedBorder,
       focusedErrorBorder: focusedErrorBorder ?? other.focusedErrorBorder,
       disabledBorder: disabledBorder ?? other.disabledBorder,
+      readOnlyBorder: readOnlyBorder ?? other.readOnlyBorder,
       filledBorder: filledBorder ?? other.filledBorder,
       enabledBorder: enabledBorder ?? other.enabledBorder,
       borderRadius: borderRadius ?? other.borderRadius,
@@ -4880,6 +5452,9 @@ class RadixInputDecorationThemeData with Diagnosticable {
   @override
   int get hashCode => Object.hash(
     textStyle,
+    textColor,
+    disabledTextColor,
+    readOnlyTextColor,
     helperStyle,
     helperMaxLines,
     hintStyle,
@@ -4895,30 +5470,36 @@ class RadixInputDecorationThemeData with Diagnosticable {
     _variantContentPadding,
     iconSize,
     iconColor,
-    prefixStyle,
-    prefixIconColor,
-    prefixIconConstraints,
     Object.hash(
+      prefixStyle,
+      prefixIconColor,
+      filledPrefixIconColor,
+      readOnlyPrefixIconColor,
+      prefixIconConstraints,
       prefixPadding,
       prefixToInputGap,
       suffixStyle,
       suffixIconColor,
+      filledSuffixIconColor,
+      readOnlySuffixIconColor,
       suffixIconConstraints,
       suffixPadding,
       inputToSuffixGap,
       affixColor,
       counterStyle,
       backgroundColor,
+      filledBackgroundColor,
       readOnlyBackgroundColor,
-      errorBorder,
-      focusedBorder,
-      focusedErrorBorder,
-      disabledBorder,
-      filledBorder,
-      enabledBorder,
-      borderRadius,
-      constraints,
       Object.hash(
+        errorBorder,
+        focusedBorder,
+        focusedErrorBorder,
+        disabledBorder,
+        readOnlyBorder,
+        filledBorder,
+        enabledBorder,
+        borderRadius,
+        constraints,
         cursorWidth,
         cursorHeight,
         cursorRadius,
@@ -4940,6 +5521,9 @@ class RadixInputDecorationThemeData with Diagnosticable {
     }
     return other is RadixInputDecorationThemeData &&
         other.textStyle == textStyle &&
+        other.textColor == textColor &&
+        other.disabledTextColor == disabledTextColor &&
+        other.readOnlyTextColor == readOnlyTextColor &&
         other.helperStyle == helperStyle &&
         other.helperMaxLines == helperMaxLines &&
         other.hintStyle == hintStyle &&
@@ -4956,22 +5540,28 @@ class RadixInputDecorationThemeData with Diagnosticable {
         other.iconColor == iconColor &&
         other.prefixStyle == prefixStyle &&
         other.prefixIconColor == prefixIconColor &&
+        other.filledPrefixIconColor == filledPrefixIconColor &&
+        other.readOnlyPrefixIconColor == readOnlyPrefixIconColor &&
         other.prefixIconConstraints == prefixIconConstraints &&
         other.prefixPadding == prefixPadding &&
         other.prefixToInputGap == prefixToInputGap &&
         other.suffixStyle == suffixStyle &&
         other.suffixIconColor == suffixIconColor &&
+        other.filledSuffixIconColor == filledSuffixIconColor &&
+        other.readOnlySuffixIconColor == readOnlySuffixIconColor &&
         other.suffixIconConstraints == suffixIconConstraints &&
         other.suffixPadding == suffixPadding &&
         other.inputToSuffixGap == inputToSuffixGap &&
         other.affixColor == affixColor &&
         other.counterStyle == counterStyle &&
         other.backgroundColor == backgroundColor &&
+        other.filledBackgroundColor == filledBackgroundColor &&
         other.readOnlyBackgroundColor == readOnlyBackgroundColor &&
         other.errorBorder == errorBorder &&
         other.focusedBorder == focusedBorder &&
         other.focusedErrorBorder == focusedErrorBorder &&
         other.disabledBorder == disabledBorder &&
+        other.readOnlyBorder == readOnlyBorder &&
         other.filledBorder == filledBorder &&
         other.enabledBorder == enabledBorder &&
         other.borderRadius == borderRadius &&
@@ -4998,6 +5588,24 @@ class RadixInputDecorationThemeData with Diagnosticable {
         'textStyle',
         textStyle,
         defaultValue: defaultTheme.textStyle,
+      ),
+    );
+    properties.add(
+      ColorProperty(
+        'textColor',
+        textColor,
+      ),
+    );
+    properties.add(
+      ColorProperty(
+        'disabledTextColor',
+        disabledTextColor,
+      ),
+    );
+    properties.add(
+      ColorProperty(
+        'readOnlyTextColor',
+        readOnlyTextColor,
       ),
     );
     properties.add(
@@ -5072,6 +5680,20 @@ class RadixInputDecorationThemeData with Diagnosticable {
       ),
     );
     properties.add(
+      DiagnosticsProperty<Color>(
+        'filledPrefixIconColor',
+        filledPrefixIconColor,
+        defaultValue: defaultTheme.filledPrefixIconColor,
+      ),
+    );
+    properties.add(
+      DiagnosticsProperty<Color>(
+        'readOnlyPrefixIconColor',
+        readOnlyPrefixIconColor,
+        defaultValue: defaultTheme.readOnlyPrefixIconColor,
+      ),
+    );
+    properties.add(
       DiagnosticsProperty<BoxConstraints>(
         'prefixIconConstraints',
         prefixIconConstraints,
@@ -5104,6 +5726,20 @@ class RadixInputDecorationThemeData with Diagnosticable {
         'suffixIconColor',
         suffixIconColor,
         defaultValue: defaultTheme.suffixIconColor,
+      ),
+    );
+    properties.add(
+      DiagnosticsProperty<Color>(
+        'filledSuffixIconColor',
+        filledSuffixIconColor,
+        defaultValue: defaultTheme.filledSuffixIconColor,
+      ),
+    );
+    properties.add(
+      DiagnosticsProperty<Color>(
+        'readOnlySuffixIconColor',
+        readOnlySuffixIconColor,
+        defaultValue: defaultTheme.readOnlySuffixIconColor,
       ),
     );
     properties.add(
@@ -5153,6 +5789,13 @@ class RadixInputDecorationThemeData with Diagnosticable {
     );
     properties.add(
       ColorProperty(
+        'filledBackgroundColor',
+        filledBackgroundColor,
+        defaultValue: defaultTheme.filledBackgroundColor,
+      ),
+    );
+    properties.add(
+      ColorProperty(
         'readOnlyBackgroundColor',
         readOnlyBackgroundColor,
         defaultValue: defaultTheme.readOnlyBackgroundColor,
@@ -5184,6 +5827,13 @@ class RadixInputDecorationThemeData with Diagnosticable {
         'disabledBorder',
         disabledBorder,
         defaultValue: defaultTheme.disabledBorder,
+      ),
+    );
+    properties.add(
+      DiagnosticsProperty<InputBorder>(
+        'readOnlyBorder',
+        readOnlyBorder,
+        defaultValue: defaultTheme.readOnlyBorder,
       ),
     );
     properties.add(

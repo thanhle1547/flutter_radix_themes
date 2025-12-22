@@ -233,7 +233,7 @@ class RadixTextField extends StatefulWidget {
     this.onSubmitted,
     this.onAppPrivateCommand,
     this.inputFormatters,
-    this.enabled,
+    this.enabled = true,
     this.ignorePointers,
     this.selectionHeightStyle,
     this.selectionWidthStyle,
@@ -572,9 +572,6 @@ class RadixTextField extends StatefulWidget {
   /// If false the text field is "disabled": it ignores taps and its
   /// [decoration] is rendered in grey.
   ///
-  /// If non-null this property overrides the [decoration]'s
-  /// [InputDecoration.enabled] property.
-  ///
   /// When a text field is disabled, all of its children widgets are also
   /// disabled, including the [InputDecoration.suffixIcon]. If you need to keep
   /// the suffix icon interactive while disabling the text field, consider using
@@ -595,7 +592,9 @@ class RadixTextField extends StatefulWidget {
   ///   ),
   /// )
   /// ```
-  final bool? enabled;
+  ///
+  /// This property is true by default.
+  final bool enabled;
 
   /// Determines whether this widget ignores pointer events.
   ///
@@ -1016,7 +1015,7 @@ class _RadixTextFieldState extends State<RadixTextField>
   bool get selectionEnabled => widget.selectionEnabled && _isEnabled;
   // End of API for TextSelectionGestureDetectorBuilderDelegate.
 
-  bool get _isEnabled => widget.enabled ?? widget.decoration?.enabled ?? true;
+  bool get _isEnabled => widget.enabled;
 
   int get _currentLength => _effectiveController.value.text.characters.length;
 
@@ -1043,7 +1042,9 @@ class _RadixTextFieldState extends State<RadixTextField>
   Color? _getCursorColor(RadixInputDecorationThemeData defaultDecoration, DefaultSelectionStyle selectionStyle) {
     return widget.decoration?.cursorColor ??
         widget.decoration?.textStyle?.color ??
+        widget.decoration?.textColor ??
         defaultDecoration.cursorColor ??
+        defaultDecoration.textColor ??
         selectionStyle.cursorColor ??
         defaultDecoration.textStyle.color;
   }
@@ -1072,7 +1073,6 @@ class _RadixTextFieldState extends State<RadixTextField>
     final RadixInputDecoration effectiveDecoration = (widget.decoration ?? const RadixInputDecoration())
         .applyDefaults(defaults)
         .copyWith(
-          enabled: _isEnabled,
           hintMaxLines:
               widget.decoration?.hintMaxLines ??
               defaults.hintMaxLines ??
@@ -1378,13 +1378,18 @@ class _RadixTextFieldState extends State<RadixTextField>
   }
   // AutofillClient implementation end.
 
-  TextStyle _getInputStyleForState(TextStyle style) {
-    final TextStyle stateStyle = WidgetStateProperty.resolveAs(
-      style,
-      _statesController.value,
-    );
-    final TextStyle providedStyle = WidgetStateProperty.resolveAs(style, _statesController.value);
-    return providedStyle.merge(stateStyle);
+  Color? _getInputColor(RadixInputDecorationThemeData defaultDecoration) {
+    final RadixInputDecoration? decoration = widget.decoration;
+
+    Color? color;
+    if (widget.readOnly) {
+      color = decoration?.readOnlyTextColor ?? defaultDecoration.readOnlyTextColor;
+    } else if (!widget.enabled) {
+      color = decoration?.disabledTextColor ?? defaultDecoration.disabledTextColor;
+    }
+    color ??= defaultDecoration.textColor ?? defaultDecoration.textColor;
+
+    return color;
   }
 
   @override
@@ -1398,13 +1403,15 @@ class _RadixTextFieldState extends State<RadixTextField>
 
     final RadixInputDecorationThemeData defaultDecoration = _getDefaultDecoration(theme);
 
-    final TextStyle? providedStyle = WidgetStateProperty.resolveAs(
+    final providedStyle = WidgetStateProperty.resolveAs(
       widget.decoration?.textStyle,
       _statesController.value,
     );
-    final TextStyle style = _getInputStyleForState(
-      defaultDecoration.textStyle,
-    ).merge(providedStyle);
+    final TextStyle style = WidgetStateProperty.resolveAs(
+      defaultDecoration.textStyle, _statesController.value
+    ).merge(providedStyle).copyWith(
+      color: _getInputColor(defaultDecoration),
+    );
 
     assert(
       !(!style.inherit && (style.fontSize == null || style.textBaseline == null)),
@@ -1635,9 +1642,22 @@ class _RadixTextFieldState extends State<RadixTextField>
             isHovering: _isHovering,
             isFocused: focusNode.hasFocus,
             isEmpty: controller.value.text.isEmpty,
+            enabled: widget.enabled,
             readOnly: widget.readOnly,
             tighContentHeight: widget.minLines == null,
-            expands: widget.expands,
+            expandHeight: widget.expands,
+            getDefaultDecoration: (context) {
+              RadixInputDecorationThemeData? defaultDecoration = RadixInputDecorationTheme.of(context);
+              if (defaultDecoration == null) {
+                final RadixThemeData? radixThemeData = RadixTheme.maybeOf(context);
+                defaultDecoration = radixThemeData?.inputDecorationTheme;
+              }
+              if (defaultDecoration == null) {
+                final RadixInputDecorationThemeData decorationTheme = RadixInputDecorationTheme.fromTheme(context);
+                defaultDecoration = decorationTheme;
+              }
+              return defaultDecoration;
+            },
             child: child,
           );
         },

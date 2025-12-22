@@ -7,6 +7,7 @@ import 'button.dart';
 import 'colors.dart';
 import 'input_decorator.dart';
 import 'radius.dart';
+import 'select.dart';
 import 'shadow.dart';
 import 'space.dart';
 import 'spinner.dart';
@@ -52,6 +53,8 @@ class RadixThemeData with Diagnosticable {
     RadixButtonCustomThemeData? buttonCustomTheme,
     required RadixInputDecorationThemeData inputDecorationTheme,
     RadixInputDecorationVariantTheme? inputDecorationVariantTheme,
+    RadixInputDecorationThemeData? selectDecorationTheme,
+    RadixSelectDecorationVariantTheme? selectDecorationVariantTheme,
     required RadixSpinnerThemeData spinnerTheme,
     required TextSelectionThemeData textSelectionTheme,
   }) {
@@ -74,6 +77,8 @@ class RadixThemeData with Diagnosticable {
       buttonCustomTheme: buttonCustomTheme,
       inputDecorationTheme: inputDecorationTheme,
       inputDecorationVariantTheme: inputDecorationVariantTheme,
+      selectDecorationTheme: selectDecorationTheme,
+      selectDecorationVariantTheme: selectDecorationVariantTheme,
       spinnerTheme: spinnerTheme,
       textSelectionTheme: textSelectionTheme,
     );
@@ -97,6 +102,8 @@ class RadixThemeData with Diagnosticable {
     this.buttonCustomTheme,
     required this.inputDecorationTheme,
     this.inputDecorationVariantTheme,
+    this.selectDecorationTheme,
+    this.selectDecorationVariantTheme,
     required this.spinnerTheme,
     required this.textSelectionTheme,
   })  : assert(badgeTheme == null || badgeCustomTheme == null),
@@ -166,6 +173,9 @@ class RadixThemeData with Diagnosticable {
   /// See [RadixInputDecoration.applyDefaults].
   final RadixInputDecorationThemeData inputDecorationTheme;
   final RadixInputDecorationVariantTheme? inputDecorationVariantTheme;
+
+  final RadixInputDecorationThemeData? selectDecorationTheme;
+  final RadixSelectDecorationVariantTheme? selectDecorationVariantTheme;
 
   final RadixSpinnerThemeData spinnerTheme;
 
@@ -258,6 +268,8 @@ class RadixThemeData with Diagnosticable {
                          ?? (t < 0.5 ? null : b.buttonCustomTheme),
       inputDecorationTheme: t < 0.5 ? a.inputDecorationTheme : b.inputDecorationTheme,
       inputDecorationVariantTheme: t < 0.5 ? a.inputDecorationVariantTheme : b.inputDecorationVariantTheme,
+      selectDecorationTheme: t < 0.5 ? a.selectDecorationTheme : b.selectDecorationTheme,
+      selectDecorationVariantTheme: t < 0.5 ? a.selectDecorationVariantTheme : b.selectDecorationVariantTheme,
       spinnerTheme: RadixSpinnerThemeData.lerp(a.spinnerTheme, b.spinnerTheme, t),
       textSelectionTheme: TextSelectionThemeData.lerp(
         a.textSelectionTheme,
@@ -294,6 +306,8 @@ class RadixThemeData with Diagnosticable {
         other.buttonCustomTheme == buttonCustomTheme &&
         other.inputDecorationTheme == inputDecorationTheme &&
         other.inputDecorationVariantTheme == inputDecorationVariantTheme &&
+        other.selectDecorationTheme == selectDecorationTheme &&
+        other.selectDecorationVariantTheme == selectDecorationVariantTheme &&
         other.spinnerTheme == spinnerTheme &&
         other.textSelectionTheme == textSelectionTheme;
   }
@@ -323,6 +337,8 @@ class RadixThemeData with Diagnosticable {
       buttonCustomTheme,
       inputDecorationTheme,
       inputDecorationVariantTheme,
+      selectDecorationTheme,
+      selectDecorationVariantTheme,
       spinnerTheme,
       textSelectionTheme,
     ];
@@ -415,6 +431,14 @@ class RadixThemeData with Diagnosticable {
       ),
     );
     properties.add(
+      DiagnosticsProperty<RadixInputDecorationThemeData>(
+        'selectDecorationTheme',
+        selectDecorationTheme,
+        defaultValue: defaultData.selectDecorationTheme,
+        level: DiagnosticLevel.debug,
+      ),
+    );
+    properties.add(
       DiagnosticsProperty<RadixSpinnerThemeData>(
         'spinnerTheme',
         spinnerTheme,
@@ -450,6 +474,8 @@ class RadixThemeExtension extends ThemeExtension<RadixThemeExtension> with Diagn
     RadixButtonCustomThemeData? buttonCustomTheme,
     required RadixInputDecorationThemeData inputDecorationTheme,
     RadixInputDecorationVariantTheme? inputDecorationVariantTheme,
+    RadixInputDecorationThemeData? selectDecorationTheme,
+    RadixSelectDecorationVariantTheme? selectDecorationVariantTheme,
     required RadixSpinnerThemeData spinnerTheme,
     required Color selectionColor,
   }) {
@@ -468,6 +494,8 @@ class RadixThemeExtension extends ThemeExtension<RadixThemeExtension> with Diagn
       buttonCustomTheme: buttonCustomTheme,
       inputDecorationTheme: inputDecorationTheme,
       inputDecorationVariantTheme: inputDecorationVariantTheme,
+      selectDecorationTheme: selectDecorationTheme,
+      selectDecorationVariantTheme: selectDecorationVariantTheme,
       spinnerTheme: spinnerTheme,
       selectionColor: selectionColor,
     );
@@ -488,6 +516,8 @@ class RadixThemeExtension extends ThemeExtension<RadixThemeExtension> with Diagn
     this.buttonCustomTheme,
     required this.inputDecorationTheme,
     this.inputDecorationVariantTheme,
+    this.selectDecorationTheme,
+    this.selectDecorationVariantTheme,
     required this.spinnerTheme,
     required this.selectionColor,
   })  : assert(badgeTheme == null || badgeCustomTheme == null),
@@ -517,6 +547,9 @@ class RadixThemeExtension extends ThemeExtension<RadixThemeExtension> with Diagn
   final RadixInputDecorationThemeData inputDecorationTheme;
   final RadixInputDecorationVariantTheme? inputDecorationVariantTheme;
 
+  final RadixInputDecorationThemeData? selectDecorationTheme;
+  final RadixSelectDecorationVariantTheme? selectDecorationVariantTheme;
+
   final RadixSpinnerThemeData spinnerTheme;
 
   /// The background color of selected text.
@@ -541,6 +574,8 @@ class RadixThemeExtension extends ThemeExtension<RadixThemeExtension> with Diagn
                          ?? (t < 0.5 ? null : other.buttonCustomTheme),
       inputDecorationTheme: t < 0.5 ? inputDecorationTheme : other.inputDecorationTheme,
       inputDecorationVariantTheme: t < 0.5 ? inputDecorationVariantTheme : other.inputDecorationVariantTheme,
+      selectDecorationTheme: t < 0.5 ? selectDecorationTheme : other.selectDecorationTheme,
+      selectDecorationVariantTheme: t < 0.5 ? selectDecorationVariantTheme : other.selectDecorationVariantTheme,
       spinnerTheme: RadixSpinnerThemeData.lerp(spinnerTheme, other.spinnerTheme, t),
       selectionColor: Color.lerp(selectionColor, other.selectionColor, t)!,
     );
@@ -566,6 +601,8 @@ class RadixThemeExtension extends ThemeExtension<RadixThemeExtension> with Diagn
         other.buttonCustomTheme == buttonCustomTheme &&
         other.inputDecorationTheme == inputDecorationTheme &&
         other.inputDecorationVariantTheme == inputDecorationVariantTheme &&
+        other.selectDecorationTheme == selectDecorationTheme &&
+        other.selectDecorationVariantTheme == selectDecorationVariantTheme &&
         other.spinnerTheme == spinnerTheme &&
         other.selectionColor == selectionColor;
   }
@@ -587,6 +624,8 @@ class RadixThemeExtension extends ThemeExtension<RadixThemeExtension> with Diagn
       buttonCustomTheme,
       inputDecorationTheme,
       inputDecorationVariantTheme,
+      selectDecorationTheme,
+      selectDecorationVariantTheme,
       spinnerTheme,
       selectionColor,
     ];
@@ -662,6 +701,14 @@ class RadixThemeExtension extends ThemeExtension<RadixThemeExtension> with Diagn
       ),
     );
     properties.add(
+      DiagnosticsProperty<RadixInputDecorationThemeData>(
+        'selectDecorationTheme',
+        selectDecorationTheme,
+        defaultValue: defaultData.selectDecorationTheme,
+        level: DiagnosticLevel.debug,
+      ),
+    );
+    properties.add(
       DiagnosticsProperty<RadixSpinnerThemeData>(
         'spinnerTheme',
         spinnerTheme,
@@ -690,6 +737,8 @@ class RadixThemeExtension extends ThemeExtension<RadixThemeExtension> with Diagn
     RadixButtonThemeData? buttonTheme,
     RadixInputDecorationThemeData? inputDecorationTheme,
     RadixInputDecorationVariantTheme? inputDecorationVariantTheme,
+    RadixInputDecorationThemeData? selectDecorationTheme,
+    RadixSelectDecorationVariantTheme? selectDecorationVariantTheme,
     RadixSpinnerThemeData? spinnerTheme,
     Color? selectionColor,
   }) {
@@ -703,6 +752,8 @@ class RadixThemeExtension extends ThemeExtension<RadixThemeExtension> with Diagn
       buttonTheme: buttonTheme ?? this.buttonTheme,
       inputDecorationTheme: inputDecorationTheme ?? this.inputDecorationTheme,
       inputDecorationVariantTheme: inputDecorationVariantTheme ?? this.inputDecorationVariantTheme,
+      selectDecorationTheme: selectDecorationTheme ?? this.selectDecorationTheme,
+      selectDecorationVariantTheme: selectDecorationVariantTheme ?? this.selectDecorationVariantTheme,
       spinnerTheme: spinnerTheme ?? this.spinnerTheme,
       selectionColor: selectionColor ?? this.selectionColor,
     );
