@@ -1040,7 +1040,7 @@ abstract class RadixButton extends StatefulWidget {
     this.onFocusChange,
     this.onTap,
   }) : isIconButton = false,
-       centeredAlignment = false,
+       centeredAlignment = true,
        _child = null;
 
   const RadixButton.ghost({
@@ -1062,7 +1062,7 @@ abstract class RadixButton extends StatefulWidget {
     this.onTap,
   })  : variant = RadixButtonVariant.ghost,
         isIconButton = false,
-        centeredAlignment = false,
+        centeredAlignment = true,
         _child = null;
 
   const RadixButton.min({
@@ -1084,7 +1084,7 @@ abstract class RadixButton extends StatefulWidget {
   })  : mainAxisSize = MainAxisSize.min,
         width = null,
         isIconButton = false,
-        centeredAlignment = false,
+        centeredAlignment = true,
         _child = null;
 
   const RadixButton.icon({
@@ -1108,7 +1108,7 @@ abstract class RadixButton extends StatefulWidget {
         iconStart = null,
         iconEnd = null,
         isIconButton = true,
-        centeredAlignment = false,
+        centeredAlignment = true,
         _child = icon;
 
   const RadixButton.custom({
