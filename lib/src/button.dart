@@ -215,7 +215,9 @@ class RadixButtonSizeSwatch {
       ),
       height: RadixSpace.kDefault.scale_5,
       uniformDimension: RadixSpace.kDefault.scale_5,
-      textStyle: RadixTextTheme.kDefault.scale_1,
+      textStyle: RadixTextTheme.kDefault.scale_1.copyWith(
+        fontVariations: RadixFigmaTextFontVariations.medium_510
+      ),
       gap: RadixSpace.kDefault.scale_1,
       borderRadius: BorderRadius.all(
         RadixRadiusFactor.kDefault.medium.swatch.scale_1,
@@ -230,7 +232,9 @@ class RadixButtonSizeSwatch {
       ),
       height: RadixSpace.kDefault.scale_6,
       uniformDimension: RadixSpace.kDefault.scale_6,
-      textStyle: RadixTextTheme.kDefault.scale_2,
+      textStyle: RadixTextTheme.kDefault.scale_2.copyWith(
+        fontVariations: RadixFigmaTextFontVariations.medium_510
+      ),
       gap: RadixSpace.kDefault.scale_2,
       borderRadius: BorderRadius.all(
         RadixRadiusFactor.kDefault.medium.swatch.scale_2,
@@ -244,7 +248,9 @@ class RadixButtonSizeSwatch {
       uniformPadding: EdgeInsets.all(11),
       height: RadixSpace.kDefault.scale_7,
       uniformDimension: RadixSpace.kDefault.scale_7,
-      textStyle: RadixTextTheme.kDefault.scale_3,
+      textStyle: RadixTextTheme.kDefault.scale_3.copyWith(
+        fontVariations: RadixFigmaTextFontVariations.medium_510
+      ),
       gap: RadixSpace.kDefault.scale_3,
       borderRadius: BorderRadius.all(
         RadixRadiusFactor.kDefault.medium.swatch.scale_3,
@@ -258,7 +264,9 @@ class RadixButtonSizeSwatch {
       uniformPadding: EdgeInsets.all(14),
       height: RadixSpace.kDefault.scale_8,
       uniformDimension: RadixSpace.kDefault.scale_8,
-      textStyle: RadixTextTheme.kDefault.scale_4,
+      textStyle: RadixTextTheme.kDefault.scale_4.copyWith(
+        fontVariations: RadixFigmaTextFontVariations.medium_510
+      ),
       gap: RadixSpace.kDefault.scale_3,
       borderRadius: BorderRadius.all(
         RadixRadiusFactor.kDefault.medium.swatch.scale_4,
