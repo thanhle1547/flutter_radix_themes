@@ -246,3 +246,23 @@ final class RadixTextTheme with Diagnosticable {
     );
   }
 }
+
+abstract final class RadixFigmaTextFontVariations {
+  static const List<FontVariation> regular_400 = [
+    FontVariation('wght', 400),
+    FontVariation('slnt', 0),
+    FontVariation('wdth', 100),
+  ];
+
+  static const List<FontVariation> medium_510 = [
+    FontVariation('wght', 510),
+    FontVariation('slnt', 0),
+    FontVariation('wdth', 100),
+  ];
+
+  static const List<FontVariation> bold_700 = [
+    FontVariation('wght', 700),
+    FontVariation('slnt', 0),
+    FontVariation('wdth', 100),
+  ];
+}
