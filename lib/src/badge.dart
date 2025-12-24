@@ -521,7 +521,15 @@ class RadixBadge extends StatelessWidget {
     this.size = RadixBadgeSize.$2,
     this.variant = RadixBadgeVariant.soft,
     this.styleModifier,
-  });
+  }) : child = null;
+
+  const RadixBadge.child({
+    super.key,
+    required Widget this.child,
+    this.size = RadixBadgeSize.$2,
+    this.variant = RadixBadgeVariant.soft,
+    this.styleModifier,
+  }) : text = '';
 
   final RadixBadgeSize size;
 
@@ -530,6 +538,8 @@ class RadixBadge extends StatelessWidget {
   final RadixBadgeStyleModifier? styleModifier;
 
   final String text;
+
+  final Widget? child;
 
   @override
   Widget build(BuildContext context) {
@@ -565,7 +575,21 @@ class RadixBadge extends StatelessWidget {
 
     Widget child;
 
-    if (text.isNotEmpty) {
+    if (this.child case final Widget customChild) {
+      final IconTheme? iconTheme = context.dependOnInheritedWidgetOfExactType<IconTheme>();
+      final IconThemeData iconThemeData =
+          (iconTheme?.data ?? const IconThemeData.fallback()).copyWith(
+            color: textColor,
+          );
+
+      child = DefaultTextStyle(
+        style: textStyle,
+        child: IconTheme(
+          data: iconThemeData,
+          child: customChild,
+        ),
+      );
+    } else if (text.isNotEmpty) {
       child = Text(text, style: textStyle);
     } else {
       child = const SizedBox.shrink();
