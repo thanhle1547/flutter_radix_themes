@@ -332,7 +332,6 @@ class RadixBadgeStyleModifier {
     this.textColor,
     this.textScaleFactor,
     this.textScaler,
-    this.gap,
     this.side,
     this.borderRadius,
   }) : _border = side == null
@@ -347,7 +346,6 @@ class RadixBadgeStyleModifier {
     Color? textColor,
     double? textScaleFactor,
     TextScaler? textScaler,
-    double? gap,
     BorderSide? side,
     BorderRadiusGeometry? borderRadius,
   }) {
@@ -360,7 +358,6 @@ class RadixBadgeStyleModifier {
           textColor: textColor ?? accent.contrast,
           textScaleFactor: textScaleFactor,
           textScaler: textScaler,
-          gap: gap,
           side: side,
           borderRadius: borderRadius,
         );
@@ -372,7 +369,6 @@ class RadixBadgeStyleModifier {
           textColor: textColor ?? accent.radixScale_11.alphaVariant,
           textScaleFactor: textScaleFactor,
           textScaler: textScaler,
-          gap: gap,
           side: side,
           borderRadius: borderRadius,
         );
@@ -384,7 +380,6 @@ class RadixBadgeStyleModifier {
           textColor: textColor ?? accent.radixScale_11.alphaVariant,
           textScaleFactor: textScaleFactor,
           textScaler: textScaler,
-          gap: gap,
           side: side?.copyWith(
             color: accent.radixScale_6.alphaVariant,
           ) ?? BorderSide(
@@ -399,7 +394,6 @@ class RadixBadgeStyleModifier {
           textColor: textColor ?? accent.radixScale_11.alphaVariant,
           textScaleFactor: textScaleFactor,
           textScaler: textScaler,
-          gap: gap,
           side: side?.copyWith(
             color: accent.radixScale_8.alphaVariant,
           ) ?? BorderSide(
@@ -426,8 +420,6 @@ class RadixBadgeStyleModifier {
   final double? textScaleFactor;
 
   final TextScaler? textScaler;
-
-  final double? gap;
 
   final BorderSide? side;
 
