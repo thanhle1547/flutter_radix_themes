@@ -255,6 +255,8 @@ abstract final class RadixColors {
       /* 11 */ Color.fromRGBO(255, 255, 255, 0.9 ),
       /* 12 */ Color.fromRGBO(255, 255, 255, 0.95),
     ]),
+    // Figma variable: `Tokens/Colors/white-contrast`
+    contrast: Color(0xFFFFFFFF),
   );
 
   static const RadixOverlayColor black = RadixOverlayColor(
@@ -273,6 +275,8 @@ abstract final class RadixColors {
       /* 11 */ Color.fromRGBO(0  , 0  , 0  , 0.9 ),
       /* 12 */ Color.fromRGBO(0  , 0  , 0  , 0.95),
     ]),
+    // Figma variable: `Tokens/Colors/black-contrast`
+    contrast: Color(0xFF1C2024),
   );
 
   /// A pure gray color.
@@ -884,20 +888,27 @@ final class RadixColor extends Color {
 
 /// Defines a single color as well a alpha color swatch with 12-step scale.
 final class RadixOverlayColor extends Color {
-  const RadixOverlayColor(super.value, this.alphaVariantSwatch);
+  const RadixOverlayColor(
+    super.value,
+    this.alphaVariantSwatch, {
+    this.contrast,
+  });
 
   final RadixColorsSwatch alphaVariantSwatch;
+  final Color? contrast;
 
   @override
   bool operator ==(Object other) {
     if (identical(this, other)) {
       return true;
     }
-    return super == other && other is RadixOverlayColor && other.alphaVariantSwatch == alphaVariantSwatch;
+    return super == other && other is RadixOverlayColor &&
+          other.alphaVariantSwatch == alphaVariantSwatch &&
+          other.contrast == contrast;
   }
 
   @override
-  int get hashCode => Object.hash(runtimeType, value, alphaVariantSwatch);
+  int get hashCode => Object.hash(runtimeType, value, alphaVariantSwatch, contrast);
 
   @override
   String toString() =>
