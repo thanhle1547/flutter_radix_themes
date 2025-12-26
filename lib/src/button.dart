@@ -2676,6 +2676,7 @@ class RadixSurfaceButton extends RadixButton {
   static RadixButtonStyleModifier figmaStyleFromErrorColorSwatch({
     required RadixColorsSwatch errorColorSwatch,
     required RadixColorsSwatch neutralSwatch,
+    Color? disabledBackgroundColor,
     EdgeInsets? padding,
     TextStyle? textStyle,
     double? textScaleFactor,
@@ -2688,7 +2689,7 @@ class RadixSurfaceButton extends RadixButton {
     return RadixButtonStyleModifier(
       backgroundColor: WidgetStateProperty.fromMap({
         WidgetState.pressed: errorColorSwatch.radixScale_3.alphaVariant,
-        WidgetState.disabled: neutralSwatch.radixScale_2.alphaVariant,
+        WidgetState.disabled: disabledBackgroundColor ?? neutralSwatch.radixScale_2.alphaVariant,
         WidgetState.any: RadixColors.transparent,
       }),
       padding: padding,
