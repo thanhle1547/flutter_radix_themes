@@ -2323,6 +2323,24 @@ class RadixSurfaceButton extends RadixButton {
     super.onTap,
   }) : super.icon(variant: RadixButtonVariant.surface);
 
+  const RadixSurfaceButton.custom({
+    super.key,
+    super.width,
+    required super.child,
+    super.size = RadixButtonSize.$2,
+    super.variant = RadixButtonVariant.ghost,
+    super.centeredAlignment,
+    super.styleModifier,
+    super.disabled = false,
+    super.highContrast = false,
+    super.loading = false,
+    super.cacheLoadingState = false,
+    super.mouseCursor,
+    super.focusNode,
+    super.onFocusChange,
+    super.onTap,
+  }) : super.custom();
+
   /// A static convenience method that constructs a surface button
   /// [RadixButtonStyleModifier] given simple values.
   ///
