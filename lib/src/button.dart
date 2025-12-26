@@ -2013,6 +2013,8 @@ class RadixSolidButton extends RadixButton {
   static RadixButtonStyleModifier figmaStyleFromErrorColorSwatch({
     required RadixColorsSwatch errorColorSwatch,
     required RadixColorsSwatch neutralSwatch,
+    Color? backgroundColor,
+    Color? disabledBackgroundColor,
     EdgeInsets? padding,
     TextStyle? textStyle,
     double? textScaleFactor,
@@ -2024,8 +2026,8 @@ class RadixSolidButton extends RadixButton {
       backgroundColor: WidgetStateProperty.fromMap({
         WidgetState.hovered: errorColorSwatch.radixScale_10.alphaVariant,
         WidgetState.pressed: errorColorSwatch.radixScale_10.alphaVariant,
-        WidgetState.disabled: neutralSwatch.radixScale_3.alphaVariant,
-        WidgetState.any: errorColorSwatch.radixScale_9.alphaVariant,
+        WidgetState.disabled: disabledBackgroundColor ?? neutralSwatch.radixScale_3.alphaVariant,
+        WidgetState.any: backgroundColor ?? errorColorSwatch.radixScale_9.alphaVariant,
       }),
       padding: padding,
       textStyle: textStyle,
@@ -2237,6 +2239,8 @@ class RadixSoftButton extends RadixButton {
   static RadixButtonStyleModifier figmaStyleFromErrorColorSwatch({
     required RadixColorsSwatch errorColorSwatch,
     required RadixColorsSwatch neutralSwatch,
+    Color? backgroundColor,
+    Color? disabledBackgroundColor,
     EdgeInsets? padding,
     TextStyle? textStyle,
     double? textScaleFactor,
@@ -2248,8 +2252,8 @@ class RadixSoftButton extends RadixButton {
       backgroundColor: WidgetStateProperty.fromMap({
         WidgetState.hovered: errorColorSwatch.radixScale_4.alphaVariant,
         WidgetState.pressed: errorColorSwatch.radixScale_5.alphaVariant,
-        WidgetState.disabled: neutralSwatch.radixScale_3.alphaVariant,
-        WidgetState.any: errorColorSwatch.radixScale_3.alphaVariant,
+        WidgetState.disabled: disabledBackgroundColor ?? neutralSwatch.radixScale_3.alphaVariant,
+        WidgetState.any: backgroundColor ?? errorColorSwatch.radixScale_3.alphaVariant,
       }),
       padding: padding,
       textStyle: textStyle,
