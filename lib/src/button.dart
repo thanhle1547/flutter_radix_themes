@@ -2328,7 +2328,7 @@ class RadixSurfaceButton extends RadixButton {
     super.width,
     required super.child,
     super.size = RadixButtonSize.$2,
-    super.variant = RadixButtonVariant.ghost,
+    super.variant = RadixButtonVariant.surface,
     super.centeredAlignment,
     super.styleModifier,
     super.disabled = false,
