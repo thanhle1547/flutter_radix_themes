@@ -2328,7 +2328,6 @@ class RadixSurfaceButton extends RadixButton {
     super.width,
     required super.child,
     super.size = RadixButtonSize.$2,
-    super.variant = RadixButtonVariant.surface,
     super.centeredAlignment,
     super.styleModifier,
     super.disabled = false,
@@ -2339,7 +2338,7 @@ class RadixSurfaceButton extends RadixButton {
     super.focusNode,
     super.onFocusChange,
     super.onTap,
-  }) : super.custom();
+  }) : super.custom(variant: RadixButtonVariant.surface);
 
   /// A static convenience method that constructs a surface button
   /// [RadixButtonStyleModifier] given simple values.
@@ -3206,7 +3205,6 @@ class RadixGhostButton extends RadixButton {
     super.width,
     required super.child,
     super.size = RadixButtonSize.$2,
-    super.variant = RadixButtonVariant.ghost,
     super.centeredAlignment,
     super.styleModifier,
     super.disabled = false,
@@ -3217,7 +3215,7 @@ class RadixGhostButton extends RadixButton {
     super.focusNode,
     super.onFocusChange,
     super.onTap,
-  }) : super.custom();
+  }) : super.custom(variant: RadixButtonVariant.ghost);
 
   /// A static convenience method that constructs a ghost button
   /// [RadixButtonStyleModifier] given simple values.
