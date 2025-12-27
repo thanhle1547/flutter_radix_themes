@@ -1939,6 +1939,7 @@ class RadixSolidButton extends RadixButton {
     TextScaler? textScaler,
     double? gap,
     BorderRadiusGeometry? borderRadius,
+    BoxShape? shape,
   }) {
     assert(accentColorSwatch == null || (backgroundColor == null || disabledBackgroundColor == null));
     assert(accentColorSwatch == null || (textColor == null || disabledTextColor == null));
@@ -1964,6 +1965,7 @@ class RadixSolidButton extends RadixButton {
       textScaler: textScaler,
       gap: gap,
       borderRadius: borderRadius,
+      shape: shape,
     );
   }
 
@@ -1984,6 +1986,7 @@ class RadixSolidButton extends RadixButton {
     TextScaler? textScaler,
     double? gap,
     BorderRadiusGeometry? borderRadius,
+    BoxShape? shape,
   }) {
     return RadixButtonStyleModifier(
       backgroundColor: WidgetStateProperty.fromMap({
@@ -2002,6 +2005,7 @@ class RadixSolidButton extends RadixButton {
       textScaler: textScaler,
       gap: gap,
       borderRadius: borderRadius,
+      shape: shape,
     );
   }
 
@@ -2021,6 +2025,7 @@ class RadixSolidButton extends RadixButton {
     TextScaler? textScaler,
     double? gap,
     BorderRadiusGeometry? borderRadius,
+    BoxShape? shape,
   }) {
     return RadixButtonStyleModifier(
       backgroundColor: WidgetStateProperty.fromMap({
@@ -2039,6 +2044,7 @@ class RadixSolidButton extends RadixButton {
       textScaler: textScaler,
       gap: gap,
       borderRadius: borderRadius,
+      shape: shape,
     );
   }
 }
@@ -2165,6 +2171,7 @@ class RadixSoftButton extends RadixButton {
     TextScaler? textScaler,
     double? gap,
     BorderRadiusGeometry? borderRadius,
+    BoxShape? shape,
   }) {
     assert(accentColorSwatch == null || (backgroundColor == null || disabledBackgroundColor == null));
     assert(accentColorSwatch == null || (textColor == null || disabledTextColor == null));
@@ -2190,6 +2197,7 @@ class RadixSoftButton extends RadixButton {
       textScaler: textScaler,
       gap: gap,
       borderRadius: borderRadius,
+      shape: shape,
     );
   }
 
@@ -2210,6 +2218,7 @@ class RadixSoftButton extends RadixButton {
     TextScaler? textScaler,
     double? gap,
     BorderRadiusGeometry? borderRadius,
+    BoxShape? shape,
   }) {
     return RadixButtonStyleModifier(
       backgroundColor: WidgetStateProperty.fromMap({
@@ -2228,6 +2237,7 @@ class RadixSoftButton extends RadixButton {
       textScaler: textScaler,
       gap: gap,
       borderRadius: borderRadius,
+      shape: shape,
     );
   }
 
@@ -2247,6 +2257,7 @@ class RadixSoftButton extends RadixButton {
     TextScaler? textScaler,
     double? gap,
     BorderRadiusGeometry? borderRadius,
+    BoxShape? shape,
   }) {
     return RadixButtonStyleModifier(
       backgroundColor: WidgetStateProperty.fromMap({
@@ -2265,6 +2276,7 @@ class RadixSoftButton extends RadixButton {
       textScaler: textScaler,
       gap: gap,
       borderRadius: borderRadius,
+      shape: shape,
     );
   }
 }
@@ -2475,6 +2487,7 @@ class RadixSurfaceButton extends RadixButton {
     double? gap,
     BorderSide? side,
     BorderRadiusGeometry? borderRadius,
+    BoxShape? shape,
     ShapeBorder? shapeBorder,
   }) {
     assert(accentColorSwatch == null || (backgroundColor == null || disabledBackgroundColor == null));
@@ -2564,6 +2577,7 @@ class RadixSurfaceButton extends RadixButton {
                       ),
                     }),
       borderRadius: borderRadius,
+      shape: shape,
       shapeBorder: shapeBorder,
     );
   }
@@ -2586,6 +2600,7 @@ class RadixSurfaceButton extends RadixButton {
     double? gap,
     BorderSide? side,
     BorderRadiusGeometry? borderRadius,
+    BoxShape? shape,
     ShapeBorder? shapeBorder,
   }) {
     assert(side == null || shapeBorder == null);
@@ -2664,6 +2679,7 @@ class RadixSurfaceButton extends RadixButton {
                   ),
                 }),
       borderRadius: borderRadius,
+      shape: shape,
       shapeBorder: shapeBorder,
     );
   }
@@ -2684,6 +2700,7 @@ class RadixSurfaceButton extends RadixButton {
     double? gap,
     BorderSide? side,
     BorderRadiusGeometry? borderRadius,
+    BoxShape? shape,
     ShapeBorder? shapeBorder,
   }) {
     return RadixButtonStyleModifier(
@@ -2759,6 +2776,7 @@ class RadixSurfaceButton extends RadixButton {
                   ),
                 }),
       borderRadius: borderRadius,
+      shape: shape,
       shapeBorder: shapeBorder,
     );
   }
@@ -2929,6 +2947,7 @@ class RadixOutlineButton extends RadixButton {
     double? gap,
     BorderSide? side,
     BorderRadiusGeometry? borderRadius,
+    BoxShape? shape,
     ShapeBorder? shapeBorder,
   }) {
     assert(accentColorSwatch == null || (backgroundColor == null || disabledBackgroundColor == null));
@@ -2994,6 +3013,7 @@ class RadixOutlineButton extends RadixButton {
                       ),
                     }),
       borderRadius: borderRadius,
+      shape: shape,
       shapeBorder: shapeBorder,
     );
   }
@@ -3016,6 +3036,7 @@ class RadixOutlineButton extends RadixButton {
     double? gap,
     BorderSide? side,
     BorderRadiusGeometry? borderRadius,
+    BoxShape? shape,
     ShapeBorder? shapeBorder,
   }) {
     assert(side == null || shapeBorder == null);
@@ -3071,6 +3092,7 @@ class RadixOutlineButton extends RadixButton {
                   ),
                 }),
       borderRadius: borderRadius,
+      shape: shape,
       shapeBorder: shapeBorder,
     );
   }
@@ -3090,6 +3112,7 @@ class RadixOutlineButton extends RadixButton {
     double? gap,
     BorderSide? side,
     BorderRadiusGeometry? borderRadius,
+    BoxShape? shape,
     ShapeBorder? shapeBorder,
   }) {
     return RadixButtonStyleModifier(
@@ -3142,6 +3165,7 @@ class RadixOutlineButton extends RadixButton {
                   ),
                 }),
       borderRadius: borderRadius,
+      shape: shape,
       shapeBorder: shapeBorder,
     );
   }
@@ -3286,6 +3310,7 @@ class RadixGhostButton extends RadixButton {
     TextScaler? textScaler,
     double? gap,
     BorderRadiusGeometry? borderRadius,
+    BoxShape? shape,
   }) {
     assert(accentColorSwatch == null || (backgroundColor == null || disabledBackgroundColor == null));
     assert(accentColorSwatch == null || (textColor == null || disabledTextColor == null));
@@ -3311,6 +3336,7 @@ class RadixGhostButton extends RadixButton {
       textScaler: textScaler,
       gap: gap,
       borderRadius: borderRadius,
+      shape: shape,
     );
   }
 
@@ -3331,6 +3357,7 @@ class RadixGhostButton extends RadixButton {
     TextScaler? textScaler,
     double? gap,
     BorderRadiusGeometry? borderRadius,
+    BoxShape? shape,
   }) {
     return RadixButtonStyleModifier(
       backgroundColor: WidgetStateProperty.fromMap({
@@ -3349,6 +3376,7 @@ class RadixGhostButton extends RadixButton {
       textScaler: textScaler,
       gap: gap,
       borderRadius: borderRadius,
+      shape: shape,
     );
   }
 
@@ -3366,6 +3394,7 @@ class RadixGhostButton extends RadixButton {
     TextScaler? textScaler,
     double? gap,
     BorderRadiusGeometry? borderRadius,
+    BoxShape? shape,
   }) {
     return RadixButtonStyleModifier(
       backgroundColor: WidgetStateProperty.fromMap({
@@ -3384,6 +3413,7 @@ class RadixGhostButton extends RadixButton {
       textScaler: textScaler,
       gap: gap,
       borderRadius: borderRadius,
+      shape: shape,
     );
   }
 }
