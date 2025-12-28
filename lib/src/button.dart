@@ -213,13 +213,10 @@ class RadixButtonSizeSwatch {
     ),
   );
 
-  static final RadixButtonSizeSwatch kFigma = RadixButtonSizeSwatch(
+  static final RadixButtonSizeSwatch kFigmaChrome = RadixButtonSizeSwatch(
     s1: RadixButtonStyleFactor(
       padding: EdgeInsets.symmetric(
         horizontal: RadixSpace.kDefault.scale_2,
-      ),
-      uniformPadding: EdgeInsets.all(
-        RadixSpace.kDefault.scale_1,
       ),
       height: RadixSpace.kDefault.scale_5,
       uniformDimension: RadixSpace.kDefault.scale_5,
@@ -235,9 +232,6 @@ class RadixButtonSizeSwatch {
       padding: EdgeInsets.symmetric(
         horizontal: RadixSpace.kDefault.scale_3,
       ),
-      uniformPadding: EdgeInsets.all(
-        RadixSpace.kDefault.scale_2,
-      ),
       height: RadixSpace.kDefault.scale_6,
       uniformDimension: RadixSpace.kDefault.scale_6,
       textStyle: RadixTextTheme.kDefault.scale_2.copyWith(
@@ -252,8 +246,6 @@ class RadixButtonSizeSwatch {
       padding: EdgeInsets.symmetric(
         horizontal: RadixSpace.kDefault.scale_4,
       ),
-      // The Figma design does not specify padding for icon button
-      uniformPadding: EdgeInsets.all(11),
       height: RadixSpace.kDefault.scale_7,
       uniformDimension: RadixSpace.kDefault.scale_7,
       textStyle: RadixTextTheme.kDefault.scale_3.copyWith(
@@ -268,10 +260,67 @@ class RadixButtonSizeSwatch {
       padding: EdgeInsets.symmetric(
         horizontal: RadixSpace.kDefault.scale_5,
       ),
-      // The Figma design does not specify padding for icon button
-      uniformPadding: EdgeInsets.all(14),
       height: RadixSpace.kDefault.scale_8,
       uniformDimension: RadixSpace.kDefault.scale_8,
+      textStyle: RadixTextTheme.kDefault.scale_4.copyWith(
+        fontVariations: RadixFigmaTextFontVariations.medium_510
+      ),
+      gap: RadixSpace.kDefault.scale_3,
+      borderRadius: BorderRadius.all(
+        RadixRadiusFactor.kDefault.medium.swatch.scale_4,
+      ),
+    ),
+  );
+
+  static final RadixButtonSizeSwatch kFigmaGhost = RadixButtonSizeSwatch(
+    s1: RadixButtonStyleFactor(
+      padding: EdgeInsets.symmetric(
+        horizontal: RadixSpace.kDefault.scale_2,
+      ),
+      // The Figma design does not specify padding for icon button
+      uniformPadding: EdgeInsets.all(
+        RadixSpace.kDefault.scale_1,
+      ),
+      textStyle: RadixTextTheme.kDefault.scale_1,
+      gap: RadixSpace.kDefault.scale_1,
+      borderRadius: BorderRadius.all(
+        RadixRadiusFactor.kDefault.medium.swatch.scale_1,
+      ),
+    ),
+    s2: RadixButtonStyleFactor(
+      padding: EdgeInsets.symmetric(
+        horizontal: RadixSpace.kDefault.scale_3,
+      ),
+      // The Figma design does not specify padding for icon button
+      uniformPadding: EdgeInsets.all(
+        RadixSpace.kDefault.scale_2,
+      ),
+      textStyle: RadixTextTheme.kDefault.scale_2,
+      gap: RadixSpace.kDefault.scale_2,
+      borderRadius: BorderRadius.all(
+        RadixRadiusFactor.kDefault.medium.swatch.scale_2,
+      ),
+    ),
+    s3: RadixButtonStyleFactor(
+      padding: EdgeInsets.symmetric(
+        horizontal: RadixSpace.kDefault.scale_4,
+      ),
+      // The Figma design does not specify padding for icon button
+      uniformPadding: EdgeInsets.all(11),
+      textStyle: RadixTextTheme.kDefault.scale_3.copyWith(
+        fontVariations: RadixFigmaTextFontVariations.medium_510
+      ),
+      gap: RadixSpace.kDefault.scale_3,
+      borderRadius: BorderRadius.all(
+        RadixRadiusFactor.kDefault.medium.swatch.scale_3,
+      ),
+    ),
+    s4: RadixButtonStyleFactor(
+      padding: EdgeInsets.symmetric(
+        horizontal: RadixSpace.kDefault.scale_5,
+      ),
+      // The Figma design does not specify padding for icon button
+      uniformPadding: EdgeInsets.all(14),
       textStyle: RadixTextTheme.kDefault.scale_4.copyWith(
         fontVariations: RadixFigmaTextFontVariations.medium_510
       ),
@@ -452,7 +501,7 @@ class RadixButtonThemeData {
       filter: WidgetStateProperty.fromMap({
         WidgetState.pressed: CSSFilterMatrix().brightness(1.08),
       }),
-      sizeSwatch: RadixButtonSizeSwatch.kFigma,
+      sizeSwatch: RadixButtonSizeSwatch.kFigmaChrome,
     ),
     soft: RadixButtonVariantStyle.from(
       debugVariant: RadixButtonVariant.soft,
@@ -466,7 +515,7 @@ class RadixButtonThemeData {
         WidgetState.disabled: RadixColorScheme.kLight.neutral.radixScale_8.alphaVariant,
         WidgetState.any: RadixColorScheme.kLight.accent.radixScale_11.alphaVariant,
       }),
-      sizeSwatch: RadixButtonSizeSwatch.kFigma,
+      sizeSwatch: RadixButtonSizeSwatch.kFigmaChrome,
     ),
     surface: RadixButtonVariantStyle.from(
       debugVariant: RadixButtonVariant.surface,
@@ -509,7 +558,7 @@ class RadixButtonThemeData {
           ),
         ),
       }),
-      sizeSwatch: RadixButtonSizeSwatch.kFigma,
+      sizeSwatch: RadixButtonSizeSwatch.kFigmaChrome,
     ),
     outline: RadixButtonVariantStyle.from(
       debugVariant: RadixButtonVariant.outline,
@@ -538,7 +587,7 @@ class RadixButtonThemeData {
           ),
         ),
       }),
-      sizeSwatch: RadixButtonSizeSwatch.kFigma,
+      sizeSwatch: RadixButtonSizeSwatch.kFigmaChrome,
     ),
     ghost: RadixButtonVariantStyle.from(
       debugVariant: RadixButtonVariant.ghost,
@@ -552,7 +601,7 @@ class RadixButtonThemeData {
         WidgetState.disabled: RadixColorScheme.kLight.neutral.radixScale_8.alphaVariant,
         WidgetState.any: RadixColorScheme.kLight.accent.radixScale_11.alphaVariant,
       }),
-      sizeSwatch: RadixButtonSizeSwatch.kFigma,
+      sizeSwatch: RadixButtonSizeSwatch.kFigmaGhost,
     ),
   );
 
@@ -695,7 +744,7 @@ class RadixButtonThemeData {
       filter: WidgetStateProperty.fromMap({
         WidgetState.pressed: CSSFilterMatrix().brightness(1.08),
       }),
-      sizeSwatch: RadixButtonSizeSwatch.kFigma,
+      sizeSwatch: RadixButtonSizeSwatch.kFigmaChrome,
     ),
     soft: RadixButtonVariantStyle.from(
       debugVariant: RadixButtonVariant.soft,
@@ -709,7 +758,7 @@ class RadixButtonThemeData {
         WidgetState.disabled: RadixColorScheme.kDark.neutral.radixScale_8.alphaVariant,
         WidgetState.any: RadixColorScheme.kDark.accent.radixScale_11.alphaVariant,
       }),
-      sizeSwatch: RadixButtonSizeSwatch.kFigma,
+      sizeSwatch: RadixButtonSizeSwatch.kFigmaChrome,
     ),
     surface: RadixButtonVariantStyle.from(
       debugVariant: RadixButtonVariant.surface,
@@ -752,7 +801,7 @@ class RadixButtonThemeData {
           ),
         ),
       }),
-      sizeSwatch: RadixButtonSizeSwatch.kFigma,
+      sizeSwatch: RadixButtonSizeSwatch.kFigmaChrome,
     ),
     outline: RadixButtonVariantStyle.from(
       debugVariant: RadixButtonVariant.outline,
@@ -781,7 +830,7 @@ class RadixButtonThemeData {
           ),
         ),
       }),
-      sizeSwatch: RadixButtonSizeSwatch.kFigma,
+      sizeSwatch: RadixButtonSizeSwatch.kFigmaChrome,
     ),
     ghost: RadixButtonVariantStyle.from(
       debugVariant: RadixButtonVariant.ghost,
@@ -795,7 +844,7 @@ class RadixButtonThemeData {
         WidgetState.disabled: RadixColorScheme.kDark.neutral.radixScale_8.alphaVariant,
         WidgetState.any: RadixColorScheme.kDark.accent.radixScale_11.alphaVariant,
       }),
-      sizeSwatch: RadixButtonSizeSwatch.kFigma,
+      sizeSwatch: RadixButtonSizeSwatch.kFigmaGhost,
     ),
   );
 
