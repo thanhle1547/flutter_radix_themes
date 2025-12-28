@@ -69,7 +69,9 @@ class RadixBadgeSizeSwatch {
         horizontal: RadixSpace.kDefault.scale_1 * 1.5,
         vertical: RadixSpace.kDefault.scale_1 * 0.5,
       ),
-      textStyle: RadixTextTheme.kDefault.scale_1,
+      textStyle: RadixTextTheme.kDefault.scale_1.copyWith(
+        fontVariations: RadixFigmaTextFontVariations.medium_510
+      ),
       gap: RadixSpace.kDefault.scale_1 * 1.5,
       borderRadius: BorderRadius.all(
         RadixRadiusFactor.kDefault.medium.swatch.scale_1,
@@ -80,7 +82,9 @@ class RadixBadgeSizeSwatch {
         horizontal: RadixSpace.kDefault.scale_2,
         vertical: RadixSpace.kDefault.scale_1,
       ),
-      textStyle: RadixTextTheme.kDefault.scale_1,
+      textStyle: RadixTextTheme.kDefault.scale_1.copyWith(
+        fontVariations: RadixFigmaTextFontVariations.medium_510
+      ),
       gap: RadixSpace.kDefault.scale_1 * 1.5,
       borderRadius: BorderRadius.all(
         RadixRadiusFactor.kDefault.medium.swatch.scale_2,
@@ -91,7 +95,9 @@ class RadixBadgeSizeSwatch {
         horizontal: RadixSpace.kDefault.scale_2 * 1.25,
         vertical: RadixSpace.kDefault.scale_1,
       ),
-      textStyle: RadixTextTheme.kDefault.scale_3,
+      textStyle: RadixTextTheme.kDefault.scale_3.copyWith(
+        fontVariations: RadixFigmaTextFontVariations.medium_510
+      ),
       gap: RadixSpace.kDefault.scale_2,
       borderRadius: BorderRadius.all(
         RadixRadiusFactor.kDefault.medium.swatch.scale_2,
