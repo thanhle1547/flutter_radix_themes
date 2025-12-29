@@ -95,7 +95,7 @@ class RadixBadgeSizeSwatch {
         horizontal: RadixSpace.kDefault.scale_2 * 1.25,
         vertical: RadixSpace.kDefault.scale_1,
       ),
-      textStyle: RadixTextTheme.kDefault.scale_3.copyWith(
+      textStyle: RadixTextTheme.kDefault.scale_2.copyWith(
         fontVariations: RadixFigmaTextFontVariations.medium_510
       ),
       gap: RadixSpace.kDefault.scale_2,
