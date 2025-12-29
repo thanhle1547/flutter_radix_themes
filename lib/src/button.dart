@@ -282,6 +282,7 @@ class RadixButtonSizeSwatch {
         RadixSpace.kDefault.scale_1,
       ),
       height: RadixSpace.kDefault.scale_5,
+      uniformDimension: RadixSpace.kDefault.scale_5,
       textStyle: RadixTextTheme.kDefault.scale_1,
       gap: RadixSpace.kDefault.scale_1,
       borderRadius: BorderRadius.all(
@@ -297,6 +298,7 @@ class RadixButtonSizeSwatch {
         RadixSpace.kDefault.scale_2,
       ),
       height: RadixSpace.kDefault.scale_6,
+      uniformDimension: RadixSpace.kDefault.scale_6,
       textStyle: RadixTextTheme.kDefault.scale_2,
       gap: RadixSpace.kDefault.scale_2,
       borderRadius: BorderRadius.all(
@@ -310,6 +312,7 @@ class RadixButtonSizeSwatch {
       // The Figma design does not specify padding for icon button
       uniformPadding: EdgeInsets.all(11),
       height: RadixSpace.kDefault.scale_7,
+      uniformDimension: RadixSpace.kDefault.scale_7,
       textStyle: RadixTextTheme.kDefault.scale_3,
       gap: RadixSpace.kDefault.scale_3,
       borderRadius: BorderRadius.all(
@@ -323,6 +326,7 @@ class RadixButtonSizeSwatch {
       // The Figma design does not specify padding for icon button
       uniformPadding: EdgeInsets.all(14),
       height: RadixSpace.kDefault.scale_8,
+      uniformDimension: RadixSpace.kDefault.scale_8,
       textStyle: RadixTextTheme.kDefault.scale_4,
       gap: RadixSpace.kDefault.scale_3,
       borderRadius: BorderRadius.all(
