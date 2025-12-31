@@ -2060,7 +2060,7 @@ class RadixSolidButton extends RadixButton {
       textStyle: textStyle,
       textColor: WidgetStateColor.fromMap({
         WidgetState.disabled: disabledTextColor ?? neutralColorSwatch.radixScale_8.alphaVariant,
-        WidgetState.any: textColor ?? RadixColors.white,
+        WidgetState.any: textColor ?? RadixColors.white.contrast!,
       }),
       textScaleFactor: textScaleFactor,
       textScaler: textScaler,
@@ -2099,7 +2099,7 @@ class RadixSolidButton extends RadixButton {
       textStyle: textStyle,
       textColor: WidgetStateColor.fromMap({
         WidgetState.disabled: neutralSwatch.radixScale_8.alphaVariant,
-        WidgetState.any: RadixColors.white,
+        WidgetState.any: RadixColors.white.contrast!,
       }),
       textScaleFactor: textScaleFactor,
       textScaler: textScaler,
