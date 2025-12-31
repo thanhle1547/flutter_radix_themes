@@ -2037,6 +2037,7 @@ class RadixSolidButton extends RadixButton {
   /// a [RadixButtonStyleModifier] that doesn't override anything.
   static RadixButtonStyleModifier figmaStyleFromNeutralColorSwatch({
     required RadixColorsSwatch neutralColorSwatch,
+    bool highContrast = false,
     Color? backgroundColor,
     Color? disabledBackgroundColor,
     EdgeInsets? padding,
@@ -2050,23 +2051,39 @@ class RadixSolidButton extends RadixButton {
     BoxShape? shape,
   }) {
     return RadixButtonStyleModifier(
-      backgroundColor: WidgetStateProperty.fromMap({
-        WidgetState.hovered: neutralColorSwatch.scale_10,
-        WidgetState.pressed: neutralColorSwatch.scale_10,
-        WidgetState.disabled: disabledBackgroundColor ?? neutralColorSwatch.radixScale_3.alphaVariant,
-        WidgetState.any: backgroundColor ?? neutralColorSwatch.scale_9,
-      }),
+      backgroundColor: highContrast
+          ? WidgetStateProperty.fromMap({
+              WidgetState.disabled: disabledBackgroundColor ?? neutralColorSwatch.radixScale_3.alphaVariant,
+              WidgetState.any: backgroundColor ?? neutralColorSwatch.scale_12,
+            })
+          : WidgetStateProperty.fromMap({
+              WidgetState.hovered: neutralColorSwatch.scale_10,
+              WidgetState.pressed: neutralColorSwatch.scale_10,
+              WidgetState.disabled: disabledBackgroundColor ?? neutralColorSwatch.radixScale_3.alphaVariant,
+              WidgetState.any: backgroundColor ?? neutralColorSwatch.scale_9,
+            }),
       padding: padding,
       textStyle: textStyle,
-      textColor: WidgetStateColor.fromMap({
-        WidgetState.disabled: disabledTextColor ?? neutralColorSwatch.radixScale_8.alphaVariant,
-        WidgetState.any: textColor ?? RadixColors.white.contrast!,
-      }),
+      textColor: highContrast
+          ? WidgetStateColor.fromMap({
+              WidgetState.disabled: disabledTextColor ?? neutralColorSwatch.radixScale_8.alphaVariant,
+              WidgetState.any: textColor ?? neutralColorSwatch.scale_1,
+            })
+          : WidgetStateColor.fromMap({
+              WidgetState.disabled: disabledTextColor ?? neutralColorSwatch.radixScale_8.alphaVariant,
+              WidgetState.any: textColor ?? RadixColors.white.contrast!,
+            }),
       textScaleFactor: textScaleFactor,
       textScaler: textScaler,
       gap: gap,
       borderRadius: borderRadius,
       shape: shape,
+      filter: highContrast
+          ? WidgetStateProperty.fromMap({
+              WidgetState.hovered: CSSFilterMatrix().opacity(0.88),
+              WidgetState.pressed: CSSFilterMatrix().opacity(0.82),
+            })
+          : null,
     );
   }
 
@@ -2269,6 +2286,7 @@ class RadixSoftButton extends RadixButton {
   /// a [RadixButtonStyleModifier] that doesn't override anything.
   static RadixButtonStyleModifier figmaStyleFromNeutralColorSwatch({
     required RadixColorsSwatch neutralColorSwatch,
+    bool highContrast = false,
     Color? backgroundColor,
     Color? disabledBackgroundColor,
     EdgeInsets? padding,
@@ -2290,15 +2308,26 @@ class RadixSoftButton extends RadixButton {
       }),
       padding: padding,
       textStyle: textStyle,
-      textColor: WidgetStateColor.fromMap({
-        WidgetState.disabled: disabledTextColor ?? neutralColorSwatch.radixScale_3.alphaVariant,
-        WidgetState.any: textColor ?? neutralColorSwatch.scale_11,
-      }),
+      textColor: highContrast
+          ? WidgetStateColor.fromMap({
+              WidgetState.disabled: disabledTextColor ?? neutralColorSwatch.radixScale_8.alphaVariant,
+              WidgetState.any: textColor ?? neutralColorSwatch.scale_12,
+            })
+          : WidgetStateColor.fromMap({
+              WidgetState.disabled: disabledTextColor ?? neutralColorSwatch.radixScale_3.alphaVariant,
+              WidgetState.any: textColor ?? neutralColorSwatch.scale_11,
+            }),
       textScaleFactor: textScaleFactor,
       textScaler: textScaler,
       gap: gap,
       borderRadius: borderRadius,
       shape: shape,
+      filter: highContrast
+          ? WidgetStateProperty.fromMap({
+              WidgetState.hovered: CSSFilterMatrix().opacity(0.88),
+              WidgetState.pressed: CSSFilterMatrix().opacity(0.82),
+            })
+          : null,
     );
   }
 
@@ -2650,6 +2679,7 @@ class RadixSurfaceButton extends RadixButton {
   /// a [RadixButtonStyleModifier] that doesn't override anything.
   static RadixButtonStyleModifier figmaStyleFromNeutralColorSwatch({
     required RadixColorsSwatch neutralColorSwatch,
+    bool highContrast = false,
     Color? backgroundColor,
     Color? disabledBackgroundColor,
     EdgeInsets? padding,
@@ -2675,10 +2705,15 @@ class RadixSurfaceButton extends RadixButton {
       }),
       padding: padding,
       textStyle: textStyle,
-      textColor: WidgetStateColor.fromMap({
-        WidgetState.disabled: disabledTextColor ?? neutralColorSwatch.radixScale_8.alphaVariant,
-        WidgetState.any: textColor ?? neutralColorSwatch.scale_11,
-      }),
+      textColor: highContrast
+          ? WidgetStateColor.fromMap({
+              WidgetState.disabled: disabledTextColor ?? neutralColorSwatch.radixScale_8.alphaVariant,
+              WidgetState.any: textColor ?? neutralColorSwatch.scale_12,
+            })
+          : WidgetStateColor.fromMap({
+              WidgetState.disabled: disabledTextColor ?? neutralColorSwatch.radixScale_8.alphaVariant,
+              WidgetState.any: textColor ?? neutralColorSwatch.scale_11,
+            }),
       textScaleFactor: textScaleFactor,
       textScaler: textScaler,
       gap: gap,
@@ -2742,6 +2777,12 @@ class RadixSurfaceButton extends RadixButton {
       borderRadius: borderRadius,
       shape: shape,
       shapeBorder: shapeBorder,
+      filter: highContrast
+          ? WidgetStateProperty.fromMap({
+              WidgetState.hovered: CSSFilterMatrix().opacity(0.88),
+              WidgetState.pressed: CSSFilterMatrix().opacity(0.82),
+            })
+          : null,
     );
   }
 
@@ -3086,6 +3127,7 @@ class RadixOutlineButton extends RadixButton {
   /// a [RadixButtonStyleModifier] that doesn't override anything.
   static RadixButtonStyleModifier figmaStyleFromNeutralColorSwatch({
     required RadixColorsSwatch neutralColorSwatch,
+    bool highContrast = false,
     Color? backgroundColor,
     Color? disabledBackgroundColor,
     EdgeInsets? padding,
@@ -3112,10 +3154,15 @@ class RadixOutlineButton extends RadixButton {
       }),
       padding: padding,
       textStyle: textStyle,
-      textColor: WidgetStateColor.fromMap({
-        WidgetState.disabled: disabledTextColor ?? neutralColorSwatch.radixScale_8.alphaVariant,
-        WidgetState.any: textColor ?? neutralColorSwatch.scale_11,
-      }),
+      textColor: highContrast
+          ? WidgetStateColor.fromMap({
+              WidgetState.disabled: disabledTextColor ?? neutralColorSwatch.radixScale_8.alphaVariant,
+              WidgetState.any: textColor ?? neutralColorSwatch.scale_12,
+            })
+          : WidgetStateColor.fromMap({
+              WidgetState.disabled: disabledTextColor ?? neutralColorSwatch.radixScale_8.alphaVariant,
+              WidgetState.any: textColor ?? neutralColorSwatch.scale_11,
+            }),
       textScaleFactor: textScaleFactor,
       textScaler: textScaler,
       gap: gap,
@@ -3133,7 +3180,9 @@ class RadixOutlineButton extends RadixButton {
                   WidgetState.any: BoxBorder.fromBorderSide(
                     BorderSide(
                       width: 1.0,
-                      color: neutralColorSwatch.radixScale_8.alphaVariant,
+                      color: highContrast
+                          ? neutralColorSwatch.radixScale_11.alphaVariant
+                          : neutralColorSwatch.radixScale_8.alphaVariant,
                       strokeAlign: BorderSide.strokeAlignInside,
                     ),
                   ),
@@ -3148,13 +3197,21 @@ class RadixOutlineButton extends RadixButton {
                   ),
                   WidgetState.any: BoxBorder.fromBorderSide(
                     side.copyWith(
-                      color: neutralColorSwatch.radixScale_8.alphaVariant,
+                      color: highContrast
+                          ? neutralColorSwatch.radixScale_11.alphaVariant
+                          : neutralColorSwatch.radixScale_8.alphaVariant,
                     ),
                   ),
                 }),
       borderRadius: borderRadius,
       shape: shape,
       shapeBorder: shapeBorder,
+      filter: highContrast
+          ? WidgetStateProperty.fromMap({
+              WidgetState.hovered: CSSFilterMatrix().opacity(0.88),
+              WidgetState.pressed: CSSFilterMatrix().opacity(0.82),
+            })
+          : null,
     );
   }
 
@@ -3408,6 +3465,7 @@ class RadixGhostButton extends RadixButton {
   /// a [RadixButtonStyleModifier] that doesn't override anything.
   static RadixButtonStyleModifier figmaStyleFromNeutralColorSwatch({
     required RadixColorsSwatch neutralColorSwatch,
+    bool highContrast = false,
     Color? backgroundColor,
     Color? disabledBackgroundColor,
     EdgeInsets? padding,
@@ -3429,15 +3487,26 @@ class RadixGhostButton extends RadixButton {
       }),
       padding: padding,
       textStyle: textStyle,
-      textColor: WidgetStateColor.fromMap({
-        WidgetState.disabled: disabledTextColor ?? neutralColorSwatch.radixScale_8.alphaVariant,
-        WidgetState.any: textColor ?? neutralColorSwatch.scale_11,
-      }),
+      textColor: highContrast
+          ? WidgetStateColor.fromMap({
+              WidgetState.disabled: disabledTextColor ?? neutralColorSwatch.radixScale_8.alphaVariant,
+              WidgetState.any: textColor ?? neutralColorSwatch.scale_12,
+            })
+          : WidgetStateColor.fromMap({
+              WidgetState.disabled: disabledTextColor ?? neutralColorSwatch.radixScale_8.alphaVariant,
+              WidgetState.any: textColor ?? neutralColorSwatch.scale_11,
+            }),
       textScaleFactor: textScaleFactor,
       textScaler: textScaler,
       gap: gap,
       borderRadius: borderRadius,
       shape: shape,
+      filter: highContrast
+          ? WidgetStateProperty.fromMap({
+              WidgetState.hovered: CSSFilterMatrix().opacity(0.88),
+              WidgetState.pressed: CSSFilterMatrix().opacity(0.82),
+            })
+          : null,
     );
   }
 
