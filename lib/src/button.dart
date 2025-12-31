@@ -2314,7 +2314,7 @@ class RadixSoftButton extends RadixButton {
               WidgetState.any: textColor ?? neutralColorSwatch.scale_12,
             })
           : WidgetStateColor.fromMap({
-              WidgetState.disabled: disabledTextColor ?? neutralColorSwatch.radixScale_3.alphaVariant,
+              WidgetState.disabled: disabledTextColor ?? neutralColorSwatch.radixScale_8.alphaVariant,
               WidgetState.any: textColor ?? neutralColorSwatch.scale_11,
             }),
       textScaleFactor: textScaleFactor,
