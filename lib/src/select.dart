@@ -1119,7 +1119,7 @@ class _RadixSelectItem<T> extends StatelessWidget {
     };
 
     if (focused && inTraditionalMode) {
-      final _MenuLimits menuLimits = route.getMenuLimits(
+      final _MenuLimits menuLimits = route._getMenuLimits(
         buttonRect,
         constraints.maxHeight,
         itemIndex,
@@ -1601,7 +1601,7 @@ class _RenderSelectContentRouteLayout<T> extends RenderBox
 
     displayedChild.layout(displayedChildConstraints, parentUsesSize: true);
 
-    final _MenuLimits menuLimits = route.getMenuLimits(
+    final _MenuLimits menuLimits = route._getMenuLimits(
       buttonRect,
       size.height,
       route.selectedIndex,
@@ -1794,7 +1794,7 @@ class RadixSelectContentRoute<T> extends PopupRoute<RadixSelectRouteResult<T>> {
   // for the ListView that contains the menu items. The vertical center of the
   // selected item is aligned with the button's vertical center, as far as
   // that's possible given availableHeight.
-  _MenuLimits getMenuLimits(Rect buttonRect, double availableHeight, int index) {
+  _MenuLimits _getMenuLimits(Rect buttonRect, double availableHeight, int index) {
     double computedMaxHeight = availableHeight - 2.0 * itemHeight;
     if (menuMaxHeight != null) {
       computedMaxHeight = math.min(computedMaxHeight, menuMaxHeight!);
@@ -1904,7 +1904,7 @@ class _SelectContentRoutePageState<T> extends State<_SelectContentRoutePage<T>> 
     // and all of the items' intrinsic heights are less than kMinInteractiveDimension.
     // Otherwise the initialScrollOffset is just a rough approximation based on
     // treating the items as if their heights were all equal to kMinInteractiveDimension.
-    final _MenuLimits menuLimits = widget.route.getMenuLimits(
+    final _MenuLimits menuLimits = widget.route._getMenuLimits(
       widget.buttonRect,
       widget.constraints.maxHeight,
       widget.selectedIndex,
