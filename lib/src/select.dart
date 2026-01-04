@@ -2761,7 +2761,7 @@ class RadixSelectFormField<T> extends FormField<T> {
             RadixInputDecoration effectiveDecoration = (decoration ?? const RadixInputDecoration())
                 .applyDefaults(defaultDecoration);
 
-            if (field.errorText != null || effectiveDecoration.hintText != null) {
+            if (field.errorText != null) {
               final Widget? error = field.errorText != null && errorBuilder != null
                   ? errorBuilder(state.context, field.errorText!)
                   : null;
