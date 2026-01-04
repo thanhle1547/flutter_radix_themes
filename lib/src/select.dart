@@ -2449,6 +2449,7 @@ class _RadixSelectState<T> extends State<RadixSelect<T>> with WidgetsBindingObse
     );
     for (int itemIndex = 0; itemIndex < options.length; itemIndex++) {
       if (options[itemIndex].value == initialValue) {
+        _selectedIndex = itemIndex;
         return;
       }
     }
