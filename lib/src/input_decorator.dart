@@ -1611,7 +1611,11 @@ class _RadixInputDecoratorState extends State<RadixInputDecorator> with TickerPr
         border = decoration.filledBorder;
       }
 
-      border = _hasError ? decoration.errorBorder : decoration.enabledBorder;
+      if (widget.readOnly) {
+        border = decoration.readOnlyBorder;
+      }
+
+      border ??= _hasError ? decoration.errorBorder : decoration.enabledBorder;
     }
 
     Widget? container;
