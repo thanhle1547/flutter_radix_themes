@@ -2766,13 +2766,10 @@ class RadixSelectFormField<T> extends FormField<T> {
                   ? errorBuilder(state.context, field.errorText!)
                   : null;
               final String? errorText = error == null ? field.errorText : null;
-              // Clear the decoration hintText because DropdownButton has its own hint logic.
-              final String? hintText = effectiveDecoration.hintText != null ? '' : null;
 
               effectiveDecoration = effectiveDecoration.copyWith(
                 error: error,
                 errorText: errorText,
-                hintText: hintText,
               );
             }
 
