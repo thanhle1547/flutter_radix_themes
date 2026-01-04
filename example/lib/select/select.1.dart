@@ -39,12 +39,12 @@ class _SelectExampleState extends State<SelectExample> {
   @override
   Widget build(BuildContext context) {
     return RadixSelect(
-      // value: dropdownValue,
+      // initialValue: dropdownValue,
       options: list.map<RadixSelectItem<String>>((String value) {
         return RadixSelectItem<String>(value: value, child: Text(value));
       }).toList(),
       inputDecoration: RadixInputDecoration(
-        hintText: 'aj ja',
+        hintText: 'Num',
       ),
       onChanged: (String? value) {
         // This is called when the user selects an item.

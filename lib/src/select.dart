@@ -1604,7 +1604,7 @@ class _RenderSelectContentRouteLayout<T> extends RenderBox
     final _MenuLimits menuLimits = route._getMenuLimits(
       buttonRect,
       size.height,
-      route.selectedIndex,
+      route.initialScrollIndex,
     );
 
     assert(() {
@@ -1683,6 +1683,7 @@ class RadixSelectContentRoute<T> extends PopupRoute<RadixSelectRouteResult<T>> {
     required this.padding,
     required this.buttonRect,
     required this.selectedIndex,
+    required this.initialScrollIndex,
     required this.capturedThemes,
     this.barrierLabel,
     this.barrierDismissible = true,
@@ -1707,7 +1708,8 @@ class RadixSelectContentRoute<T> extends PopupRoute<RadixSelectRouteResult<T>> {
   final List<RadixSelectItem<T>> items;
   final EdgeInsets padding;
   final Rect buttonRect;
-  final int selectedIndex;
+  final int? selectedIndex;
+  final int initialScrollIndex;
   final CapturedThemes capturedThemes;
   final double itemHeight;
   final Color hoveredItemBackgroundColor;
@@ -1755,7 +1757,7 @@ class RadixSelectContentRoute<T> extends PopupRoute<RadixSelectRouteResult<T>> {
             route: this,
             constraints: constraints,
             buttonRect: buttonRect,
-            selectedIndex: selectedIndex,
+            initialScrollIndex: initialScrollIndex,
             capturedThemes: capturedThemes,
             style: style,
             enableFeedback: enableFeedback,
@@ -1811,7 +1813,7 @@ class RadixSelectContentRoute<T> extends PopupRoute<RadixSelectRouteResult<T>> {
     final double bottomLimit = math.max(availableHeight - itemHeight, buttonBottom);
 
     double menuTop =
-        (buttonTop - selectedItemOffset) - (itemHeights[selectedIndex] - buttonRect.height) / 2.0;
+        (buttonTop - selectedItemOffset) - (itemHeights[initialScrollIndex] - buttonRect.height) / 2.0;
     double preferredMenuHeight = kMaterialListPadding.vertical;
     if (items.isNotEmpty) {
       preferredMenuHeight += itemHeights.reduce((double total, double height) => total + height);
@@ -1837,8 +1839,8 @@ class RadixSelectContentRoute<T> extends PopupRoute<RadixSelectRouteResult<T>> {
       menuTop = menuBottom - menuHeight;
     }
 
-    if (menuBottom - itemHeights[selectedIndex] / 2.0 < buttonBottom - buttonRect.height / 2.0) {
-      menuBottom = buttonBottom - buttonRect.height / 2.0 + itemHeights[selectedIndex] / 2.0;
+    if (menuBottom - itemHeights[initialScrollIndex] / 2.0 < buttonBottom - buttonRect.height / 2.0) {
+      menuBottom = buttonBottom - buttonRect.height / 2.0 + itemHeights[initialScrollIndex] / 2.0;
       menuTop = menuBottom - menuHeight;
     }
 
@@ -1869,7 +1871,7 @@ class _SelectContentRoutePage<T> extends StatefulWidget {
     required this.route,
     required this.constraints,
     required this.buttonRect,
-    required this.selectedIndex,
+    required this.initialScrollIndex,
     required this.capturedThemes,
     this.style,
     required this.enableFeedback,
@@ -1880,7 +1882,7 @@ class _SelectContentRoutePage<T> extends StatefulWidget {
   final RadixSelectContentRoute<T> route;
   final BoxConstraints constraints;
   final Rect buttonRect;
-  final int selectedIndex;
+  final int initialScrollIndex;
   final CapturedThemes capturedThemes;
   final TextStyle? style;
   final bool enableFeedback;
@@ -1899,15 +1901,14 @@ class _SelectContentRoutePageState<T> extends State<_SelectContentRoutePage<T>> 
     super.initState();
 
     // Computing the initialScrollOffset now, before the items have been laid
-    // out. This only works if the item heights are effectively fixed, i.e. either
-    // DropdownButton.itemHeight is specified or DropdownButton.itemHeight is null
-    // and all of the items' intrinsic heights are less than kMinInteractiveDimension.
+    // out. This only works if the item heights are effectively fixed.
     // Otherwise the initialScrollOffset is just a rough approximation based on
-    // treating the items as if their heights were all equal to kMinInteractiveDimension.
+    // treating the items as if their heights were all equal to
+    // RadixSelectContentRoute.itemHeight.
     final _MenuLimits menuLimits = widget.route._getMenuLimits(
       widget.buttonRect,
       widget.constraints.maxHeight,
-      widget.selectedIndex,
+      widget.initialScrollIndex,
     );
     _scrollController = ScrollController(initialScrollOffset: menuLimits.scrollOffset);
   }
@@ -2474,7 +2475,8 @@ class _RadixSelectState<T> extends State<RadixSelect<T>> with WidgetsBindingObse
       items: widget.options!,
       buttonRect: itemRect,
       padding: size.contentPadding.resolve(textDirection),
-      selectedIndex: _selectedIndex ?? 0,
+      selectedIndex: _selectedIndex,
+      initialScrollIndex: _selectedIndex ?? 0,
       capturedThemes: InheritedTheme.capture(from: context, to: navigator.context),
       barrierLabel: MaterialLocalizations.of(context).modalBarrierDismissLabel,
       barrierDismissible: widget.barrierDismissible,
