@@ -123,7 +123,7 @@ final class RadixColorScheme with Diagnosticable {
     panelSolidColor: RadixDarkColors.slate.scale_2, // It's RadixColorScheme.neutral.scale_2
     // CSS version is:
     // panelSolidColor: RadixDarkColors.slate.scale_2, // It's RadixColorScheme.gray.scale_2
-    panelTranslucentColor: Color.fromRGBO(29, 29, 33, 0.21),
+    panelTranslucentColor: Color.fromRGBO(29, 29, 33, 0.7),
     // CSS version is:
     // panelTranslucentColor: RadixDarkColors.slate.radixScale_2.alphaVariant, // It's RadixColorScheme.gray.radixScale_2.alphaVariant
     surfaceColor: Color.fromRGBO(0, 0, 0, 0.25),
