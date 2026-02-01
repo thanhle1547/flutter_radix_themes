@@ -20,11 +20,15 @@ final class RadixColorScheme with Diagnosticable {
     required this.textColor,
     this.headingColor,
     required this.pageBackgroundColor,
-    required this.panelSolidColor,
-    required this.panelTranslucentColor,
+    Color? panelSolidColor,
+    Color? panelTranslucentColor,
+    required this.solidEffectColor,
+    required this.translucentEffectColor,
     required this.surfaceColor,
     required this.overlayColor,
-  }) : focus = accent;
+  }) : focus = accent,
+       panelSolidColor = panelSolidColor ?? solidEffectColor,
+       panelTranslucentColor = panelTranslucentColor ?? translucentEffectColor;
 
   final RadixColorsSwatch gray;
 
@@ -77,6 +81,12 @@ final class RadixColorScheme with Diagnosticable {
   /// CSS variable: `--color-panel-translucent`
   final Color panelTranslucentColor;
 
+  /// Figma variable: `Variables/Effects/solid`
+  final Color solidEffectColor;
+
+  /// Figma variable: `Variables/Effects/translucent`
+  final Color translucentEffectColor;
+
   /// The color to use for form component backgrounds, such as
   /// text fields, checkboxes, select, etc.
   ///
@@ -105,6 +115,8 @@ final class RadixColorScheme with Diagnosticable {
     panelTranslucentColor: Color.fromRGBO(255, 255, 255, 0.8),
     // CSS version is:
     // panelTranslucentColor: Color.fromRGBO(255, 255, 255, 0.7),
+    solidEffectColor: RadixColors.white,
+    translucentEffectColor: Color.fromRGBO(255, 255, 255, 0.8),
     surfaceColor: Color.fromRGBO(255, 255, 255, 0.85),
     overlayColor: RadixColors.black.alphaVariantSwatch.scale_6,
   );
@@ -126,6 +138,8 @@ final class RadixColorScheme with Diagnosticable {
     panelTranslucentColor: Color.fromRGBO(29, 29, 33, 0.7),
     // CSS version is:
     // panelTranslucentColor: RadixDarkColors.slate.radixScale_2.alphaVariant, // It's RadixColorScheme.gray.radixScale_2.alphaVariant
+    solidEffectColor: RadixDarkColors.slate.scale_2, // It's RadixColorScheme.neutral.scale_2
+    translucentEffectColor: Color.fromRGBO(29, 29, 33, 0.7),
     surfaceColor: Color.fromRGBO(0, 0, 0, 0.25),
     overlayColor: RadixColors.black.alphaVariantSwatch.scale_8,
   );
@@ -148,8 +162,10 @@ final class RadixColorScheme with Diagnosticable {
       textColor: Color.lerp(a.textColor, b.textColor, t)!,
       headingColor: Color.lerp(a.headingColor, b.headingColor, t),
       pageBackgroundColor: Color.lerp(a.pageBackgroundColor, b.pageBackgroundColor, t)!,
-      panelSolidColor: Color.lerp(a.panelSolidColor, b.panelSolidColor, t)!,
-      panelTranslucentColor: Color.lerp(a.panelTranslucentColor, b.panelTranslucentColor, t)!,
+      panelSolidColor: Color.lerp(a.panelSolidColor, b.panelSolidColor, t),
+      panelTranslucentColor: Color.lerp(a.panelTranslucentColor, b.panelTranslucentColor, t),
+      solidEffectColor: Color.lerp(a.solidEffectColor, b.solidEffectColor, t)!,
+      translucentEffectColor: Color.lerp(a.translucentEffectColor, b.translucentEffectColor, t)!,
       surfaceColor: Color.lerp(a.surfaceColor, b.surfaceColor, t)!,
       overlayColor: Color.lerp(a.overlayColor, b.overlayColor, t)!,
     );
@@ -173,6 +189,8 @@ final class RadixColorScheme with Diagnosticable {
         other.pageBackgroundColor == pageBackgroundColor &&
         other.panelSolidColor == panelSolidColor &&
         other.panelTranslucentColor == panelTranslucentColor &&
+        other.solidEffectColor == solidEffectColor &&
+        other.translucentEffectColor == translucentEffectColor &&
         other.surfaceColor == surfaceColor &&
         other.overlayColor == overlayColor;
   }
@@ -191,6 +209,8 @@ final class RadixColorScheme with Diagnosticable {
     pageBackgroundColor,
     panelSolidColor,
     panelTranslucentColor,
+    solidEffectColor,
+    translucentEffectColor,
     surfaceColor,
     overlayColor,
   );
@@ -203,6 +223,8 @@ final class RadixColorScheme with Diagnosticable {
     properties.add(ColorProperty('pageBackgroundColor', pageBackgroundColor));
     properties.add(ColorProperty('panelSolidColor', panelSolidColor));
     properties.add(ColorProperty('panelTranslucentColor', panelTranslucentColor));
+    properties.add(ColorProperty('solidEffectColor', solidEffectColor));
+    properties.add(ColorProperty('translucentEffectColor', translucentEffectColor));
     properties.add(ColorProperty('surfaceColor', surfaceColor));
     properties.add(ColorProperty('overlayColor', overlayColor));
   }
