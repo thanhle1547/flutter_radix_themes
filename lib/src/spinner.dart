@@ -21,6 +21,14 @@ class RadixSpinnerThemeData {
   final Size s2;
   final Size s3;
 
+  Size operator [](RadixSpinnerSize size) {
+    return switch (size) {
+      RadixSpinnerSize.$1 => s1,
+      RadixSpinnerSize.$2 => s2,
+      RadixSpinnerSize.$3 => s3,
+    };
+  }
+
   /// Color of the spinner.
   final Color color;
 
@@ -99,19 +107,6 @@ class RadixSpinnerThemeData {
 
 enum RadixSpinnerSize {
   $1, $2, $3
-}
-
-extension on RadixSpinnerSize {
-  Size getSize(RadixSpinnerThemeData theme) {
-    switch (this) {
-      case RadixSpinnerSize.$1:
-        return theme.s1;
-      case RadixSpinnerSize.$2:
-        return theme.s2;
-      case RadixSpinnerSize.$3:
-        return theme.s3;
-    }
-  }
 }
 
 /// A Radix-style activity indicator similar to the iOS (Cupertino) design.
@@ -220,7 +215,7 @@ class _RadixSpinnerState extends State<RadixSpinner> with SingleTickerProviderSt
       radiusFactor = RadixRadiusFactor.extensionFrom(theme);
     }
 
-    final Size size = widget.size.getSize(spinnerTheme);
+    final Size size = spinnerTheme[widget.size];
 
     return CustomPaint(
       size: size,
@@ -421,7 +416,7 @@ class _RadixFigmaSpinnerState extends State<RadixFigmaSpinner> with SingleTicker
       radiusFactor = RadixRadiusFactor.extensionFrom(theme);
     }
 
-    final Size size = widget.size.getSize(spinnerTheme);
+    final Size size = spinnerTheme[widget.size];
     final RadixColorsSwatch color = widget.color ?? colorScheme.neutral;
 
     return CustomPaint(
