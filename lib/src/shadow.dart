@@ -41,7 +41,7 @@ final class RadixShadowSwatch {
         offset: Offset.zero,
         blurRadius: 0,
         spreadRadius: 1,
-        color: RadixColorScheme.kLight.gray.radixScale_3.alphaVariant,
+        color: RadixColorScheme.kWebCssLight.gray.radixScale_3.alphaVariant,
       ),
       BoxShadow(
         offset: Offset.zero,
@@ -53,7 +53,7 @@ final class RadixShadowSwatch {
         offset: Offset(0, 1),
         blurRadius: 1,
         spreadRadius: 0,
-        color: RadixColorScheme.kLight.gray.radixScale_2.alphaVariant,
+        color: RadixColorScheme.kWebCssLight.gray.radixScale_2.alphaVariant,
       ),
       BoxShadow(
         offset: Offset(0, 2),
@@ -73,13 +73,13 @@ final class RadixShadowSwatch {
         offset: Offset.zero,
         blurRadius: 0,
         spreadRadius: 1,
-        color: RadixColorScheme.kLight.gray.radixScale_3.alphaVariant,
+        color: RadixColorScheme.kWebCssLight.gray.radixScale_3.alphaVariant,
       ),
       BoxShadow(
         offset: Offset(0, 2),
         blurRadius: 3,
         spreadRadius: -2,
-        color: RadixColorScheme.kLight.gray.radixScale_3.alphaVariant,
+        color: RadixColorScheme.kWebCssLight.gray.radixScale_3.alphaVariant,
       ),
       BoxShadow(
         offset: Offset(0, 3),
@@ -99,7 +99,7 @@ final class RadixShadowSwatch {
         offset: Offset.zero,
         blurRadius: 0,
         spreadRadius: 1,
-        color: RadixColorScheme.kLight.gray.radixScale_3.alphaVariant,
+        color: RadixColorScheme.kWebCssLight.gray.radixScale_3.alphaVariant,
       ),
       BoxShadow(
         offset: Offset(0, 8),
@@ -111,7 +111,7 @@ final class RadixShadowSwatch {
         offset: Offset(0, 12),
         blurRadius: 32,
         spreadRadius: -16,
-        color: RadixColorScheme.kLight.gray.radixScale_3.alphaVariant,
+        color: RadixColorScheme.kWebCssLight.gray.radixScale_3.alphaVariant,
       ),
     ],
     scale_5: [
@@ -119,7 +119,7 @@ final class RadixShadowSwatch {
         offset: Offset.zero,
         blurRadius: 0,
         spreadRadius: 1,
-        color: RadixColorScheme.kLight.gray.radixScale_3.alphaVariant,
+        color: RadixColorScheme.kWebCssLight.gray.radixScale_3.alphaVariant,
       ),
       BoxShadow(
         offset: Offset(0, 12),
@@ -131,7 +131,7 @@ final class RadixShadowSwatch {
         offset: Offset(0, 12),
         blurRadius: 32,
         spreadRadius: -16,
-        color: RadixColorScheme.kLight.gray.radixScale_5.alphaVariant,
+        color: RadixColorScheme.kWebCssLight.gray.radixScale_5.alphaVariant,
       ),
     ],
     scale_6: [
@@ -139,7 +139,7 @@ final class RadixShadowSwatch {
         offset: Offset.zero,
         blurRadius: 0,
         spreadRadius: 1,
-        color: RadixColorScheme.kLight.gray.radixScale_3.alphaVariant,
+        color: RadixColorScheme.kWebCssLight.gray.radixScale_3.alphaVariant,
       ),
       BoxShadow(
         offset: Offset(0, 12),
@@ -151,13 +151,13 @@ final class RadixShadowSwatch {
         offset: Offset(0, 16),
         blurRadius: 64,
         spreadRadius: 0,
-        color: RadixColorScheme.kLight.gray.radixScale_2.alphaVariant,
+        color: RadixColorScheme.kWebCssLight.gray.radixScale_2.alphaVariant,
       ),
       BoxShadow(
         offset: Offset(0, 16),
         blurRadius: 36,
         spreadRadius: -20,
-        color: RadixColorScheme.kLight.gray.radixScale_7.alphaVariant,
+        color: RadixColorScheme.kWebCssLight.gray.radixScale_7.alphaVariant,
       ),
     ],
   );
