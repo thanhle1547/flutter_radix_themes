@@ -115,11 +115,9 @@ final class RadixColorScheme with Diagnosticable {
     pageBackgroundColor: RadixColors.white,
     panelSolidColor: RadixColors.white,
     panelTranslucentColor: Color.fromRGBO(255, 255, 255, 0.8),
-    // CSS version is:
-    // panelTranslucentColor: Color.fromRGBO(255, 255, 255, 0.7),
     solidEffectColor: RadixColors.white,
     translucentEffectColor: Color.fromRGBO(255, 255, 255, 0.8),
-    surfaceColor: Color.fromRGBO(255, 255, 255, 0.85),
+    surfaceColor: Color.fromRGBO(255, 255, 255, 0.9),
     overlayColor: RadixColors.black.alphaVariantSwatch.scale_6,
   );
 
@@ -135,11 +133,45 @@ final class RadixColorScheme with Diagnosticable {
     headingColor: RadixDarkColors.indigo.radixScale_12.alphaVariant,
     pageBackgroundColor: RadixDarkColors.slate.scale_1, // It's RadixColorScheme.neutral.scale_1
     panelSolidColor: RadixDarkColors.slate.scale_2, // It's RadixColorScheme.neutral.scale_2
-    // CSS version is:
-    // panelSolidColor: RadixDarkColors.slate.scale_2, // It's RadixColorScheme.gray.scale_2
     panelTranslucentColor: Color.fromRGBO(29, 29, 33, 0.7),
-    // CSS version is:
-    // panelTranslucentColor: RadixDarkColors.slate.radixScale_2.alphaVariant, // It's RadixColorScheme.gray.radixScale_2.alphaVariant
+    solidEffectColor: RadixDarkColors.slate.scale_2, // It's RadixColorScheme.neutral.scale_2
+    translucentEffectColor: Color.fromRGBO(29, 29, 33, 0.7),
+    surfaceColor: Color.fromRGBO(0, 0, 0, 0.25),
+    overlayColor: RadixColors.black.alphaVariantSwatch.scale_8,
+  );
+
+  static final RadixColorScheme kWebCssLight = RadixColorScheme(
+    gray: RadixLightColors.slate,
+    accent: RadixLightColors.indigo,
+    neutral: RadixLightColors.slate,
+    error: RadixLightColors.red,
+    success: RadixLightColors.green,
+    warning: RadixLightColors.amber,
+    info: RadixLightColors.sky,
+    textColor: RadixLightColors.slate.scale_12,
+    headingColor: RadixLightColors.indigo.radixScale_12.alphaVariant,
+    pageBackgroundColor: RadixColors.white,
+    panelSolidColor: RadixColors.white,
+    /* CSS */ panelTranslucentColor: Color.fromRGBO(255, 255, 255, 0.7),
+    solidEffectColor: RadixColors.white,
+    translucentEffectColor: Color.fromRGBO(255, 255, 255, 0.8),
+    /* CSS */ surfaceColor: Color.fromRGBO(255, 255, 255, 0.85),
+    overlayColor: RadixColors.black.alphaVariantSwatch.scale_6,
+  );
+
+  static final RadixColorScheme kWebCssDark = RadixColorScheme(
+    gray: RadixDarkColors.slate,
+    accent: RadixDarkColors.indigo,
+    neutral: RadixDarkColors.slate,
+    error: RadixDarkColors.red,
+    success: RadixDarkColors.green,
+    warning: RadixDarkColors.amber,
+    info: RadixDarkColors.sky,
+    textColor: RadixColors.white,
+    headingColor: RadixDarkColors.indigo.radixScale_12.alphaVariant,
+    pageBackgroundColor: RadixDarkColors.slate.scale_1, // It's RadixColorScheme.neutral.scale_1
+    /* CSS */ panelSolidColor: RadixDarkColors.slate.scale_2, // It's RadixColorScheme.gray.scale_2
+    /* CSS */ panelTranslucentColor: RadixDarkColors.slate.radixScale_2.alphaVariant, // It's RadixColorScheme.gray.radixScale_2.alphaVariant
     solidEffectColor: RadixDarkColors.slate.scale_2, // It's RadixColorScheme.neutral.scale_2
     translucentEffectColor: Color.fromRGBO(29, 29, 33, 0.7),
     surfaceColor: Color.fromRGBO(0, 0, 0, 0.25),

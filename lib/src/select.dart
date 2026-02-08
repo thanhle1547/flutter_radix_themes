@@ -745,7 +745,7 @@ class RadixSelectDecorationVariantTheme {
   static final RadixSelectDecorationVariantTheme kLight = RadixSelectDecorationVariantTheme(
     surface: RadixSelectDecorationVariant(
       debugVariant: RadixSelectVariant.surface,
-      backgroundColor: RadixColorScheme.kLight.surfaceColor,
+      backgroundColor: RadixColorScheme.kWebCssLight.surfaceColor,
       disabledBackgroundColor: RadixColorScheme.kLight.gray.radixScale_2.alphaVariant,
       textColor: RadixColorScheme.kLight.gray.scale_12,
       disabledTextColor: RadixColorScheme.kLight.gray.radixScale_11.alphaVariant,
