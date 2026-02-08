@@ -35,7 +35,7 @@ final class RadixShadowSwatch {
   final List<BoxShadow> scale_5;
   final List<BoxShadow> scale_6;
 
-  static final RadixShadowSwatch kWebCss = RadixShadowSwatch(
+  static final RadixShadowSwatch kWebCssLight = RadixShadowSwatch(
     scale_2: [
       BoxShadow(
         offset: Offset.zero,
