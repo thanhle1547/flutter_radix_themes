@@ -63,6 +63,8 @@ final class RadixColorScheme with Diagnosticable {
   final Color? headingColor;
 
   /// A color used for page backgrounds.
+  ///
+  /// Figma variable: `Tokens/Colors/page-background`
   final Color pageBackgroundColor;
 
   /// The color to use for panel backgrounds, such as cards, tables,
@@ -131,7 +133,7 @@ final class RadixColorScheme with Diagnosticable {
     info: RadixDarkColors.sky,
     textColor: RadixColors.white,
     headingColor: RadixDarkColors.indigo.radixScale_12.alphaVariant,
-    pageBackgroundColor: RadixColors.white,
+    pageBackgroundColor: RadixDarkColors.slate.scale_1, // It's RadixColorScheme.neutral.scale_1
     panelSolidColor: RadixDarkColors.slate.scale_2, // It's RadixColorScheme.neutral.scale_2
     // CSS version is:
     // panelSolidColor: RadixDarkColors.slate.scale_2, // It's RadixColorScheme.gray.scale_2
