@@ -3,6 +3,7 @@ export 'src/button.dart';
 export 'src/colors.dart';
 export 'src/input_decorator.dart';
 export 'src/radius.dart';
+export 'src/segmented_control.dart';
 export 'src/select.dart';
 export 'src/shadow.dart';
 export 'src/skeleton.dart';

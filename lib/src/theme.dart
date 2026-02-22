@@ -7,6 +7,7 @@ import 'button.dart';
 import 'colors.dart';
 import 'input_decorator.dart';
 import 'radius.dart';
+import 'segmented_control.dart';
 import 'select.dart';
 import 'shadow.dart';
 import 'space.dart';
@@ -53,6 +54,7 @@ class RadixTheme extends StatelessWidget {
       size: RadixSelectDecorationVariantTheme.kFigmaLight.sizeSwatch.s2,
     ),
     selectDecorationVariantTheme: RadixSelectDecorationVariantTheme.kFigmaLight,
+    segmentedControlTheme: RadixSegmentedControlThemeData.kFigmaLight,
     spinnerTheme: RadixSpinnerThemeData.kLight,
     textSelectionTheme: TextSelectionThemeData(
       selectionColor: RadixColorScheme.kLight.focus.radixScale_5.alphaVariant,
@@ -79,6 +81,7 @@ class RadixTheme extends StatelessWidget {
       size: RadixSelectDecorationVariantTheme.kFigmaDark.sizeSwatch.s2,
     ),
     selectDecorationVariantTheme: RadixSelectDecorationVariantTheme.kFigmaDark,
+    segmentedControlTheme: RadixSegmentedControlThemeData.kFigmaDark,
     spinnerTheme: RadixSpinnerThemeData.kDark,
     textSelectionTheme: TextSelectionThemeData(
       selectionColor: RadixColorScheme.kDark.focus.radixScale_5.alphaVariant,
@@ -103,6 +106,7 @@ class RadixTheme extends StatelessWidget {
       size: RadixSelectDecorationVariantTheme.kFigmaLight.sizeSwatch.s2,
     ),
     selectDecorationVariantTheme: RadixSelectDecorationVariantTheme.kFigmaLight,
+    segmentedControlTheme: RadixSegmentedControlThemeData.kFigmaLight,
     spinnerTheme: RadixSpinnerThemeData.kLight,
     selectionColor: RadixColorScheme.kLight.focus.radixScale_5.alphaVariant,
   );
@@ -125,6 +129,7 @@ class RadixTheme extends StatelessWidget {
       size: RadixSelectDecorationVariantTheme.kFigmaDark.sizeSwatch.s2,
     ),
     selectDecorationVariantTheme: RadixSelectDecorationVariantTheme.kFigmaDark,
+    segmentedControlTheme: RadixSegmentedControlThemeData.kFigmaDark,
     spinnerTheme: RadixSpinnerThemeData.kDark,
     selectionColor: RadixColorScheme.kDark.focus.radixScale_5.alphaVariant,
   );

@@ -7,6 +7,7 @@ import 'button.dart';
 import 'colors.dart';
 import 'input_decorator.dart';
 import 'radius.dart';
+import 'segmented_control.dart';
 import 'select.dart';
 import 'shadow.dart';
 import 'space.dart';
@@ -55,6 +56,7 @@ class RadixThemeData with Diagnosticable {
     RadixInputDecorationVariantTheme? inputDecorationVariantTheme,
     RadixInputDecorationThemeData? selectDecorationTheme,
     RadixSelectDecorationVariantTheme? selectDecorationVariantTheme,
+    RadixSegmentedControlThemeData? segmentedControlTheme,
     required RadixSpinnerThemeData spinnerTheme,
     required TextSelectionThemeData textSelectionTheme,
   }) {
@@ -79,6 +81,7 @@ class RadixThemeData with Diagnosticable {
       inputDecorationVariantTheme: inputDecorationVariantTheme,
       selectDecorationTheme: selectDecorationTheme,
       selectDecorationVariantTheme: selectDecorationVariantTheme,
+      segmentedControlTheme: segmentedControlTheme,
       spinnerTheme: spinnerTheme,
       textSelectionTheme: textSelectionTheme,
     );
@@ -104,6 +107,7 @@ class RadixThemeData with Diagnosticable {
     this.inputDecorationVariantTheme,
     this.selectDecorationTheme,
     this.selectDecorationVariantTheme,
+    this.segmentedControlTheme,
     required this.spinnerTheme,
     required this.textSelectionTheme,
   })  : assert(badgeTheme == null || badgeCustomTheme == null),
@@ -176,6 +180,8 @@ class RadixThemeData with Diagnosticable {
 
   final RadixInputDecorationThemeData? selectDecorationTheme;
   final RadixSelectDecorationVariantTheme? selectDecorationVariantTheme;
+
+  final RadixSegmentedControlThemeData? segmentedControlTheme;
 
   final RadixSpinnerThemeData spinnerTheme;
 
@@ -270,6 +276,7 @@ class RadixThemeData with Diagnosticable {
       inputDecorationVariantTheme: t < 0.5 ? a.inputDecorationVariantTheme : b.inputDecorationVariantTheme,
       selectDecorationTheme: t < 0.5 ? a.selectDecorationTheme : b.selectDecorationTheme,
       selectDecorationVariantTheme: t < 0.5 ? a.selectDecorationVariantTheme : b.selectDecorationVariantTheme,
+      segmentedControlTheme: t < 0.5 ? a.segmentedControlTheme : b.segmentedControlTheme,
       spinnerTheme: RadixSpinnerThemeData.lerp(a.spinnerTheme, b.spinnerTheme, t),
       textSelectionTheme: TextSelectionThemeData.lerp(
         a.textSelectionTheme,
@@ -308,6 +315,7 @@ class RadixThemeData with Diagnosticable {
         other.inputDecorationVariantTheme == inputDecorationVariantTheme &&
         other.selectDecorationTheme == selectDecorationTheme &&
         other.selectDecorationVariantTheme == selectDecorationVariantTheme &&
+        other.segmentedControlTheme == segmentedControlTheme &&
         other.spinnerTheme == spinnerTheme &&
         other.textSelectionTheme == textSelectionTheme;
   }
@@ -339,6 +347,7 @@ class RadixThemeData with Diagnosticable {
       inputDecorationVariantTheme,
       selectDecorationTheme,
       selectDecorationVariantTheme,
+      segmentedControlTheme,
       spinnerTheme,
       textSelectionTheme,
     ];
@@ -476,6 +485,7 @@ class RadixThemeExtension extends ThemeExtension<RadixThemeExtension> with Diagn
     RadixInputDecorationVariantTheme? inputDecorationVariantTheme,
     RadixInputDecorationThemeData? selectDecorationTheme,
     RadixSelectDecorationVariantTheme? selectDecorationVariantTheme,
+    RadixSegmentedControlThemeData? segmentedControlTheme,
     required RadixSpinnerThemeData spinnerTheme,
     required Color selectionColor,
   }) {
@@ -496,6 +506,7 @@ class RadixThemeExtension extends ThemeExtension<RadixThemeExtension> with Diagn
       inputDecorationVariantTheme: inputDecorationVariantTheme,
       selectDecorationTheme: selectDecorationTheme,
       selectDecorationVariantTheme: selectDecorationVariantTheme,
+      segmentedControlTheme: segmentedControlTheme,
       spinnerTheme: spinnerTheme,
       selectionColor: selectionColor,
     );
@@ -518,6 +529,7 @@ class RadixThemeExtension extends ThemeExtension<RadixThemeExtension> with Diagn
     this.inputDecorationVariantTheme,
     this.selectDecorationTheme,
     this.selectDecorationVariantTheme,
+    this.segmentedControlTheme,
     required this.spinnerTheme,
     required this.selectionColor,
   })  : assert(badgeTheme == null || badgeCustomTheme == null),
@@ -550,6 +562,8 @@ class RadixThemeExtension extends ThemeExtension<RadixThemeExtension> with Diagn
   final RadixInputDecorationThemeData? selectDecorationTheme;
   final RadixSelectDecorationVariantTheme? selectDecorationVariantTheme;
 
+  final RadixSegmentedControlThemeData? segmentedControlTheme;
+
   final RadixSpinnerThemeData spinnerTheme;
 
   /// The background color of selected text.
@@ -576,6 +590,7 @@ class RadixThemeExtension extends ThemeExtension<RadixThemeExtension> with Diagn
       inputDecorationVariantTheme: t < 0.5 ? inputDecorationVariantTheme : other.inputDecorationVariantTheme,
       selectDecorationTheme: t < 0.5 ? selectDecorationTheme : other.selectDecorationTheme,
       selectDecorationVariantTheme: t < 0.5 ? selectDecorationVariantTheme : other.selectDecorationVariantTheme,
+      segmentedControlTheme: t < 0.5 ? segmentedControlTheme : other.segmentedControlTheme,
       spinnerTheme: RadixSpinnerThemeData.lerp(spinnerTheme, other.spinnerTheme, t),
       selectionColor: Color.lerp(selectionColor, other.selectionColor, t)!,
     );
@@ -603,6 +618,7 @@ class RadixThemeExtension extends ThemeExtension<RadixThemeExtension> with Diagn
         other.inputDecorationVariantTheme == inputDecorationVariantTheme &&
         other.selectDecorationTheme == selectDecorationTheme &&
         other.selectDecorationVariantTheme == selectDecorationVariantTheme &&
+        other.segmentedControlTheme == segmentedControlTheme &&
         other.spinnerTheme == spinnerTheme &&
         other.selectionColor == selectionColor;
   }
@@ -626,6 +642,7 @@ class RadixThemeExtension extends ThemeExtension<RadixThemeExtension> with Diagn
       inputDecorationVariantTheme,
       selectDecorationTheme,
       selectDecorationVariantTheme,
+      segmentedControlTheme,
       spinnerTheme,
       selectionColor,
     ];
