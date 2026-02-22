@@ -20,6 +20,7 @@ final class RadixColorScheme with Diagnosticable {
     required this.textColor,
     this.headingColor,
     required this.pageBackgroundColor,
+    required this.backgroundColor,
     Color? panelSolidColor,
     Color? panelTranslucentColor,
     required this.solidEffectColor,
@@ -67,6 +68,9 @@ final class RadixColorScheme with Diagnosticable {
   /// Figma variable: `Tokens/Colors/page-background`
   final Color pageBackgroundColor;
 
+  /// CSS variable: `--color-background`
+  final Color backgroundColor;
+
   /// The color to use for panel backgrounds, such as cards, tables,
   /// popovers, dropdown menus, etc. to present information unobstructed.
   ///
@@ -113,6 +117,7 @@ final class RadixColorScheme with Diagnosticable {
     textColor: RadixLightColors.slate.scale_12,
     headingColor: RadixLightColors.indigo.radixScale_12.alphaVariant,
     pageBackgroundColor: RadixColors.white,
+    backgroundColor: RadixColors.white,
     panelSolidColor: RadixColors.white,
     panelTranslucentColor: Color.fromRGBO(255, 255, 255, 0.8),
     solidEffectColor: RadixColors.white,
@@ -132,6 +137,7 @@ final class RadixColorScheme with Diagnosticable {
     textColor: RadixColors.white,
     headingColor: RadixDarkColors.indigo.radixScale_12.alphaVariant,
     pageBackgroundColor: RadixDarkColors.slate.scale_1, // It's RadixColorScheme.neutral.scale_1
+    backgroundColor: RadixDarkColors.slate.scale_1, // It's RadixColorScheme.gray.scale_1
     panelSolidColor: RadixDarkColors.slate.scale_2, // It's RadixColorScheme.neutral.scale_2
     panelTranslucentColor: Color.fromRGBO(29, 29, 33, 0.7),
     solidEffectColor: RadixDarkColors.slate.scale_2, // It's RadixColorScheme.neutral.scale_2
@@ -151,6 +157,7 @@ final class RadixColorScheme with Diagnosticable {
     textColor: RadixLightColors.slate.scale_12,
     headingColor: RadixLightColors.indigo.radixScale_12.alphaVariant,
     pageBackgroundColor: RadixColors.white,
+    backgroundColor: RadixColors.white,
     panelSolidColor: RadixColors.white,
     /* CSS */ panelTranslucentColor: Color.fromRGBO(255, 255, 255, 0.7),
     solidEffectColor: RadixColors.white,
@@ -170,6 +177,7 @@ final class RadixColorScheme with Diagnosticable {
     textColor: RadixColors.white,
     headingColor: RadixDarkColors.indigo.radixScale_12.alphaVariant,
     pageBackgroundColor: RadixDarkColors.slate.scale_1, // It's RadixColorScheme.neutral.scale_1
+    backgroundColor: RadixDarkColors.slate.scale_1, // It's RadixColorScheme.gray.scale_1
     /* CSS */ panelSolidColor: RadixDarkColors.slate.scale_2, // It's RadixColorScheme.gray.scale_2
     /* CSS */ panelTranslucentColor: RadixDarkColors.slate.radixScale_2.alphaVariant, // It's RadixColorScheme.gray.radixScale_2.alphaVariant
     solidEffectColor: RadixDarkColors.slate.scale_2, // It's RadixColorScheme.neutral.scale_2
@@ -196,6 +204,7 @@ final class RadixColorScheme with Diagnosticable {
       textColor: Color.lerp(a.textColor, b.textColor, t)!,
       headingColor: Color.lerp(a.headingColor, b.headingColor, t),
       pageBackgroundColor: Color.lerp(a.pageBackgroundColor, b.pageBackgroundColor, t)!,
+      backgroundColor: Color.lerp(a.backgroundColor, b.backgroundColor, t)!,
       panelSolidColor: Color.lerp(a.panelSolidColor, b.panelSolidColor, t),
       panelTranslucentColor: Color.lerp(a.panelTranslucentColor, b.panelTranslucentColor, t),
       solidEffectColor: Color.lerp(a.solidEffectColor, b.solidEffectColor, t)!,
@@ -221,6 +230,7 @@ final class RadixColorScheme with Diagnosticable {
         other.textColor == textColor &&
         other.headingColor == headingColor &&
         other.pageBackgroundColor == pageBackgroundColor &&
+        other.backgroundColor == backgroundColor &&
         other.panelSolidColor == panelSolidColor &&
         other.panelTranslucentColor == panelTranslucentColor &&
         other.solidEffectColor == solidEffectColor &&
@@ -241,6 +251,7 @@ final class RadixColorScheme with Diagnosticable {
     textColor,
     headingColor,
     pageBackgroundColor,
+    backgroundColor,
     panelSolidColor,
     panelTranslucentColor,
     solidEffectColor,
@@ -255,6 +266,7 @@ final class RadixColorScheme with Diagnosticable {
     properties.add(ColorProperty('textColor', textColor));
     properties.add(ColorProperty('headingColor', headingColor));
     properties.add(ColorProperty('pageBackgroundColor', pageBackgroundColor));
+    properties.add(ColorProperty('backgroundColor', backgroundColor));
     properties.add(ColorProperty('panelSolidColor', panelSolidColor));
     properties.add(ColorProperty('panelTranslucentColor', panelTranslucentColor));
     properties.add(ColorProperty('solidEffectColor', solidEffectColor));
