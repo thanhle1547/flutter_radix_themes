@@ -41,10 +41,10 @@ class RadixSegmentedControlSizeSwatch {
       itemPadding: EdgeInsets.symmetric(
         horizontal: RadixSpace.kDefault.scale_3,
       ),
-      activeTextStyle: RadixTextTheme.kDefault.scale_1,
-      inactiveTextStyle: RadixTextTheme.kDefault.scale_1.copyWith(
+      activeTextStyle: RadixTextTheme.kDefault.scale_1.copyWith(
         fontVariations: RadixFigmaTextFontVariations.medium_510,
       ),
+      inactiveTextStyle: RadixTextTheme.kDefault.scale_1,
       gap: RadixSpace.kDefault.scale_1,
       cornerRadius: RadixRadiusFactor.kDefault.medium.swatch.scale_2,
     ),
@@ -53,10 +53,10 @@ class RadixSegmentedControlSizeSwatch {
       itemPadding: EdgeInsets.symmetric(
         horizontal: RadixSpace.kDefault.scale_4,
       ),
-      activeTextStyle: RadixTextTheme.kDefault.scale_2,
-      inactiveTextStyle: RadixTextTheme.kDefault.scale_2.copyWith(
+      activeTextStyle: RadixTextTheme.kDefault.scale_2.copyWith(
         fontVariations: RadixFigmaTextFontVariations.medium_510,
       ),
+      inactiveTextStyle: RadixTextTheme.kDefault.scale_2,
       gap: RadixSpace.kDefault.scale_2,
       cornerRadius: RadixRadiusFactor.kDefault.medium.swatch.scale_2,
     ),
@@ -65,10 +65,10 @@ class RadixSegmentedControlSizeSwatch {
       itemPadding: EdgeInsets.symmetric(
         horizontal: RadixSpace.kDefault.scale_4,
       ),
-      activeTextStyle: RadixTextTheme.kDefault.scale_3,
-      inactiveTextStyle: RadixTextTheme.kDefault.scale_3.copyWith(
+      activeTextStyle: RadixTextTheme.kDefault.scale_3.copyWith(
         fontVariations: RadixFigmaTextFontVariations.medium_510,
       ),
+      inactiveTextStyle: RadixTextTheme.kDefault.scale_3,
       gap: RadixSpace.kDefault.scale_3,
       cornerRadius: RadixRadiusFactor.kDefault.medium.swatch.scale_3,
     ),
