@@ -897,6 +897,7 @@ class RadixSegmentedControl<T extends Object> extends StatefulWidget {
     this.size = RadixSegmentedControlSize.$2,
     this.cornerRadius,
     this.proportionalWidth = false,
+    this.expands = false,
   }) : assert(children.length >= 2),
        assert(
          groupValue == null || children.keys.contains(groupValue),
@@ -997,6 +998,11 @@ class RadixSegmentedControl<T extends Object> extends StatefulWidget {
   ///
   /// Defaults to false.
   final bool proportionalWidth;
+
+  /// Whether this widget's width will be sized to fill its parent.
+  ///
+  /// Defaults to false.
+  final bool expands;
 
   @override
   State<RadixSegmentedControl<T>> createState() => _RadixSegmentedControlState<T>();
@@ -1291,6 +1297,7 @@ class _RadixSegmentedControlState<T extends Object> extends State<RadixSegmented
       thumbSide: _style.indicatorSide.resolve(states)!,
       thumbShadow: _style.indicatorShadow,
       proportionalWidth: widget.proportionalWidth,
+      expands: widget.expands,
       state: this,
       children: children,
     );
@@ -1342,6 +1349,7 @@ class _SegmentedControlRenderWidget<T extends Object> extends MultiChildRenderOb
     required this.thumbSide,
     required this.thumbShadow,
     required this.proportionalWidth,
+    required this.expands,
     required this.state,
   });
 
@@ -1352,6 +1360,7 @@ class _SegmentedControlRenderWidget<T extends Object> extends MultiChildRenderOb
   final BorderSide thumbSide;
   final List<BoxShadow> thumbShadow;
   final bool proportionalWidth;
+  final bool expands;
   final _RadixSegmentedControlState<T> state;
 
   @override
@@ -1364,6 +1373,7 @@ class _SegmentedControlRenderWidget<T extends Object> extends MultiChildRenderOb
       thumbSide: thumbSide,
       thumbShadow: thumbShadow,
       proportionalWidth: proportionalWidth,
+      expands: expands,
       state: state,
     );
   }
@@ -1378,7 +1388,8 @@ class _SegmentedControlRenderWidget<T extends Object> extends MultiChildRenderOb
       ..thumbSide = thumbSide
       ..thumbShadow = thumbShadow
       ..highlightedIndex = highlightedIndex
-      ..proportionalWidth = proportionalWidth;
+      ..proportionalWidth = proportionalWidth
+      ..expands = expands;
   }
 }
 
@@ -1398,6 +1409,7 @@ class _RenderSegmentedControl<T extends Object> extends RenderBox
     required BorderSide thumbSide,
     required List<BoxShadow> thumbShadow,
     required bool proportionalWidth,
+    required bool expands,
     required this.state,
   }) : _height = height,
        _highlightedIndex = highlightedIndex,
@@ -1405,7 +1417,8 @@ class _RenderSegmentedControl<T extends Object> extends RenderBox
        _thumbRadius = thumbRadius,
        _thumbSide = thumbSide,
        _thumbShadow = thumbShadow,
-       _proportionalWidth = proportionalWidth;
+       _proportionalWidth = proportionalWidth,
+       _expands = expands;
 
   final _RadixSegmentedControlState<T> state;
 
@@ -1493,6 +1506,16 @@ class _RenderSegmentedControl<T extends Object> extends RenderBox
       return;
     }
     _proportionalWidth = value;
+    markNeedsLayout();
+  }
+
+  bool get expands => _expands;
+  bool _expands;
+  set expands(bool value) {
+    if (_expands == value) {
+      return;
+    }
+    _expands = value;
     markNeedsLayout();
   }
 
@@ -1629,9 +1652,17 @@ class _RenderSegmentedControl<T extends Object> extends RenderBox
   }
 
   List<double> _getChildWidths(BoxConstraints constraints) {
+    final double totalSeparatorWidth = this.totalSeparatorWidth;
+
     if (!proportionalWidth) {
-      final double maxChildWidth = _getMaxChildWidth(constraints);
+      double maxChildWidth = _getMaxChildWidth(constraints);
       final int segmentCount = childCount ~/ 2 + 1;
+      if (expands) {
+        final double allowedMaxChildWidth = (constraints.maxWidth - totalSeparatorWidth) / segmentCount;
+        if (maxChildWidth < allowedMaxChildWidth) {
+          maxChildWidth = allowedMaxChildWidth;
+        }
+      }
       return List<double>.filled(segmentCount, maxChildWidth);
     }
 
@@ -1654,7 +1685,12 @@ class _RenderSegmentedControl<T extends Object> extends RenderBox
     final double allowedMaxWidth = constraints.maxWidth - totalSeparatorWidth;
     final double allowedMinWidth = constraints.minWidth - totalSeparatorWidth;
 
-    final double scale = clampDouble(totalWidth, allowedMinWidth, allowedMaxWidth) / totalWidth;
+    final double scale;
+    if (expands) {
+      scale = allowedMaxWidth / totalWidth;
+    } else {
+      scale = clampDouble(totalWidth, allowedMinWidth, allowedMaxWidth) / totalWidth;
+    }
     if (scale != 1) {
       for (int i = 0; i < segmentWidths.length; i++) {
         segmentWidths[i] = segmentWidths[i] * scale;
