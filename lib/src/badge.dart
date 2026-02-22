@@ -28,7 +28,7 @@ class RadixBadgeVariantStyle {
   /// {@macro dart.ui.shadow.lerp}
   static RadixBadgeVariantStyle lerp(RadixBadgeVariantStyle a, RadixBadgeVariantStyle b, double t) {
     return RadixBadgeVariantStyle(
-      backgroundColor: Color.lerp(a.backgroundColor, b.backgroundColor, t)!,
+      backgroundColor: Color.lerp(a.backgroundColor, b.backgroundColor, t),
       textColor: Color.lerp(a.textColor, b.textColor, t)!,
       side: _lerpSides(a.side, b.side, t),
     );
