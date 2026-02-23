@@ -72,7 +72,7 @@ class RadixSpinnerThemeData {
   }
 
   @override
-  int get hashCode => Object.hash(runtimeType, s1, s2, s3, color);
+  int get hashCode => Object.hash(runtimeType, s1, s2, s3, color, figmaVersionColor);
 
   /// Linearly interpolate between two [RadixSpinnerThemeData]s.
   ///
