@@ -1,4 +1,5 @@
 import 'dart:math' as math;
+import 'dart:ui';
 
 import 'package:flutter/material.dart';
 
@@ -17,11 +18,11 @@ class RadixSpinnerThemeData {
     required this.figmaVersionColor,
   });
 
-  final Size s1;
-  final Size s2;
-  final Size s3;
+  final double s1;
+  final double s2;
+  final double s3;
 
-  Size operator [](RadixSpinnerSize size) {
+  double operator [](RadixSpinnerSize size) {
     return switch (size) {
       RadixSpinnerSize.$1 => s1,
       RadixSpinnerSize.$2 => s2,
@@ -35,9 +36,9 @@ class RadixSpinnerThemeData {
   final RadixColorsSwatch figmaVersionColor;
 
   static final RadixSpinnerThemeData kLight = RadixSpinnerThemeData(
-    s1: Size.square(RadixSpace.kDefault.scale_3),
-    s2: Size.square(RadixSpace.kDefault.scale_4),
-    s3: Size.square(1.25 * RadixSpace.kDefault.scale_4),
+    s1: RadixSpace.kDefault.scale_3,
+    s2: RadixSpace.kDefault.scale_4,
+    s3: 1.25 * RadixSpace.kDefault.scale_4,
     // The web's spinner color is set to `currentColor`, which is the current
     // text color, typically '--gray-12' in the Light Theme.
     color: RadixColorScheme.kLight.gray.scale_12.withOpacity(0.65),
@@ -46,9 +47,9 @@ class RadixSpinnerThemeData {
   );
 
   static final RadixSpinnerThemeData kDark = RadixSpinnerThemeData(
-    s1: Size.square(RadixSpace.kDefault.scale_3),
-    s2: Size.square(RadixSpace.kDefault.scale_4),
-    s3: Size.square(1.25 * RadixSpace.kDefault.scale_4),
+    s1: RadixSpace.kDefault.scale_3,
+    s2: RadixSpace.kDefault.scale_4,
+    s3: 1.25 * RadixSpace.kDefault.scale_4,
     // The web's spinner color is set to `currentColor`, which is the current
     // text color, typically '--gray-12' in the Dark Theme.
     color: RadixColorScheme.kDark.gray.scale_12.withOpacity(0.65),
@@ -81,9 +82,9 @@ class RadixSpinnerThemeData {
       return a;
     }
     return RadixSpinnerThemeData(
-      s1: Size.lerp(a?.s1, b?.s1, t)!,
-      s2: Size.lerp(a?.s2, b?.s2, t)!,
-      s3: Size.lerp(a?.s3, b?.s3, t)!,
+      s1: lerpDouble(a?.s1, b?.s1, t)!,
+      s2: lerpDouble(a?.s2, b?.s2, t)!,
+      s3: lerpDouble(a?.s3, b?.s3, t)!,
       color: Color.lerp(a?.color, b?.color, t)!,
       figmaVersionColor: RadixColorsSwatch.lerp(a?.figmaVersionColor, b?.figmaVersionColor, t)!,
     );
@@ -215,7 +216,7 @@ class _RadixSpinnerState extends State<RadixSpinner> with SingleTickerProviderSt
       radiusFactor = RadixRadiusFactor.extensionFrom(theme);
     }
 
-    final Size size = spinnerTheme[widget.size];
+    final Size size = Size.square(spinnerTheme[widget.size]);
 
     return CustomPaint(
       size: size,
@@ -416,7 +417,7 @@ class _RadixFigmaSpinnerState extends State<RadixFigmaSpinner> with SingleTicker
       radiusFactor = RadixRadiusFactor.extensionFrom(theme);
     }
 
-    final Size size = spinnerTheme[widget.size];
+    final Size size = Size.square(spinnerTheme[widget.size]);
     final RadixColorsSwatch color = widget.color ?? colorScheme.neutral;
 
     return CustomPaint(
