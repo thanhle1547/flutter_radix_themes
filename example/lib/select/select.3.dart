@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:radix_themes/radix_themes.dart';
 
-/// Flutter code sample for [DropdownButton].
+/// Flutter code sample for [RadixSelect].
 
 final List<String> list = <String>['One', 'Two', 'Three', 'Four'];
 
