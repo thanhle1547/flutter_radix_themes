@@ -1330,6 +1330,7 @@ class _SelectContentRouteLayout<T> extends MultiChildRenderObjectWidget {
     this.width,
     required this.padding,
     required this.itemIndicatorWidth,
+    required this.isExpanded,
     required Widget child,
     required List<Widget> options,
   }) : super(children: [child, ...options]);
@@ -1340,6 +1341,7 @@ class _SelectContentRouteLayout<T> extends MultiChildRenderObjectWidget {
   final double? width;
   final EdgeInsets padding;
   final double itemIndicatorWidth;
+  final bool isExpanded;
 
   @override
   _RenderSelectContentRouteLayout createRenderObject(BuildContext context) {
@@ -1350,6 +1352,7 @@ class _SelectContentRouteLayout<T> extends MultiChildRenderObjectWidget {
       width: width,
       padding: padding,
       itemIndicatorWidth: itemIndicatorWidth,
+      isExpanded: isExpanded,
     );
   }
 
@@ -1360,7 +1363,8 @@ class _SelectContentRouteLayout<T> extends MultiChildRenderObjectWidget {
       ..textDirection = textDirection
       ..width = width
       ..padding = padding
-      ..itemIndicatorWidth = itemIndicatorWidth;
+      ..itemIndicatorWidth = itemIndicatorWidth
+      ..isExpanded = isExpanded;
   }
 }
 
@@ -1376,11 +1380,13 @@ class _RenderSelectContentRouteLayout<T> extends RenderBox
     double? width,
     required EdgeInsets padding,
     required double itemIndicatorWidth,
+    required bool isExpanded,
   }) : _buttonRect = buttonRect,
        _textDirection = textDirection,
        _width = width,
        _padding = padding,
-       _itemIndicatorWidth = itemIndicatorWidth {
+       _itemIndicatorWidth = itemIndicatorWidth,
+       _isExpanded = isExpanded {
     addAll(children);
   }
 
@@ -1423,6 +1429,14 @@ class _RenderSelectContentRouteLayout<T> extends RenderBox
   set itemIndicatorWidth(double value) {
     if (value == _itemIndicatorWidth) return;
     _itemIndicatorWidth = value;
+    markNeedsLayout();
+  }
+
+  bool get isExpanded => _isExpanded;
+  bool _isExpanded;
+  set isExpanded(bool value) {
+    if (value == _isExpanded) return;
+    _isExpanded = value;
     markNeedsLayout();
   }
 
@@ -1544,7 +1558,9 @@ class _RenderSelectContentRouteLayout<T> extends RenderBox
     double height = 0.0;
 
     final BoxConstraints nonPositionedConstraints = BoxConstraints(
-      maxWidth: constraints.maxWidth,
+      maxWidth: isExpanded
+          ? math.min(buttonRect.width + padding.horizontal, constraints.maxWidth)
+          : constraints.maxWidth,
       minHeight: route.itemHeight,
       maxHeight: route.itemHeight,
     );
@@ -1960,6 +1976,7 @@ class _SelectContentRoutePageState<T> extends State<_SelectContentRoutePage<T>> 
             width: widget.menuWidth,
             padding: widget.route.padding,
             itemIndicatorWidth: widget.route.itemIndicatorWidth,
+            isExpanded: widget.route.isExpanded,
             options: children,
             child: widget.capturedThemes.wrap(content),
           );
