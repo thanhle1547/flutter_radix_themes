@@ -2631,7 +2631,14 @@ class _RadixSelectState<T> extends State<RadixSelect<T>> with WidgetsBindingObse
     );
 
     final MouseCursor effectiveMouseCursor = WidgetStateProperty.resolveAs<MouseCursor>(
-      WidgetStateMouseCursor.clickable,
+      // TODO: Upgrade Flutter SDK to 3.41.0.
+      // This is required to migrate to 'WidgetStateMouseCursor.adaptiveClickable'.
+      // Following the framework change that defaulted button cursors to 'basic' 
+      // instead of 'click' (except on Web), this property ensures the correct 
+      // adaptive behavior is maintained across platforms.
+      //
+      // widget.mouseCursor ?? WidgetStateMouseCursor.adaptiveClickable,
+      widget.mouseCursor ?? WidgetStateMouseCursor.clickable,
       <WidgetState>{if (!_enabled) WidgetState.disabled},
     );
 
