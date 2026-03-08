@@ -1719,6 +1719,7 @@ class RadixSelectContentRoute<T> extends PopupRoute<RadixSelectRouteResult<T>> {
     this.contentItemMouseCursor,
     this.popPopupContentRoute,
     required this.textDirection,
+    super.settings,
   }) : itemHeights = List<double>.filled(items.length, itemHeight);
 
   final List<RadixSelectItem<T>> items;
@@ -2058,7 +2059,9 @@ enum RadixSelectVariant {
   surface, soft, ghost
 }
 
-typedef PushRadixSelectPopupContentRouteCallback<T extends Object?> = Future<RadixSelectRouteResult<T>?> Function(RadixSelectContentRoute<T> route);
+typedef RadixSelectPopupContentRouteBuilder<T extends Object?> = RadixSelectContentRoute<T> Function(RouteSettings settings);
+
+typedef PushRadixSelectPopupContentRouteCallback<T extends Object?> = Future<RadixSelectRouteResult<T>?> Function(RadixSelectPopupContentRouteBuilder routeBuilder);
 
 typedef PopRadixSelectPopupContentRouteCallback<T> = void Function(BuildContext context, [RadixSelectRouteResult<T>? result]);
 
@@ -2489,36 +2492,75 @@ class _RadixSelectState<T> extends State<RadixSelect<T>> with WidgetsBindingObse
     final Rect itemRect =
         itemBox.localToGlobal(Offset.zero, ancestor: navigator.context.findRenderObject()) &
         itemBox.size;
-    final RadixSelectContentRoute<T> contentRoute = RadixSelectContentRoute<T>(
-      items: widget.options!,
-      buttonRect: itemRect,
-      padding: size.contentPadding.resolve(textDirection),
-      selectedIndex: _selectedIndex,
-      initialScrollIndex: _selectedIndex ?? 0,
-      capturedThemes: InheritedTheme.capture(from: context, to: navigator.context),
-      barrierLabel: MaterialLocalizations.of(context).modalBarrierDismissLabel,
-      barrierDismissible: widget.barrierDismissible,
-      itemHeight: size.itemHeight,
-      hoveredItemBackgroundColor: decorationVariant.hoveredItemBackgroundColor,
-      itemIndicatorWidth: size.itemIndicatorWidth,
-      style: size.itemTextStyle,
-      menuWidth: widget.menuWidth,
-      isExpanded: widget.isExpanded,
-      menuMaxHeight: widget.menuMaxHeight,
-      indicatorIconSize: size.itemIndicatorIconSize,
-      enableFeedback: widget.enableFeedback ?? true,
-      contentDecoration: widget.contentDecoration,
-      backgroundColor: decorationVariantTheme.contentBackgroundColor,
-      borderRadius: size.contentBorderRadius,
-      boxShadow: decorationVariantTheme.contentBoxShadow,
-      contentItemMouseCursor: widget.contentItemMouseCursor,
-      textDirection: textDirection,
-      popPopupContentRoute: widget.popPopupContentRoute,
-    );
-    _selectContentRoute = contentRoute;
 
     focusNode.requestFocus();
-    (widget.pushPopupContentRoute?.call(contentRoute) ?? navigator.push(contentRoute)).then<void>(
+
+    Future<RadixSelectRouteResult<T>?> futureResult;
+    if (widget.pushPopupContentRoute case final PushRadixSelectPopupContentRouteCallback<T> pushPopupContentRoute) {
+      futureResult = pushPopupContentRoute(
+        (RouteSettings settings) {
+          return RadixSelectContentRoute<T>(
+            items: widget.options!,
+            buttonRect: itemRect,
+            padding: size.contentPadding.resolve(textDirection),
+            selectedIndex: _selectedIndex,
+            initialScrollIndex: _selectedIndex ?? 0,
+            capturedThemes: InheritedTheme.capture(from: context, to: navigator.context),
+            barrierLabel: MaterialLocalizations.of(context).modalBarrierDismissLabel,
+            barrierDismissible: widget.barrierDismissible,
+            itemHeight: size.itemHeight,
+            hoveredItemBackgroundColor: decorationVariant.hoveredItemBackgroundColor,
+            itemIndicatorWidth: size.itemIndicatorWidth,
+            style: size.itemTextStyle,
+            menuWidth: widget.menuWidth,
+            isExpanded: widget.isExpanded,
+            menuMaxHeight: widget.menuMaxHeight,
+            indicatorIconSize: size.itemIndicatorIconSize,
+            enableFeedback: widget.enableFeedback ?? true,
+            contentDecoration: widget.contentDecoration,
+            backgroundColor: decorationVariantTheme.contentBackgroundColor,
+            borderRadius: size.contentBorderRadius,
+            boxShadow: decorationVariantTheme.contentBoxShadow,
+            contentItemMouseCursor: widget.contentItemMouseCursor,
+            textDirection: textDirection,
+            popPopupContentRoute: widget.popPopupContentRoute,
+            settings: settings,
+          );
+        },
+      );
+    } else {
+      final RadixSelectContentRoute<T> contentRoute = RadixSelectContentRoute<T>(
+        items: widget.options!,
+        buttonRect: itemRect,
+        padding: size.contentPadding.resolve(textDirection),
+        selectedIndex: _selectedIndex,
+        initialScrollIndex: _selectedIndex ?? 0,
+        capturedThemes: InheritedTheme.capture(from: context, to: navigator.context),
+        barrierLabel: MaterialLocalizations.of(context).modalBarrierDismissLabel,
+        barrierDismissible: widget.barrierDismissible,
+        itemHeight: size.itemHeight,
+        hoveredItemBackgroundColor: decorationVariant.hoveredItemBackgroundColor,
+        itemIndicatorWidth: size.itemIndicatorWidth,
+        style: size.itemTextStyle,
+        menuWidth: widget.menuWidth,
+        isExpanded: widget.isExpanded,
+        menuMaxHeight: widget.menuMaxHeight,
+        indicatorIconSize: size.itemIndicatorIconSize,
+        enableFeedback: widget.enableFeedback ?? true,
+        contentDecoration: widget.contentDecoration,
+        backgroundColor: decorationVariantTheme.contentBackgroundColor,
+        borderRadius: size.contentBorderRadius,
+        boxShadow: decorationVariantTheme.contentBoxShadow,
+        contentItemMouseCursor: widget.contentItemMouseCursor,
+        textDirection: textDirection,
+        popPopupContentRoute: widget.popPopupContentRoute,
+      );
+
+      _selectContentRoute = contentRoute;
+
+      futureResult = navigator.push(contentRoute);
+    }
+    futureResult.then<void>(
       (RadixSelectRouteResult<T>? newValue) {
         _removeDropdownRoute();
         if (!mounted || newValue == null) {
