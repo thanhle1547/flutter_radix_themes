@@ -2058,7 +2058,7 @@ enum RadixSelectVariant {
   surface, soft, ghost
 }
 
-typedef PushRadixSelectPopupContentRouteCallback<T extends Object?> = Future<T?> Function(RadixSelectContentRoute<T> route);
+typedef PushRadixSelectPopupContentRouteCallback<T extends Object?> = Future<RadixSelectRouteResult<T>?> Function(RadixSelectContentRoute<T> route);
 
 typedef PopRadixSelectPopupContentRouteCallback<T> = void Function(BuildContext context, [RadixSelectRouteResult<T>? result]);
 
@@ -2513,11 +2513,12 @@ class _RadixSelectState<T> extends State<RadixSelect<T>> with WidgetsBindingObse
       boxShadow: decorationVariantTheme.contentBoxShadow,
       contentItemMouseCursor: widget.contentItemMouseCursor,
       textDirection: textDirection,
+      popPopupContentRoute: widget.popPopupContentRoute,
     );
     _selectContentRoute = contentRoute;
 
     focusNode.requestFocus();
-    widget.pushPopupContentRoute?.call(contentRoute) ?? navigator.push(contentRoute).then<void>(
+    (widget.pushPopupContentRoute?.call(contentRoute) ?? navigator.push(contentRoute)).then<void>(
       (RadixSelectRouteResult<T>? newValue) {
         _removeDropdownRoute();
         if (!mounted || newValue == null) {
@@ -2527,8 +2528,8 @@ class _RadixSelectState<T> extends State<RadixSelect<T>> with WidgetsBindingObse
         setState(() {
           _selectedIndex = newValue.itemIndex;
         });
-    },
-  );
+      },
+    );
 
     widget.onTap?.call();
     _isMenuExpanded = true;
