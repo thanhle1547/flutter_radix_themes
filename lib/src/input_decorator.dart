@@ -591,18 +591,32 @@ class _RenderDecoration extends RenderBox
     final Size prefixSize = prefix == null ? Size.zero : layoutChild(prefix, contentConstraints);
     final Size suffixSize = suffix == null ? Size.zero : layoutChild(suffix, contentConstraints);
 
+    double accessoryHorizontalStartInset = iconWidth + prefixSize.width;
+    if (prefixIcon == null) {
+      accessoryHorizontalStartInset += contentPadding.start + decoration.inputGap;
+    } else {
+      accessoryHorizontalStartInset += prefixIconSize.width + prefixToInputGap;
+    }
+
+    double accessoryHorizontalEndInset = suffixSize.width;
+    if (suffixIcon == null) {
+      accessoryHorizontalEndInset += contentPadding.end + decoration.inputGap;
+    } else {
+      accessoryHorizontalEndInset += suffixIconSize.width + inputToSuffixGap;
+    }
+
+    if (decoration.affixIconPosition == AffixIconPosition.insideContent) {
+      if (prefixIcon != null) {
+        accessoryHorizontalStartInset += contentPadding.start + decoration.inputGap;
+      }
+      if (suffixIcon != null) {
+        accessoryHorizontalEndInset += contentPadding.end + decoration.inputGap;
+      }
+    }
+
     final EdgeInsetsDirectional accessoryHorizontalInsets = EdgeInsetsDirectional.only(
-      start:
-          iconWidth +
-          prefixSize.width +
-          (prefixIcon == null
-              ? contentPadding.start + decoration.inputGap
-              : prefixIconSize.width + prefixToInputGap),
-      end:
-          suffixSize.width +
-          (suffixIcon == null
-              ? contentPadding.end + decoration.inputGap
-              : suffixIconSize.width + inputToSuffixGap),
+      start: accessoryHorizontalStartInset,
+      end: accessoryHorizontalEndInset,
     );
 
     // The height of the input needs to accommodate label above and counter and

@@ -1190,6 +1190,7 @@ class _RadixSelectItem<T> extends StatelessWidget {
                     width: route.itemIndicatorWidth,
                     child: Center(
                       widthFactor: 1,
+                      heightFactor: 1,
                       child: Builder(
                         builder: (context) {
                           final IconThemeData iconTheme = IconTheme.of(context);
@@ -1235,7 +1236,9 @@ class _RadixSelectItem<T> extends StatelessWidget {
       );
     }
     child = ConstrainedBox(
-      constraints: BoxConstraints.tightFor(height: route.itemHeight),
+      constraints: route.maxItemHeight == null
+          ? BoxConstraints.tightFor(height: route.itemHeight)
+          : BoxConstraints(minHeight: route.itemHeight, maxHeight: route.maxItemHeight!),
       child: child,
     );
     if (kIsWeb && selectMenuItem.enabled) {
@@ -1562,7 +1565,7 @@ class _RenderSelectContentRouteLayout<T> extends RenderBox
           ? math.min(buttonRect.width + padding.horizontal, constraints.maxWidth)
           : constraints.maxWidth,
       minHeight: route.itemHeight,
-      maxHeight: route.itemHeight,
+      maxHeight: route.maxItemHeight ?? route.itemHeight,
     );
 
     RenderBox? child = _getEffectiveFirstChild();
@@ -1604,7 +1607,7 @@ class _RenderSelectContentRouteLayout<T> extends RenderBox
     // with which to dismiss the menu.
     //   -- https://material.io/design/components/menus.html#usage
     double maxHeight = math.max(0.0, constraints.maxHeight - 2 * route.itemHeight);
-    if (route.menuMaxHeight != null && route.menuMaxHeight! <= maxHeight) {
+    if (route.menuMaxHeight != null && route.menuMaxHeight! < maxHeight) {
       maxHeight = route.menuMaxHeight!;
     }
 
@@ -1704,6 +1707,7 @@ class RadixSelectContentRoute<T> extends PopupRoute<RadixSelectRouteResult<T>> {
     this.barrierLabel,
     this.barrierDismissible = true,
     required this.itemHeight,
+    this.maxItemHeight,
     required this.hoveredItemBackgroundColor,
     required this.itemIndicatorWidth,
     required this.style,
@@ -1729,6 +1733,7 @@ class RadixSelectContentRoute<T> extends PopupRoute<RadixSelectRouteResult<T>> {
   final int initialScrollIndex;
   final CapturedThemes capturedThemes;
   final double itemHeight;
+  final double? maxItemHeight;
   final Color hoveredItemBackgroundColor;
   final double itemIndicatorWidth;
   final TextStyle style;
@@ -2136,11 +2141,15 @@ class RadixSelect<T> extends StatefulWidget {
     required this.onChanged,
     this.onTap,
     this.isExpanded = false,
+    this.tightHeight = true,
+    this.textOverflow = TextOverflow.ellipsis,
+    this.textMaxLines,
     this.menuWidth,
     this.focusNode,
     this.autofocus = false,
     this.readOnly = false,
     this.menuMaxHeight,
+    this.maxItemHeight,
     this.enableFeedback,
     this.barrierDismissible = true,
     this.mouseCursor,
@@ -2174,11 +2183,15 @@ class RadixSelect<T> extends StatefulWidget {
     required this.onChanged,
     this.onTap,
     this.isExpanded = false,
+    this.tightHeight = true,
+    this.textOverflow = TextOverflow.ellipsis,
+    this.textMaxLines,
     this.menuWidth,
     this.focusNode,
     this.autofocus = false,
     this.readOnly = false,
     this.menuMaxHeight,
+    this.maxItemHeight,
     this.enableFeedback,
     this.barrierDismissible = true,
     this.mouseCursor,
@@ -2252,6 +2265,47 @@ class RadixSelect<T> extends StatefulWidget {
   /// surrounding container.
   final bool isExpanded;
 
+  /// Whether the height should be equal to the menu item height
+  /// for the given [size].
+  ///
+  /// If true, the button’s height will always be exactly
+  /// [RadixSelectDecorationVariantFactor.itemHeight] for the given [size],
+  /// regardless of the child content.
+  ///
+  /// If false, the button’s height will be at least
+  /// [RadixSelectDecorationVariantFactor.itemHeight] for the given [size],
+  /// but may grow taller if the child content (such as multi‑line text)
+  /// requires more vertical space.
+  ///
+  /// See also:
+  ///  * [RadixSelectDecorationVariantFactor.itemHeight], which defines the
+  ///    item height.
+  final bool tightHeight;
+
+  /// How visual overflow should be handled.
+  ///
+  /// If [textMaxLines] is null and [textOverflow] is not
+  /// [TextOverflow.ellipsis], the text may wrap onto multiple
+  /// lines as needed. In this case, the menu's initial scroll offset
+  /// may not perfectly align the selected option with the button.
+  /// This happens because the offset is computed under the assumption that
+  /// the selected text occupies only a single line.
+  ///
+  /// When textOverflow is set to [TextOverflow.ellipsis] and
+  /// [textMaxLines] is not specified (or set to null),
+  /// the text will render as a single line by default
+  /// and display an ellipsis if the content overflows
+  /// the available horizontal space.
+  ///
+  /// See also:
+  ///
+  ///  * [TextPainter.ellipsis], which defines the string used to indicate eluted text.
+  final TextOverflow textOverflow;
+
+  /// Specifies the maximum number of lines the selected value can display
+  /// in the [RadixSelect].
+  final int? textMaxLines;
+
   /// The width of the menu.
   ///
   /// If it is not provided, the width of the menu is the width of the
@@ -2276,6 +2330,21 @@ class RadixSelect<T> extends StatefulWidget {
   /// mentioned above, then the menu defaults to being padded at the top
   /// and bottom of the menu by at one menu item's height.
   final double? menuMaxHeight;
+
+  /// If null, all menu items will have a fixed height equal to
+  /// [RadixSelectDecorationVariantFactor.itemHeight] for the given [size].
+  ///
+  /// If non-null, menu item heights will vary according to each item's
+  /// intrinsic height, but will be constrained between
+  /// [RadixSelectDecorationVariantFactor.itemHeight] (for the given [size])
+  /// and this value.
+  ///
+  /// If this value is non-null and there isn't enough vertical room for the menu,
+  /// then the menu's initial scroll offset may not align the selected option with
+  /// the select. That's because, in this case, the initial scroll
+  /// offset is computed as if all of the menu item heights were
+  /// the same height.
+  final double? maxItemHeight;
 
   /// Whether detected gestures should provide acoustic and/or haptic feedback.
   ///
@@ -2502,6 +2571,7 @@ class _RadixSelectState<T> extends State<RadixSelect<T>> with WidgetsBindingObse
             barrierLabel: MaterialLocalizations.of(context).modalBarrierDismissLabel,
             barrierDismissible: widget.barrierDismissible,
             itemHeight: size.itemHeight,
+            maxItemHeight: widget.maxItemHeight,
             hoveredItemBackgroundColor: decorationVariant.hoveredItemBackgroundColor,
             itemIndicatorWidth: size.itemIndicatorWidth,
             style: size.itemTextStyle,
@@ -2532,6 +2602,7 @@ class _RadixSelectState<T> extends State<RadixSelect<T>> with WidgetsBindingObse
         barrierLabel: MaterialLocalizations.of(context).modalBarrierDismissLabel,
         barrierDismissible: widget.barrierDismissible,
         itemHeight: size.itemHeight,
+        maxItemHeight: widget.maxItemHeight,
         hoveredItemBackgroundColor: decorationVariant.hoveredItemBackgroundColor,
         itemIndicatorWidth: size.itemIndicatorWidth,
         style: size.itemTextStyle,
@@ -2662,6 +2733,8 @@ class _RadixSelectState<T> extends State<RadixSelect<T>> with WidgetsBindingObse
 
     Widget result = DefaultTextStyle(
       style: textStyle,
+      overflow: widget.textOverflow,
+      maxLines: widget.textMaxLines,
       child: triggerInnerWidget,
     );
 
@@ -2703,6 +2776,7 @@ class _RadixSelectState<T> extends State<RadixSelect<T>> with WidgetsBindingObse
           child: RadixInputDecorator(
             decoration: effectiveDecoration,
             affixIconPosition: AffixIconPosition.insideContent,
+            tighContentHeight: widget.tightHeight,
             expandWidth: widget.isExpanded,
             isEmpty: triggerInnerWidget == emptyWidget,
             enabled: _enabled,
@@ -2770,6 +2844,9 @@ class RadixSelectFormField<T> extends FormField<T> {
     required this.onChanged,
     VoidCallback? onTap,
     bool isExpanded = false,
+    bool tightHeight = true,
+    TextOverflow textOverflow = TextOverflow.ellipsis,
+    int? textMaxLines,
     FocusNode? focusNode,
     bool autofocus = false,
     RadixInputDecoration? decoration,
@@ -2780,6 +2857,7 @@ class RadixSelectFormField<T> extends FormField<T> {
     super.forceErrorText,
     AutovalidateMode? autovalidateMode,
     double? menuMaxHeight,
+    double? maxItemHeight,
     bool? enableFeedback,
     this.barrierDismissible = true,
     this.mouseCursor,
@@ -2846,9 +2924,13 @@ class RadixSelectFormField<T> extends FormField<T> {
                 onChanged: onChanged == null ? null : state.didChange,
                 onTap: onTap,
                 isExpanded: isExpanded,
+                tightHeight: tightHeight,
+                textOverflow: textOverflow,
+                textMaxLines: textMaxLines,
                 focusNode: focusNode,
                 autofocus: autofocus,
                 menuMaxHeight: menuMaxHeight,
+                maxItemHeight: maxItemHeight,
                 enableFeedback: enableFeedback,
                 inputDecoration: effectiveDecoration,
                 contentDecoration: contentDecoration,
