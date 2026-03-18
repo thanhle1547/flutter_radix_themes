@@ -2135,7 +2135,6 @@ class RadixSelect<T> extends StatefulWidget {
     this.contentDecoration,
     required this.onChanged,
     this.onTap,
-    this.iconSize = 24.0,
     this.isExpanded = false,
     this.menuWidth,
     this.focusNode,
@@ -2174,7 +2173,6 @@ class RadixSelect<T> extends StatefulWidget {
     this.contentDecoration,
     required this.onChanged,
     this.onTap,
-    this.iconSize = 24.0,
     this.isExpanded = false,
     this.menuWidth,
     this.focusNode,
@@ -2246,11 +2244,6 @@ class RadixSelect<T> extends StatefulWidget {
   ///
   /// The callback will not be invoked if the select button is disabled.
   final VoidCallback? onTap;
-
-  /// The size to use for the drop-down button's down arrow icon button.
-  ///
-  /// Defaults to 24.0.
-  final double iconSize;
 
   /// Set the dropdown's inner contents to horizontally fill its parent.
   ///
@@ -2776,7 +2769,6 @@ class RadixSelectFormField<T> extends FormField<T> {
     RadixSelectVariant variant = RadixSelectVariant.surface,
     required this.onChanged,
     VoidCallback? onTap,
-    double iconSize = 24.0,
     bool isExpanded = false,
     FocusNode? focusNode,
     bool autofocus = false,
@@ -2853,7 +2845,6 @@ class RadixSelectFormField<T> extends FormField<T> {
                 variant: variant,
                 onChanged: onChanged == null ? null : state.didChange,
                 onTap: onTap,
-                iconSize: iconSize,
                 isExpanded: isExpanded,
                 focusNode: focusNode,
                 autofocus: autofocus,
